@@ -7,15 +7,15 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.5rem",
       screens: {
         "2xl": "1400px",
       },
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -43,6 +43,14 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -61,6 +69,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        electric: {
+          blue: "hsl(var(--electric-blue))",
+          purple: "hsl(var(--electric-purple))",
+        },
+        coral: "hsl(var(--coral))",
+        mint: "hsl(var(--mint))",
+        golden: "hsl(var(--golden))",
+        pink: "hsl(var(--pink))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -68,12 +84,14 @@ export default {
         sm: "calc(var(--radius) - 4px)",
         xl: "calc(var(--radius) + 4px)",
         "2xl": "calc(var(--radius) + 8px)",
+        "3xl": "1.5rem",
+        "4xl": "2rem",
       },
       boxShadow: {
-        card: "var(--shadow-card)",
-        "card-hover": "var(--shadow-card-hover)",
-        button: "var(--shadow-button)",
-        accent: "var(--shadow-accent)",
+        glow: "0 4px 20px hsl(var(--primary) / 0.4)",
+        "glow-accent": "0 4px 20px hsl(var(--accent) / 0.4)",
+        soft: "0 4px 20px -4px hsl(220 25% 10% / 0.1)",
+        elevated: "0 12px 40px -12px hsl(220 25% 10% / 0.15)",
       },
       keyframes: {
         "accordion-down": {
@@ -96,6 +114,10 @@ export default {
           from: { opacity: "0", transform: "scale(0.95)" },
           to: { opacity: "1", transform: "scale(1)" },
         },
+        "spin-slow": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -103,8 +125,9 @@ export default {
         "fade-in": "fade-in 0.5s ease-out",
         "slide-up": "slide-up 0.6s ease-out",
         "scale-in": "scale-in 0.4s ease-out",
+        "spin-slow": "spin-slow 20s linear infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
