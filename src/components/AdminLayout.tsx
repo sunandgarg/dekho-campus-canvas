@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { LayoutDashboard, Megaphone, Star, Users, LogOut, ChevronLeft } from "lucide-react";
+import { LayoutDashboard, Megaphone, Star, Users, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -17,7 +16,6 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children, title }: AdminLayoutProps) {
-  const { signOut, user } = useAuth();
   const location = useLocation();
 
   return (
@@ -30,7 +28,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
             Back to site
           </Link>
           <h2 className="text-lg font-bold text-foreground mt-2">Admin Panel</h2>
-          <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+          <p className="text-xs text-muted-foreground">DekhoCampus Management</p>
         </div>
 
         <nav className="flex-1 p-3 space-y-1">
@@ -52,13 +50,6 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
             );
           })}
         </nav>
-
-        <div className="p-3 border-t border-border">
-          <Button variant="ghost" onClick={signOut} className="w-full justify-start gap-3 text-muted-foreground">
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </Button>
-        </div>
       </aside>
 
       {/* Mobile header */}
