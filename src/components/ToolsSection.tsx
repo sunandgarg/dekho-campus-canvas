@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Search, Calculator, GraduationCap, Building2 } from "lucide-react";
+import { ArrowRight, Search, Calculator, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 
 // Sample college data
 const collegeData: Record<string, { 
   name: string; 
-  location: string; 
+  location: string;
   ranking: number; 
   fees: string; 
   avgPackage: string; 
@@ -401,6 +402,15 @@ export function ToolsSection() {
               </p>
             </div>
           </motion.div>
+        </div>
+
+        {/* Lead Capture inline form */}
+        <div className="mt-10 max-w-2xl mx-auto">
+          <LeadCaptureForm
+            variant="inline"
+            title="📞 Need help choosing? Get a free callback from our counselor"
+            source="tools_inline"
+          />
         </div>
       </div>
     </section>

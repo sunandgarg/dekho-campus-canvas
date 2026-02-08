@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, ArrowRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 
 const footerLinks = {
   explore: [
@@ -44,35 +43,21 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer className="bg-foreground text-background" role="contentinfo">
-      {/* Newsletter Section */}
+      {/* Lead Capture Section */}
       <div className="border-b border-background/10">
         <div className="container py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col lg:flex-row items-center justify-between gap-8"
+            className="max-w-4xl mx-auto"
           >
-            <div className="text-center lg:text-left">
-              <h3 className="text-2xl font-bold text-background mb-2">
-                Never Miss an Update 🎯
-              </h3>
-              <p className="text-background/70 max-w-md">
-                Get instant alerts for admissions, exam dates, and exclusive tips
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-background/10 border-background/20 text-background placeholder:text-background/50 min-w-[280px] rounded-xl"
-                aria-label="Email for newsletter"
-              />
-              <Button className="gradient-accent btn-accent-glow rounded-xl whitespace-nowrap">
-                Subscribe
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
+            <LeadCaptureForm
+              variant="banner"
+              title="🎯 Get Expert College Counseling — Free!"
+              subtitle="Our counselors have helped 50,000+ students find their dream college"
+              source="footer_banner"
+            />
           </motion.div>
         </div>
       </div>

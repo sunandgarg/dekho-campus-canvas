@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Clock, ArrowRight, TrendingUp, Newspaper } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { LeadCaptureForm } from "@/components/LeadCaptureForm";
+import { AdBanner } from "@/components/AdBanner";
 
 const newsItems = [
   {
@@ -56,16 +58,21 @@ const newsItems = [
 const categoryColors: Record<string, string> = {
   Admissions: "bg-primary/10 text-primary",
   Results: "bg-success/10 text-success",
-  Scholarships: "bg-golden/10 text-golden",
+  Scholarships: "bg-warning/10 text-warning-foreground",
   "Exam Updates": "bg-accent/10 text-accent",
-  Rankings: "bg-electric-purple/10 text-electric-purple",
-  "New Courses": "bg-mint/10 text-mint",
+  Rankings: "bg-secondary text-secondary-foreground",
+  "New Courses": "bg-muted text-muted-foreground",
 };
 
 export function NewsSection() {
   return (
     <section className="py-16 bg-muted/30" aria-label="Latest Education News">
       <div className="container">
+        {/* Leaderboard Ad at top */}
+        <div className="mb-8">
+          <AdBanner variant="leaderboard" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -87,95 +94,111 @@ export function NewsSection() {
           </button>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Featured News */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2 card-elevated p-6 group cursor-pointer"
-          >
-            <div className="flex items-start gap-4">
-              <div className="text-5xl">{newsItems[0].image}</div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-3">
-                  <Badge variant="secondary" className={categoryColors[newsItems[0].category]}>
-                    {newsItems[0].category}
-                  </Badge>
-                  {newsItems[0].trending && (
-                    <Badge variant="secondary" className="bg-accent/10 text-accent">
-                      <TrendingUp className="w-3 h-3 mr-1" /> Trending
-                    </Badge>
-                  )}
-                </div>
-                <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-2">
-                  {newsItems[0].title}
-                </h3>
-                <p className="text-muted-foreground mb-3">{newsItems[0].excerpt}</p>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  <span>{newsItems[0].date}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Side news list */}
-          <div className="space-y-4">
-            {newsItems.slice(1, 4).map((item, i) => (
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Main content - 3 columns */}
+          <div className="lg:col-span-3 space-y-6">
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Featured News */}
               <motion.div
-                key={item.title}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="card-elevated p-4 group cursor-pointer"
+                className="lg:col-span-2 card-elevated p-6 group cursor-pointer"
               >
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">{item.image}</span>
-                  <div className="flex-1 min-w-0">
-                    <Badge variant="secondary" className={`text-xs mb-1 ${categoryColors[item.category]}`}>
-                      {item.category}
-                    </Badge>
-                    <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      {item.title}
-                    </h4>
-                    <span className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                      <Clock className="w-3 h-3" /> {item.date}
-                    </span>
+                <div className="flex items-start gap-4">
+                  <div className="text-5xl">{newsItems[0].image}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Badge variant="secondary" className={categoryColors[newsItems[0].category]}>
+                        {newsItems[0].category}
+                      </Badge>
+                      {newsItems[0].trending && (
+                        <Badge variant="secondary" className="bg-accent/10 text-accent">
+                          <TrendingUp className="w-3 h-3 mr-1" /> Trending
+                        </Badge>
+                      )}
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-2">
+                      {newsItems[0].title}
+                    </h3>
+                    <p className="text-muted-foreground mb-3">{newsItems[0].excerpt}</p>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="w-4 h-4" />
+                      <span>{newsItems[0].date}</span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
-            ))}
-          </div>
-        </div>
 
-        {/* Bottom row */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-          {newsItems.slice(3).map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="card-elevated p-4 group cursor-pointer"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xl">{item.image}</span>
-                <Badge variant="secondary" className={`text-xs ${categoryColors[item.category]}`}>
-                  {item.category}
-                </Badge>
-                {item.trending && (
-                  <TrendingUp className="w-3 h-3 text-accent" />
-                )}
+              {/* Side news list */}
+              <div className="space-y-4">
+                {newsItems.slice(1, 4).map((item, i) => (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="card-elevated p-4 group cursor-pointer"
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">{item.image}</span>
+                      <div className="flex-1 min-w-0">
+                        <Badge variant="secondary" className={`text-xs mb-1 ${categoryColors[item.category]}`}>
+                          {item.category}
+                        </Badge>
+                        <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                          {item.title}
+                        </h4>
+                        <span className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> {item.date}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-              <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-1">
-                {item.title}
-              </h4>
-              <p className="text-xs text-muted-foreground line-clamp-2">{item.excerpt}</p>
-            </motion.div>
-          ))}
+            </div>
+
+            {/* Bottom row */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {newsItems.slice(3).map((item, i) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="card-elevated p-4 group cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xl">{item.image}</span>
+                    <Badge variant="secondary" className={`text-xs ${categoryColors[item.category]}`}>
+                      {item.category}
+                    </Badge>
+                    {item.trending && (
+                      <TrendingUp className="w-3 h-3 text-accent" />
+                    )}
+                  </div>
+                  <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-1">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{item.excerpt}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <LeadCaptureForm
+              variant="sidebar"
+              title="Get Exam Alerts"
+              subtitle="Never miss important dates"
+              source="news_sidebar"
+            />
+            <AdBanner variant="square" position="Sponsored" className="hidden lg:flex" />
+          </div>
         </div>
       </div>
     </section>
