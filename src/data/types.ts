@@ -2,6 +2,7 @@
 export interface College {
   slug: string;
   name: string;
+  shortName: string;
   location: string;
   state: string;
   type: "Government" | "Private" | "Deemed" | "Autonomous";
@@ -18,6 +19,8 @@ export interface College {
   description: string;
   highlights: string[];
   facilities: string[];
+  approvals: string[];
+  naacGrade: string;
 }
 
 export interface Course {
@@ -37,6 +40,8 @@ export interface Course {
   careers: string[];
   subjects: string[];
   image: string;
+  mode: string;
+  specializations: string[];
 }
 
 export interface Exam {
@@ -55,6 +60,12 @@ export interface Exam {
   topColleges: string[];
   image: string;
   registrationUrl: string;
+  duration: string;
+  examType: string;
+  language: string;
+  frequency: string;
+  applicationMode: string;
+  status: "Upcoming" | "Applications Open" | "Applications Closed" | "Exam Over";
 }
 
 export interface Article {

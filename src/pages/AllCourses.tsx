@@ -1,39 +1,43 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, BookOpen, TrendingUp, Building, Clock } from "lucide-react";
+import { Search, SlidersHorizontal, BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 import { ListingPageLayout } from "@/components/ListingPageLayout";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { AdBanner } from "@/components/AdBanner";
-import { courses, courseCategories, courseLevels } from "@/data/courses";
+import { CourseCard } from "@/components/CourseCard";
+import { courses, courseCategories, courseLevels, courseModes, courseDurations } from "@/data/courses";
 
 export default function AllCourses() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [level, setLevel] = useState("All");
+  const [mode, setMode] = useState("All");
+  const [duration, setDuration] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+
+  const activeFilters = [category, level, mode, duration].filter((f) => f !== "All").length;
 
   const filtered = useMemo(() => {
     return courses.filter((c) => {
       const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.fullName.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === "All" || c.category === category;
       const matchLevel = level === "All" || c.level === level;
-      return matchSearch && matchCategory && matchLevel;
+      const matchMode = mode === "All" || c.mode === mode;
+      const matchDuration = duration === "All" || matchesDuration(c.duration, duration);
+      return matchSearch && matchCategory && matchLevel && matchMode && matchDuration;
     });
-  }, [search, category, level]);
+  }, [search, category, level, mode, duration]);
+
+  const clearAll = () => { setCategory("All"); setLevel("All"); setMode("All"); setDuration("All"); };
 
   return (
-    <ListingPageLayout
-      title="All Courses in India 2026"
-      description="Explore 10,000+ courses — compare eligibility, fees, career prospects & top colleges"
-    >
+    <ListingPageLayout title="All Courses in India 2026" description="Explore 10,000+ courses — compare eligibility, fees, career prospects & top colleges">
       <PageBreadcrumb items={[{ label: "Courses" }]} />
 
-      {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -42,11 +46,7 @@ export default function AllCourses() {
         <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="rounded-xl gap-2 h-11">
           <SlidersHorizontal className="w-4 h-4" />
           Filters
-          {(category !== "All" || level !== "All") && (
-            <Badge className="ml-1 bg-primary text-primary-foreground text-xs px-1.5">
-              {[category, level].filter((f) => f !== "All").length}
-            </Badge>
-          )}
+          {activeFilters > 0 && <Badge className="ml-1 bg-primary text-primary-foreground text-xs px-1.5">{activeFilters}</Badge>}
         </Button>
       </div>
 
@@ -54,25 +54,13 @@ export default function AllCourses() {
         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="bg-card rounded-2xl border border-border p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-foreground">Filter Courses</h3>
-            <button onClick={() => { setCategory("All"); setLevel("All"); }} className="text-xs text-primary hover:underline">Clear all</button>
+            <button onClick={clearAll} className="text-xs text-primary hover:underline">Clear all</button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Category</label>
-              <div className="flex flex-wrap gap-1.5">
-                {courseCategories.map((c) => (
-                  <button key={c} onClick={() => setCategory(c)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${category === c ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>{c}</button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Level</label>
-              <div className="flex flex-wrap gap-1.5">
-                {courseLevels.map((l) => (
-                  <button key={l} onClick={() => setLevel(l)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${level === l ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>{l}</button>
-                ))}
-              </div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <FilterGroup label="Category" options={courseCategories} value={category} onChange={setCategory} />
+            <FilterGroup label="Level" options={courseLevels} value={level} onChange={setLevel} />
+            <FilterGroup label="Mode" options={courseModes} value={mode} onChange={setMode} />
+            <FilterGroup label="Duration" options={courseDurations} value={duration} onChange={setDuration} />
           </div>
         </motion.div>
       )}
@@ -81,43 +69,11 @@ export default function AllCourses() {
         Showing <span className="font-semibold text-foreground">{filtered.length}</span> courses
       </p>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-3">
+          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
             {filtered.map((course, i) => (
-              <motion.div key={course.slug} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                <Link to={`/courses/${course.slug}`} className="block h-full">
-                  <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-                    <img src={course.image} alt={course.name} className="w-full h-36 object-cover" loading="lazy" />
-                    <div className="p-4 flex-1 flex flex-col">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary" className="text-xs">{course.category}</Badge>
-                        <Badge variant="outline" className="text-xs">{course.level}</Badge>
-                      </div>
-                      <h2 className="text-base font-bold text-foreground mb-1">{course.name}</h2>
-                      <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{course.fullName}</p>
-                      <div className="mt-auto grid grid-cols-2 gap-2 text-center pt-3 border-t border-border">
-                        <div className="flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-xs text-foreground">{course.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Building className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-xs text-foreground">{course.colleges} colleges</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <TrendingUp className="w-3.5 h-3.5 text-success" />
-                          <span className="text-xs font-semibold text-success">{course.growth}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <BookOpen className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-xs text-foreground">{course.avgSalary}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              </motion.div>
+              <CourseCard key={course.slug} course={course} index={i} />
             ))}
           </div>
 
@@ -129,22 +85,43 @@ export default function AllCourses() {
             </div>
           )}
 
-          {/* Mid-page ad */}
-          <div className="mt-6">
-            <AdBanner variant="horizontal" position="Courses Mid-page" />
-          </div>
+          <div className="mt-6"><AdBanner variant="horizontal" position="Courses Mid-page" /></div>
         </div>
 
         <aside className="space-y-6">
           <LeadCaptureForm variant="sidebar" title="Confused About Courses?" subtitle="Get free career counseling from our experts" source="courses_listing" />
-          <AdBanner variant="square" position="Courses Sidebar" />
+          <AdBanner variant="vertical" position="Courses Sidebar" />
           <LeadCaptureForm variant="card" title="Get Course Alerts" subtitle="Stay updated on admission deadlines" source="courses_sidebar_card" />
+          <AdBanner variant="square" position="Courses Sidebar 2" />
         </aside>
       </div>
 
       <div className="mt-10">
-        <LeadCaptureForm variant="banner" title="📚 Not sure which course is right for you? Talk to an expert!" subtitle="Our career counselors analyze your interests, scores & goals" source="courses_bottom_banner" />
+        <LeadCaptureForm variant="banner" title="📚 Not sure which course is right? Talk to an expert!" subtitle="Our counselors analyze your interests, scores & goals" source="courses_bottom_banner" />
       </div>
     </ListingPageLayout>
+  );
+}
+
+function matchesDuration(dur: string, filter: string): boolean {
+  if (filter === "1-2 Years") return dur.includes("1") || dur.includes("2");
+  if (filter === "3 Years") return dur === "3 Years";
+  if (filter === "4 Years") return dur === "4 Years";
+  if (filter === "5+ Years") return parseFloat(dur) >= 5;
+  return true;
+}
+
+function FilterGroup({ label, options, value, onChange }: { label: string; options: readonly string[]; value: string; onChange: (v: string) => void }) {
+  return (
+    <div>
+      <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{label}</label>
+      <div className="flex flex-wrap gap-1.5">
+        {options.map((o) => (
+          <button key={o} onClick={() => onChange(o)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${value === o ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>
+            {o}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
