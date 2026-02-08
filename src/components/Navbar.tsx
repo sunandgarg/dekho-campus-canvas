@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Search, Sparkles, User } from "lucide-react";
+import { Menu, X, ChevronDown, Search, User, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -16,17 +16,17 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full">
-      {/* Glassmorphism navbar */}
-      <nav className="glass border-b border-border/50">
+      {/* Warm glassmorphism navbar */}
+      <nav className="bg-white/80 backdrop-blur-md border-b border-amber-100/50">
         <div className="container flex items-center justify-between h-16 md:h-18">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-1.5" aria-label="DekhoCampus Home">
-            <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
+          <a href="/" className="flex items-center gap-2" aria-label="DC Educational AI Home">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold">
-              <span className="text-foreground">Dekho</span>
-              <span className="text-gradient">Campus</span>
+              <span className="text-gradient">DC</span>
+              <span className="text-foreground"> Educational AI</span>
             </span>
           </a>
 
@@ -35,12 +35,12 @@ export function Navbar() {
             {navItems.map((item) => (
               <button
                 key={item.label}
-                className="relative flex items-center gap-1 px-4 py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors rounded-xl hover:bg-muted focus-ring"
+                className="relative flex items-center gap-1 px-4 py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors rounded-xl hover:bg-amber-50 focus-ring"
               >
                 {item.label}
                 {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
                 {item.isNew && (
-                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 text-[10px] font-bold badge-gradient rounded-full">
+                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 text-[10px] font-bold bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full">
                     AI
                   </span>
                 )}
@@ -50,14 +50,14 @@ export function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="hidden md:flex focus-ring" aria-label="Search">
+            <Button variant="ghost" size="icon" className="hidden md:flex focus-ring hover:bg-amber-50" aria-label="Search">
               <Search className="w-5 h-5" />
             </Button>
-            <Button variant="outline" className="hidden md:flex gap-2 rounded-xl focus-ring">
+            <Button variant="outline" className="hidden md:flex gap-2 rounded-xl focus-ring border-amber-200 hover:bg-amber-50">
               <User className="w-4 h-4" />
               Sign In
             </Button>
-            <Button className="hidden md:flex gradient-primary btn-glow rounded-xl focus-ring">
+            <Button className="hidden md:flex bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl shadow-lg focus-ring">
               Get Started
             </Button>
             
@@ -65,7 +65,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden focus-ring"
+              className="lg:hidden focus-ring hover:bg-amber-50"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-expanded={isMobileMenuOpen}
               aria-label="Toggle menu"
@@ -82,29 +82,29 @@ export function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-t border-border/50"
+              className="lg:hidden border-t border-amber-100/50"
             >
-              <div className="container py-4 space-y-2">
+              <div className="container py-4 space-y-2 bg-white">
                 {navItems.map((item) => (
                   <button
                     key={item.label}
-                    className="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-foreground hover:bg-muted rounded-xl transition-colors"
+                    className="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-foreground hover:bg-amber-50 rounded-xl transition-colors"
                   >
                     <span className="flex items-center gap-2">
                       {item.label}
                       {item.isNew && (
-                        <span className="px-1.5 py-0.5 text-[10px] font-bold badge-gradient rounded-full">AI</span>
+                        <span className="px-1.5 py-0.5 text-[10px] font-bold bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full">AI</span>
                       )}
                     </span>
                     {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
                   </button>
                 ))}
-                <div className="pt-4 flex flex-col gap-2 border-t border-border/50">
-                  <Button variant="outline" className="w-full rounded-xl">
+                <div className="pt-4 flex flex-col gap-2 border-t border-amber-100/50">
+                  <Button variant="outline" className="w-full rounded-xl border-amber-200">
                     <User className="w-4 h-4 mr-2" />
                     Sign In
                   </Button>
-                  <Button className="w-full gradient-primary btn-glow rounded-xl">
+                  <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl">
                     Get Started
                   </Button>
                 </div>

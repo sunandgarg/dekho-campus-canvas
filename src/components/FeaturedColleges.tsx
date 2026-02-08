@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star, MapPin, ArrowRight, TrendingUp, Heart } from "lucide-react";
+import { Star, MapPin, ArrowRight, TrendingUp, Heart, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -56,7 +56,7 @@ const featuredColleges = [
 
 export function FeaturedColleges() {
   return (
-    <section className="py-20 bg-background" aria-labelledby="featured-heading">
+    <section className="py-16 bg-white" aria-labelledby="featured-heading">
       <div className="container">
         {/* Header */}
         <motion.div
@@ -66,15 +66,18 @@ export function FeaturedColleges() {
           className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10"
         >
           <div>
-            <Badge className="mb-4 badge-gradient">Featured</Badge>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-medium mb-3">
+              <GraduationCap className="w-4 h-4" />
+              Featured Institutions
+            </div>
             <h2 id="featured-heading" className="text-headline font-bold text-foreground">
-              Top Ranked <span className="text-gradient">Institutions</span>
+              Top Ranked <span className="text-gradient-accent">Colleges</span>
             </h2>
             <p className="text-muted-foreground mt-2 max-w-lg">
-              Explore India's most prestigious colleges with world-class placements
+              Explore India's most prestigious institutions with world-class placements
             </p>
           </div>
-          <Button variant="outline" className="self-start md:self-auto rounded-xl">
+          <Button variant="outline" className="self-start md:self-auto rounded-xl border-amber-200 hover:bg-amber-50">
             Explore All Colleges
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
@@ -89,7 +92,7 @@ export function FeaturedColleges() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group card-interactive overflow-hidden"
+              className="group bg-white rounded-2xl border border-amber-100 overflow-hidden shadow-sm hover:shadow-lg transition-all"
             >
               {/* Image */}
               <div className="relative h-44 overflow-hidden">
@@ -99,18 +102,18 @@ export function FeaturedColleges() {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
                 
                 {/* Ranking badge */}
                 <div className="absolute top-3 left-3">
-                  <Badge className="badge-gradient">
+                  <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0">
                     #{college.ranking} Rank
                   </Badge>
                 </div>
                 
                 {/* Wishlist button */}
                 <button
-                  className="absolute top-3 right-3 w-9 h-9 rounded-xl glass flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="absolute top-3 right-3 w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors"
                   aria-label="Add to wishlist"
                 >
                   <Heart className="w-5 h-5" />
@@ -118,10 +121,10 @@ export function FeaturedColleges() {
 
                 {/* College name overlay */}
                 <div className="absolute bottom-3 left-3 right-3">
-                  <h3 className="text-lg font-bold text-primary-foreground drop-shadow-lg">
+                  <h3 className="text-lg font-bold text-white drop-shadow-lg">
                     {college.name}
                   </h3>
-                  <div className="flex items-center gap-1 text-sm text-primary-foreground/90">
+                  <div className="flex items-center gap-1 text-sm text-white/90">
                     <MapPin className="w-3 h-3" />
                     <span>{college.location}</span>
                   </div>
@@ -133,7 +136,7 @@ export function FeaturedColleges() {
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2">
                   {college.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
+                    <Badge key={tag} variant="secondary" className="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100">
                       {tag}
                     </Badge>
                   ))}
@@ -141,19 +144,19 @@ export function FeaturedColleges() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-2.5 rounded-xl bg-muted">
-                    <div className="flex items-center gap-1 text-sm font-semibold text-foreground">
-                      <TrendingUp className="w-4 h-4 text-success" />
+                  <div className="p-2.5 rounded-xl bg-emerald-50">
+                    <div className="flex items-center gap-1 text-sm font-semibold text-emerald-700">
+                      <TrendingUp className="w-4 h-4" />
                       {college.avgPackage}
                     </div>
-                    <div className="text-xs text-muted-foreground">Avg Package</div>
+                    <div className="text-xs text-emerald-600/80">Avg Package</div>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-muted">
-                    <div className="flex items-center gap-1 text-sm font-semibold text-foreground">
-                      <Star className="w-4 h-4 text-golden fill-golden" />
+                  <div className="p-2.5 rounded-xl bg-amber-50">
+                    <div className="flex items-center gap-1 text-sm font-semibold text-amber-700">
+                      <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                       {college.rating}
                     </div>
-                    <div className="text-xs text-muted-foreground">{college.reviews} reviews</div>
+                    <div className="text-xs text-amber-600/80">{college.reviews} reviews</div>
                   </div>
                 </div>
 
