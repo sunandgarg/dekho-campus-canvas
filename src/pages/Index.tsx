@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { UniversalSearch } from "@/components/UniversalSearch";
-import { StatsSection } from "@/components/StatsSection";
+
 import { CategorySection } from "@/components/CategorySection";
 import { FeaturedColleges } from "@/components/FeaturedColleges";
 import { NewsSection } from "@/components/NewsSection";
@@ -41,7 +41,7 @@ const Index = () => {
       <main id="main-content">
         <HeroSection onOpenChat={handleOpenChat} />
         <UniversalSearch />
-        <StatsSection />
+        
         <CategorySection />
         <FeaturedColleges />
         <NewsSection />

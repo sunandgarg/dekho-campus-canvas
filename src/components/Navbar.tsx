@@ -2,13 +2,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, User, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const navItems = [
-  { label: "Explore", hasDropdown: true },
-  { label: "Colleges", hasDropdown: true },
-  { label: "Courses", hasDropdown: true },
-  { label: "Exams", hasDropdown: true },
-  { label: "AI Guide", hasDropdown: false, isNew: true },
+  { label: "Colleges", href: "/colleges" },
+  { label: "Courses", href: "/courses" },
+  { label: "Exams", href: "/exams" },
+  { label: "AI Guide", href: "#", isNew: true },
 ];
 
 export function Navbar() {
@@ -19,7 +19,7 @@ export function Navbar() {
       <nav className="glass border-b border-border">
         <div className="container flex items-center justify-between h-14 md:h-16 lg:h-18">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2" aria-label="DekhoCampus Home">
+          <Link to="/" className="flex items-center gap-2" aria-label="DekhoCampus Home">
             <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-primary-foreground" />
             </div>
@@ -27,23 +27,23 @@ export function Navbar() {
               <span className="text-gradient">Dekho</span>
               <span className="text-foreground">Campus</span>
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
             {navItems.map((item) => (
-              <button
+              <Link
                 key={item.label}
+                to={item.href}
                 className="relative flex items-center gap-1 px-4 py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors rounded-xl hover:bg-secondary focus-ring"
               >
                 {item.label}
-                {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
                 {item.isNew && (
                   <span className="absolute -top-1 -right-1 px-1.5 py-0.5 text-[10px] font-bold badge-gradient rounded-full">
                     AI
                   </span>
                 )}
-              </button>
+              </Link>
             ))}
           </nav>
 
@@ -80,8 +80,10 @@ export function Navbar() {
             >
               <div className="container py-4 space-y-2 bg-card">
                 {navItems.map((item) => (
-                  <button
+                  <Link
                     key={item.label}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-foreground hover:bg-secondary rounded-xl transition-colors"
                   >
                     <span className="flex items-center gap-2">
@@ -90,8 +92,7 @@ export function Navbar() {
                         <span className="px-1.5 py-0.5 text-[10px] font-bold badge-gradient rounded-full">AI</span>
                       )}
                     </span>
-                    {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
-                  </button>
+                  </Link>
                 ))}
                 <div className="pt-4 flex flex-col gap-2 border-t border-border">
                   <Button variant="outline" className="w-full rounded-xl">

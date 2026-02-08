@@ -4,9 +4,9 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 
 const footerLinks = {
   explore: [
-    { label: "Colleges", href: "#" },
-    { label: "Courses", href: "#" },
-    { label: "Exams", href: "#" },
+    { label: "Colleges", href: "/colleges" },
+    { label: "Courses", href: "/courses" },
+    { label: "Exams", href: "/exams" },
     { label: "Rankings", href: "#" },
     { label: "Compare", href: "#" },
   ],
