@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Calendar, User, ArrowLeft, Tag } from "lucide-react";
+import { Clock, Calendar, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { articles } from "@/data/articles";
 import ReactMarkdown from "react-markdown";
 
@@ -33,7 +33,7 @@ export default function ArticleDetail() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <AdBanner variant="leaderboard" />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page="articles" itemSlug={slug} />
       <main className="container py-4 md:py-6">
         <PageBreadcrumb items={[{ label: "Articles", href: "/articles" }, { label: article.title }]} />
 
@@ -67,7 +67,7 @@ export default function ArticleDetail() {
             </motion.div>
 
             <div className="mt-8">
-              <AdBanner variant="horizontal" position="Article Bottom" />
+              <DynamicAdBanner variant="horizontal" position="mid-page" page="articles" itemSlug={slug} />
             </div>
             <div className="mt-6">
               <LeadCaptureForm variant="inline" title="Found this helpful? Get personalized guidance!" source={`article_${article.slug}`} />
@@ -76,7 +76,7 @@ export default function ArticleDetail() {
 
           <aside className="space-y-6">
             <LeadCaptureForm variant="card" title="Get Free Counseling" subtitle="Talk to our experts about your education goals" source={`article_sidebar_${article.slug}`} />
-            <AdBanner variant="vertical" position="Article Sidebar" />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="articles" itemSlug={slug} />
             <LeadCaptureForm variant="sidebar" title="Weekly Updates" subtitle="Get the latest education news" source="article_newsletter_sidebar" />
           </aside>
         </div>
