@@ -1,13 +1,28 @@
+import { useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { StatsSection } from "@/components/StatsSection";
 import { CategorySection } from "@/components/CategorySection";
 import { FeaturedColleges } from "@/components/FeaturedColleges";
 import { FeaturesSection } from "@/components/FeaturesSection";
+import { ToolsSection } from "@/components/ToolsSection";
 import { Footer } from "@/components/Footer";
-import { AICounselor } from "@/components/AICounselor";
+import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 
 const Index = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [initialChatMessage, setInitialChatMessage] = useState<string | undefined>();
+
+  const handleOpenChat = useCallback((message?: string) => {
+    setInitialChatMessage(message);
+    setIsChatOpen(true);
+  }, []);
+
+  const handleCloseChat = useCallback(() => {
+    setIsChatOpen(false);
+    setInitialChatMessage(undefined);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Skip link for accessibility */}
@@ -21,17 +36,22 @@ const Index = () => {
       <Navbar />
       
       <main id="main-content">
-        <HeroSection />
+        <HeroSection onOpenChat={handleOpenChat} />
         <StatsSection />
         <CategorySection />
         <FeaturedColleges />
+        <ToolsSection />
         <FeaturesSection />
       </main>
       
       <Footer />
       
-      {/* AI Counselor Floating Chat */}
-      <AICounselor />
+      {/* Full-screen AI Chat (ChatGPT-style) */}
+      <AIChatFullScreen 
+        isOpen={isChatOpen} 
+        onClose={handleCloseChat}
+        initialMessage={initialChatMessage}
+      />
     </div>
   );
 };
