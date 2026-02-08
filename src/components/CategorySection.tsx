@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Star, MapPin, ArrowRight, Clock, Users, Bookmark, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 const categories = [
   { id: "engineering", label: "Engineering", emoji: "⚡" },
@@ -245,14 +246,17 @@ export function CategorySection() {
                 <h3 className="text-lg font-bold text-foreground">Top Colleges</h3>
                 <p className="text-sm text-muted-foreground">Based on NIRF rankings</p>
               </div>
-              <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
-                View All <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
+              <Link to={`/colleges?category=${activeCategory}`}>
+                <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
+                  View All <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
             </div>
             <div className="space-y-4">
               {data.colleges.map((college) => (
-                <div
+                <Link
                   key={college.rank}
+                  to={`/colleges`}
                   className="group flex items-center gap-4 p-3 rounded-xl hover:bg-amber-50/50 transition-colors cursor-pointer"
                 >
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-sm font-bold text-white">
@@ -282,7 +286,7 @@ export function CategorySection() {
                     </div>
                     <span className="text-xs text-muted-foreground">{college.placement}</span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </motion.article>
@@ -300,15 +304,18 @@ export function CategorySection() {
                 <h3 className="text-lg font-bold text-foreground">Trending Courses</h3>
                 <p className="text-sm text-muted-foreground">High demand programs</p>
               </div>
-              <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
-                View All <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
+              <Link to="/courses">
+                <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
+                  View All <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
             </div>
             <div className="space-y-4">
               {data.courses.map((course) => (
-                <div
+                <Link
                   key={course.name}
-                  className="group p-4 rounded-xl border border-amber-100 hover:border-amber-300 hover:bg-amber-50/50 transition-all cursor-pointer"
+                  to="/courses"
+                  className="block group p-4 rounded-xl border border-amber-100 hover:border-amber-300 hover:bg-amber-50/50 transition-all cursor-pointer"
                 >
                   <h4 className="font-semibold text-foreground group-hover:text-amber-600 transition-colors">
                     {course.name}
@@ -330,7 +337,7 @@ export function CategorySection() {
                       </Badge>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </motion.article>
@@ -348,14 +355,17 @@ export function CategorySection() {
                 <h3 className="text-lg font-bold text-foreground">Upcoming Exams</h3>
                 <p className="text-sm text-muted-foreground">Don't miss deadlines!</p>
               </div>
+              <Link to="/exams">
               <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
                 View All <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
+              </Link>
             </div>
             <div className="space-y-4">
               {data.exams.map((exam) => (
-                <div
+                <Link
                   key={exam.name}
+                  to="/exams"
                   className="group flex items-center justify-between p-4 rounded-xl border border-amber-100 hover:border-amber-300 hover:bg-amber-50/50 transition-all cursor-pointer"
                 >
                   <div>
@@ -377,7 +387,7 @@ export function CategorySection() {
                       <Bookmark className="w-4 h-4" />
                     </Button>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </motion.article>

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, User, Sparkles } from "lucide-react";
+import { Menu, X, ChevronDown, User, Sparkles, Shield, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { label: "Colleges", href: "/colleges" },
@@ -14,6 +15,8 @@ const navItems = [
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAdmin, signOut, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -50,13 +53,41 @@ export function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="outline" className="hidden md:flex gap-2 rounded-xl focus-ring">
-              <User className="w-4 h-4" />
-              Sign In
-            </Button>
-            <Button className="hidden md:flex gradient-primary btn-glow rounded-xl text-primary-foreground">
-              Get Started
-            </Button>
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="outline" size="sm" className="hidden md:flex gap-2 rounded-xl border-amber-200 text-amber-600 hover:bg-amber-50">
+                  <Shield className="w-4 h-4" />
+                  Admin
+                </Button>
+              </Link>
+            )}
+
+            {user ? (
+              <>
+                <Button
+                  variant="outline"
+                  className="hidden md:flex gap-2 rounded-xl focus-ring"
+                  onClick={() => signOut()}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/auth">
+                  <Button variant="outline" className="hidden md:flex gap-2 rounded-xl focus-ring">
+                    <User className="w-4 h-4" />
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button className="hidden md:flex gradient-primary btn-glow rounded-xl text-primary-foreground">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
 
             <Button
               variant="ghost"
@@ -95,14 +126,43 @@ export function Navbar() {
                     </span>
                   </Link>
                 ))}
+
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-2 w-full px-4 py-3 text-sm font-medium text-amber-600 hover:bg-amber-50 rounded-xl transition-colors"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Admin Panel
+                  </Link>
+                )}
+
                 <div className="pt-4 flex flex-col gap-2 border-t border-border">
-                  <Button variant="outline" className="w-full rounded-xl">
-                    <User className="w-4 h-4 mr-2" />
-                    Sign In
-                  </Button>
-                  <Button className="w-full gradient-primary text-primary-foreground rounded-xl">
-                    Get Started
-                  </Button>
+                  {user ? (
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-xl"
+                      onClick={() => { signOut(); setIsMobileMenuOpen(false); }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  ) : (
+                    <>
+                      <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="outline" className="w-full rounded-xl">
+                          <User className="w-4 h-4 mr-2" />
+                          Sign In
+                        </Button>
+                      </Link>
+                      <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button className="w-full gradient-primary text-primary-foreground rounded-xl">
+                          Get Started
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>

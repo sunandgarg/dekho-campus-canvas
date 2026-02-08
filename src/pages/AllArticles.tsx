@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ListingPageLayout } from "@/components/ListingPageLayout";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { articles, articleCategories } from "@/data/articles";
 
 export default function AllArticles() {
@@ -23,7 +23,7 @@ export default function AllArticles() {
   }, [search, category]);
 
   return (
-    <ListingPageLayout title="Articles & Guides" description="Expert advice, exam strategies, and career guidance for students">
+    <ListingPageLayout title="Articles & Guides" description="Expert advice, exam strategies, and career guidance for students" page="articles">
       <PageBreadcrumb items={[{ label: "Articles" }]} />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -64,14 +64,14 @@ export default function AllArticles() {
                   </div>
                 </article>
               </Link>
-              {(i + 1) % 3 === 0 && i < filtered.length - 1 && <div className="mt-4"><AdBanner variant="horizontal" position={`Ad - Articles ${i + 1}`} /></div>}
+              {(i + 1) % 3 === 0 && i < filtered.length - 1 && <div className="mt-4"><DynamicAdBanner variant="horizontal" position="mid-page" page="articles" /></div>}
             </motion.div>
           ))}
         </div>
 
         <aside className="space-y-6">
           <LeadCaptureForm variant="sidebar" title="Get Expert Guidance" subtitle="Talk to our counselors for free" source="articles_listing" />
-          <AdBanner variant="vertical" position="Articles Sidebar" />
+          <DynamicAdBanner variant="vertical" position="sidebar" page="articles" />
           <LeadCaptureForm variant="card" title="Weekly Newsletter" subtitle="Get the latest education news in your inbox" source="articles_newsletter" />
         </aside>
       </div>

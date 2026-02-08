@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { Clock, ArrowRight, TrendingUp, Newspaper } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
+import { Link } from "react-router-dom";
 
 const newsItems = [
   {
@@ -70,7 +71,7 @@ export function NewsSection() {
       <div className="container">
         {/* Leaderboard Ad at top */}
         <div className="mb-8">
-          <AdBanner variant="leaderboard" />
+          <DynamicAdBanner variant="leaderboard" position="leaderboard" />
         </div>
 
         <motion.div
@@ -89,9 +90,9 @@ export function NewsSection() {
             </h2>
             <p className="text-muted-foreground mt-1">Stay updated with the latest in Indian education</p>
           </div>
-          <button className="hidden md:flex items-center gap-2 text-primary font-semibold hover:underline">
+          <Link to="/articles" className="hidden md:flex items-center gap-2 text-primary font-semibold hover:underline">
             View All News <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </motion.div>
 
         <div className="grid lg:grid-cols-4 gap-6">
@@ -197,7 +198,7 @@ export function NewsSection() {
               subtitle="Never miss important dates"
               source="news_sidebar"
             />
-            <AdBanner variant="square" position="Sponsored" className="hidden lg:flex" />
+            <DynamicAdBanner variant="square" position="sidebar" className="hidden lg:flex" />
           </div>
         </div>
       </div>
