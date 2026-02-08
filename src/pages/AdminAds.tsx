@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { useAllAds } from "@/hooks/useAds";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,7 +19,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import {
   Plus, Pencil, Trash2, X, ExternalLink, Copy, Search,
-  Megaphone, HelpCircle, Eye, Info,
+  Megaphone, HelpCircle, Eye, Info, Upload,
 } from "lucide-react";
 import { colleges } from "@/data/colleges";
 import { courses } from "@/data/courses";
@@ -29,30 +29,10 @@ import { articles } from "@/data/articles";
 // ─── Friendly labels ───────────────────────────────────────────────────
 
 const AUDIENCE_OPTIONS = [
-  {
-    value: "universal",
-    emoji: "🌍",
-    label: "Show Everywhere",
-    help: "This ad will appear on every page as a fallback when no better-matched ad exists.",
-  },
-  {
-    value: "page",
-    emoji: "📄",
-    label: "Show on a Specific Page",
-    help: "This ad appears only on one listing page — like All Colleges, All Courses, etc.",
-  },
-  {
-    value: "item",
-    emoji: "🎯",
-    label: "Show on a Specific College / Course / Exam / Article",
-    help: "This ad appears only when someone visits a specific detail page, e.g. the IIT Delhi page.",
-  },
-  {
-    value: "city",
-    emoji: "📍",
-    label: "Show for a Specific City",
-    help: "This ad appears anywhere on the site for users in the selected city.",
-  },
+  { value: "universal", emoji: "🌍", label: "Show Everywhere", help: "This ad will appear on every page as a fallback when no better-matched ad exists." },
+  { value: "page", emoji: "📄", label: "Show on a Specific Page", help: "This ad appears only on one listing page — like All Colleges, All Courses, etc." },
+  { value: "item", emoji: "🎯", label: "Show on a Specific College / Course / Exam / Article", help: "This ad appears only when someone visits a specific detail page, e.g. the IIT Delhi page." },
+  { value: "city", emoji: "📍", label: "Show for a Specific City", help: "This ad appears anywhere on the site for users in the selected city." },
 ] as const;
 
 const PAGE_OPTIONS = [
@@ -63,10 +43,10 @@ const PAGE_OPTIONS = [
 ] as const;
 
 const LOOK_OPTIONS = [
-  { value: "horizontal", emoji: "▬", label: "Wide Banner", help: "A horizontal banner shown in the main content area" },
-  { value: "vertical", emoji: "▮", label: "Tall Sidebar Ad", help: "A vertical ad shown in the sidebar" },
-  { value: "square", emoji: "⬜", label: "Square Box", help: "A compact square ad, great for sidebars" },
-  { value: "leaderboard", emoji: "━━", label: "Full-Width Strip", help: "A slim strip across the top of the page" },
+  { value: "horizontal", emoji: "▬", label: "Wide Banner", help: "A horizontal banner shown in the main content area", size: "728 × 90 px or 970 × 250 px" },
+  { value: "vertical", emoji: "▮", label: "Tall Sidebar Ad", help: "A vertical ad shown in the sidebar", size: "300 × 600 px or 160 × 600 px" },
+  { value: "square", emoji: "⬜", label: "Square Box", help: "A compact square ad, great for sidebars", size: "300 × 250 px or 336 × 280 px" },
+  { value: "leaderboard", emoji: "━━", label: "Full-Width Strip", help: "A slim strip across the top of the page", size: "970 × 90 px or 728 × 90 px" },
 ] as const;
 
 const PLACEMENT_OPTIONS = [
@@ -118,6 +98,7 @@ interface AdForm {
   subtitle: string;
   cta_text: string;
   link_url: string;
+  image_url: string;
   variant: string;
   bg_gradient: string;
   target_type: string;
@@ -130,19 +111,10 @@ interface AdForm {
 }
 
 const emptyForm: AdForm = {
-  title: "",
-  subtitle: "",
-  cta_text: "Learn More",
-  link_url: "",
-  variant: "horizontal",
-  bg_gradient: "from-violet-600 to-purple-600",
-  target_type: "universal",
-  target_page: "",
-  target_item_slug: "",
-  target_city: "",
-  position: "mid-page",
-  priority: 10,
-  is_active: true,
+  title: "", subtitle: "", cta_text: "Learn More", link_url: "", image_url: "",
+  variant: "horizontal", bg_gradient: "from-violet-600 to-purple-600",
+  target_type: "universal", target_page: "", target_item_slug: "", target_city: "",
+  position: "mid-page", priority: 10, is_active: true,
 };
 
 // ─── Inline hint component ────────────────────────────────────────────
@@ -171,6 +143,8 @@ export default function AdminAds() {
   const [filterTarget, setFilterTarget] = useState("all");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGuide, setShowGuide] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // ── Actions ──
 
@@ -179,10 +153,10 @@ export default function AdminAds() {
   const openEdit = (ad: any) => {
     setForm({
       title: ad.title, subtitle: ad.subtitle || "", cta_text: ad.cta_text, link_url: ad.link_url,
-      variant: ad.variant, bg_gradient: ad.bg_gradient, target_type: ad.target_type,
-      target_page: ad.target_page || "", target_item_slug: ad.target_item_slug || "",
-      target_city: ad.target_city || "", position: ad.position, priority: ad.priority,
-      is_active: ad.is_active,
+      image_url: ad.image_url || "", variant: ad.variant, bg_gradient: ad.bg_gradient,
+      target_type: ad.target_type, target_page: ad.target_page || "",
+      target_item_slug: ad.target_item_slug || "", target_city: ad.target_city || "",
+      position: ad.position, priority: ad.priority, is_active: ad.is_active,
     });
     setEditingId(ad.id); setErrors({}); setShowForm(true);
   };
@@ -190,6 +164,37 @@ export default function AdminAds() {
   const duplicateAd = (ad: any) => {
     openEdit({ ...ad, title: ad.title + " (Copy)", is_active: false, id: undefined });
     setEditingId(null);
+  };
+
+  // ── Image upload ──
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Please upload an image file", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Image must be under 5MB", variant: "destructive" });
+      return;
+    }
+
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const fileName = `ad-${Date.now()}.${ext}`;
+
+    const { error } = await supabase.storage.from("ad-images").upload(fileName, file);
+    if (error) {
+      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
+      setUploading(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from("ad-images").getPublicUrl(fileName);
+    setForm({ ...form, image_url: urlData.publicUrl });
+    setUploading(false);
+    toast({ title: "✅ Image uploaded!" });
   };
 
   const validate = (): boolean => {
@@ -216,6 +221,7 @@ export default function AdminAds() {
       subtitle: form.subtitle.trim() || null,
       cta_text: form.cta_text.trim() || "Learn More",
       link_url: form.link_url.trim(),
+      image_url: form.image_url.trim() || null,
       variant: form.variant,
       bg_gradient: form.bg_gradient,
       target_type: form.target_type,
@@ -270,7 +276,6 @@ export default function AdminAds() {
 
   const items = form.target_page ? getItems(form.target_page) : [];
 
-  // ── Where will this ad appear? summary ──
   const whereText = () => {
     if (form.target_type === "universal") return "This ad will show on every page (as a fallback).";
     if (form.target_type === "page" && form.target_page && form.target_city)
@@ -283,6 +288,8 @@ export default function AdminAds() {
       return `This ad will show on all pages for users in ${form.target_city}.`;
     return "Choose targeting options above to see where this ad will appear.";
   };
+
+  const selectedLook = LOOK_OPTIONS.find((l) => l.value === form.variant);
 
   return (
     <AdminLayout title="Ad Manager">
@@ -309,7 +316,7 @@ export default function AdminAds() {
       {/* ── Quick Guide ─────────────────────────────────────── */}
       {showGuide && <QuickGuide onClose={() => setShowGuide(false)} />}
 
-      {/* Search */}
+      {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -335,7 +342,7 @@ export default function AdminAds() {
           </div>
 
           <div className="space-y-8">
-            {/* STEP 1: What does your ad say? */}
+            {/* STEP 1 */}
             <Section step={1} title="What does your ad say?">
               <div className="space-y-4">
                 <Field label="Ad Headline" error={errors.title} hint="The main text people see. Keep it short and catchy!">
@@ -352,10 +359,33 @@ export default function AdminAds() {
                     <Input value={form.link_url} onChange={(e) => { setForm({ ...form, link_url: e.target.value }); setErrors({ ...errors, link_url: "" }); }} placeholder="https://example.com" className={`rounded-xl ${errors.link_url ? "border-destructive" : ""}`} />
                   </Field>
                 </div>
+
+                {/* Image upload */}
+                <Field label="Ad Image (optional)" hint={`Upload a banner image. Recommended size for "${selectedLook?.label}": ${selectedLook?.size}`}>
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                  <div className="flex items-center gap-3">
+                    <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="rounded-xl gap-2">
+                      <Upload className="w-4 h-4" />
+                      {uploading ? "Uploading..." : "Upload Image"}
+                    </Button>
+                    {form.image_url && (
+                      <div className="flex items-center gap-2">
+                        <img src={form.image_url} alt="Ad" className="w-20 h-12 object-cover rounded-lg border" />
+                        <button onClick={() => setForm({ ...form, image_url: "" })} className="text-destructive hover:text-destructive/80 text-xs">Remove</button>
+                      </div>
+                    )}
+                  </div>
+                  {form.image_url && (
+                    <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="Or paste an image URL" className="rounded-xl mt-2 text-xs" />
+                  )}
+                  {!form.image_url && (
+                    <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="Or paste an image URL directly" className="rounded-xl mt-2 text-xs" />
+                  )}
+                </Field>
               </div>
             </Section>
 
-            {/* STEP 2: Who should see this ad? */}
+            {/* STEP 2 */}
             <Section step={2} title="Who should see this ad?">
               <div className="grid sm:grid-cols-2 gap-3 mb-4">
                 {AUDIENCE_OPTIONS.map((opt) => (
@@ -373,7 +403,6 @@ export default function AdminAds() {
                 ))}
               </div>
 
-              {/* Conditional fields based on audience */}
               {(form.target_type === "page" || form.target_type === "item") && (
                 <Field label="Which page?" error={errors.target_page}>
                   <Select value={form.target_page} onValueChange={(v) => { setForm({ ...form, target_page: v, target_item_slug: "" }); setErrors({ ...errors, target_page: "" }); }}>
@@ -386,7 +415,7 @@ export default function AdminAds() {
               )}
 
               {form.target_type === "item" && form.target_page && (
-                <Field label={`Which specific ${form.target_page.slice(0, -1)}?`} error={errors.target_item_slug} hint={`Pick the exact ${form.target_page.slice(0, -1)} this ad is for`}>
+                <Field label={`Which specific ${form.target_page.slice(0, -1)}?`} error={errors.target_item_slug} hint={`Pick the exact ${form.target_page.slice(0, -1)} this ad is for. The "slug" is the URL-friendly name like "iit-delhi".`}>
                   <Select value={form.target_item_slug} onValueChange={(v) => { setForm({ ...form, target_item_slug: v }); setErrors({ ...errors, target_item_slug: "" }); }}>
                     <SelectTrigger className={`rounded-xl ${errors.target_item_slug ? "border-destructive" : ""}`}><SelectValue placeholder={`Choose a ${form.target_page.slice(0, -1)}...`} /></SelectTrigger>
                     <SelectContent className="max-h-60">
@@ -397,8 +426,8 @@ export default function AdminAds() {
               )}
 
               {(form.target_type === "city" || form.target_type === "page") && (
-                <Field label={form.target_type === "city" ? "Which city?" : "City filter (optional)"} error={errors.target_city} hint={form.target_type === "page" ? "Leave empty to show on this page for all cities" : undefined}>
-                  <Select value={form.target_city || (form.target_type === "page" ? "__all__" : "")} onValueChange={(v) => { setForm({ ...form, target_city: v === "__all__" ? "" : v }); setErrors({ ...errors, target_city: "" }); }}>
+                <Field label={form.target_type === "city" ? "Which city?" : "City filter (optional)"} error={errors.target_city} hint={form.target_type === "page" ? "Leave on 'All cities' to show on this page for everyone, or pick a city to narrow down" : undefined}>
+                  <Select value={form.target_city || "__all__"} onValueChange={(v) => { setForm({ ...form, target_city: v === "__all__" ? "" : v }); setErrors({ ...errors, target_city: "" }); }}>
                     <SelectTrigger className={`rounded-xl ${errors.target_city ? "border-destructive" : ""}`}><SelectValue placeholder="Choose a city..." /></SelectTrigger>
                     <SelectContent>
                       {form.target_type === "page" && <SelectItem value="__all__">All cities</SelectItem>}
@@ -408,7 +437,6 @@ export default function AdminAds() {
                 </Field>
               )}
 
-              {/* Where summary */}
               <div className="mt-3 p-3 bg-primary/5 rounded-xl border border-primary/20">
                 <p className="text-sm font-medium flex items-center gap-2">
                   <Eye className="w-4 h-4 text-primary" />
@@ -417,7 +445,7 @@ export default function AdminAds() {
               </div>
             </Section>
 
-            {/* STEP 3: How should it look? */}
+            {/* STEP 3 */}
             <Section step={3} title="How should it look?">
               <div className="space-y-4">
                 <Field label="Ad Shape">
@@ -429,7 +457,8 @@ export default function AdminAds() {
                         className={`p-3 rounded-xl border-2 text-center transition-all ${form.variant === opt.value ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/30"}`}
                       >
                         <span className="text-2xl block mb-1">{opt.emoji}</span>
-                        <span className="text-xs font-medium">{opt.label}</span>
+                        <span className="text-xs font-medium block">{opt.label}</span>
+                        <span className="text-[10px] text-muted-foreground block mt-0.5">{opt.size}</span>
                       </button>
                     ))}
                   </div>
@@ -444,7 +473,7 @@ export default function AdminAds() {
                       </SelectContent>
                     </Select>
                   </Field>
-                  <Field label="Color Theme">
+                  <Field label="Color Theme" hint="Background color if no image is used">
                     <Select value={form.bg_gradient} onValueChange={(v) => setForm({ ...form, bg_gradient: v })}>
                       <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
                       <SelectContent>
@@ -476,7 +505,7 @@ export default function AdminAds() {
               </div>
             </Section>
 
-            {/* STEP 4: Preview */}
+            {/* STEP 4 */}
             <Section step={4} title="Preview">
               <div className="bg-muted rounded-xl p-4">
                 <AdPreview form={form} />
@@ -512,12 +541,16 @@ export default function AdminAds() {
           {filteredAds.map((ad) => (
             <div key={ad.id} className={`bg-card rounded-2xl border transition-all ${ad.is_active ? "border-border" : "border-border/50 opacity-60"}`}>
               <div className="p-4 flex flex-col lg:flex-row lg:items-center gap-4">
-                {/* Color chip */}
-                <div className={`w-full lg:w-20 h-14 rounded-xl bg-gradient-to-r ${ad.bg_gradient} flex items-center justify-center shrink-0`}>
-                  <span className="text-xs text-white/80 uppercase font-medium">
-                    {LOOK_OPTIONS.find(l => l.value === ad.variant)?.emoji}
-                  </span>
-                </div>
+                {/* Image or color chip */}
+                {ad.image_url ? (
+                  <img src={ad.image_url} alt="" className="w-full lg:w-24 h-14 object-cover rounded-xl shrink-0" />
+                ) : (
+                  <div className={`w-full lg:w-20 h-14 rounded-xl bg-gradient-to-r ${ad.bg_gradient} flex items-center justify-center shrink-0`}>
+                    <span className="text-xs text-white/80 uppercase font-medium">
+                      {LOOK_OPTIONS.find(l => l.value === ad.variant)?.emoji}
+                    </span>
+                  </div>
+                )}
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
@@ -580,45 +613,62 @@ function Field({ label, error, hint, children }: { label: string; error?: string
 }
 
 function AdPreview({ form }: { form: AdForm }) {
-  const { title, subtitle, cta_text, bg_gradient, variant } = form;
+  const { title, subtitle, cta_text, bg_gradient, variant, image_url } = form;
   const t = title || "Your Ad Title";
+
+  const bgStyle = image_url
+    ? { backgroundImage: `url(${image_url})`, backgroundSize: "cover", backgroundPosition: "center" }
+    : {};
+  const overlayClass = image_url ? "bg-black/40" : "";
 
   if (variant === "leaderboard") {
     return (
-      <div className={`bg-gradient-to-r ${bg_gradient} h-14 rounded-xl flex items-center justify-center px-4`}>
-        <p className="text-white text-sm font-medium truncate mr-4">{t}</p>
-        <span className="px-4 py-1.5 bg-white text-foreground text-sm font-semibold rounded-full">{cta_text || "Learn More"}</span>
+      <div className={`bg-gradient-to-r ${bg_gradient} h-14 rounded-xl flex items-center justify-center px-4 relative overflow-hidden`} style={bgStyle}>
+        <div className={`absolute inset-0 ${overlayClass}`} />
+        <div className="relative flex items-center gap-4">
+          <p className="text-white text-sm font-medium truncate mr-4">{t}</p>
+          <span className="px-4 py-1.5 bg-white text-foreground text-sm font-semibold rounded-full">{cta_text || "Learn More"}</span>
+        </div>
       </div>
     );
   }
   if (variant === "vertical") {
     return (
-      <div className={`bg-gradient-to-b ${bg_gradient} rounded-xl p-5 max-w-[220px]`}>
-        <h4 className="text-lg font-bold text-white mb-2">{t}</h4>
-        {subtitle && <p className="text-white/80 text-sm mb-3">{subtitle}</p>}
-        <span className="block w-full py-2 bg-white text-foreground text-sm font-semibold rounded-xl text-center">{cta_text || "Learn More"}</span>
+      <div className={`bg-gradient-to-b ${bg_gradient} rounded-xl p-5 max-w-[220px] relative overflow-hidden`} style={bgStyle}>
+        <div className={`absolute inset-0 ${overlayClass}`} />
+        <div className="relative">
+          <h4 className="text-lg font-bold text-white mb-2">{t}</h4>
+          {subtitle && <p className="text-white/80 text-sm mb-3">{subtitle}</p>}
+          <span className="block w-full py-2 bg-white text-foreground text-sm font-semibold rounded-xl text-center">{cta_text || "Learn More"}</span>
+        </div>
       </div>
     );
   }
   if (variant === "square") {
     return (
-      <div className={`bg-gradient-to-br ${bg_gradient} aspect-square rounded-xl flex flex-col items-center justify-center p-5 text-center max-w-[180px]`}>
-        <h4 className="text-lg font-bold text-white mb-2">{t}</h4>
-        {subtitle && <p className="text-white/80 text-sm mb-3">{subtitle}</p>}
-        <span className="px-5 py-1.5 bg-white text-foreground text-sm font-semibold rounded-xl">{cta_text || "Learn More"}</span>
+      <div className={`bg-gradient-to-br ${bg_gradient} aspect-square rounded-xl flex flex-col items-center justify-center p-5 text-center max-w-[180px] relative overflow-hidden`} style={bgStyle}>
+        <div className={`absolute inset-0 ${overlayClass}`} />
+        <div className="relative">
+          <h4 className="text-lg font-bold text-white mb-2">{t}</h4>
+          {subtitle && <p className="text-white/80 text-sm mb-3">{subtitle}</p>}
+          <span className="px-5 py-1.5 bg-white text-foreground text-sm font-semibold rounded-xl">{cta_text || "Learn More"}</span>
+        </div>
       </div>
     );
   }
   return (
-    <div className={`bg-gradient-to-r ${bg_gradient} h-24 rounded-xl flex items-center justify-between px-6`}>
-      <div>
-        <h4 className="text-lg font-bold text-white">{t}</h4>
-        {subtitle && <p className="text-white/80 text-sm">{subtitle}</p>}
+    <div className={`bg-gradient-to-r ${bg_gradient} h-24 rounded-xl flex items-center justify-between px-6 relative overflow-hidden`} style={bgStyle}>
+      <div className={`absolute inset-0 ${overlayClass}`} />
+      <div className="relative flex items-center justify-between w-full">
+        <div>
+          <h4 className="text-lg font-bold text-white">{t}</h4>
+          {subtitle && <p className="text-white/80 text-sm">{subtitle}</p>}
+        </div>
+        <span className="flex items-center gap-2 px-5 py-2 bg-white text-foreground font-semibold rounded-xl text-sm">
+          {cta_text || "Learn More"}
+          <ExternalLink className="w-3.5 h-3.5" />
+        </span>
       </div>
-      <span className="flex items-center gap-2 px-5 py-2 bg-white text-foreground font-semibold rounded-xl text-sm">
-        {cta_text || "Learn More"}
-        <ExternalLink className="w-3.5 h-3.5" />
-      </span>
     </div>
   );
 }
@@ -629,12 +679,12 @@ function QuickGuide({ onClose }: { onClose: () => void }) {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold flex items-center gap-2">
           <HelpCircle className="w-5 h-5 text-primary" />
-          How the Ad System Works
+          Complete Ad System Guide
         </h3>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="w-5 h-5" /></button>
       </div>
 
-      <div className="space-y-5 text-sm">
+      <div className="space-y-6 text-sm">
         {/* Core concept */}
         <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
           <p className="font-semibold mb-2">💡 The Big Idea</p>
@@ -645,23 +695,85 @@ function QuickGuide({ onClose }: { onClose: () => void }) {
           </p>
         </div>
 
-        {/* Priority explained simply */}
+        {/* Detailed targeting flows */}
         <div>
-          <p className="font-semibold mb-3">📊 Which ad shows up? (Priority Order)</p>
-          <div className="space-y-2">
-            {[
-              { num: "1️⃣", title: "Specific Item Ad", example: 'You made an ad for "IIT Delhi" → it shows ONLY on the IIT Delhi page', color: "bg-primary/10 border-primary/20" },
-              { num: "2️⃣", title: "Page + City Ad", example: 'You made an ad for "Colleges Page in Delhi" → it shows on the colleges page for Delhi visitors', color: "bg-muted" },
-              { num: "3️⃣", title: "Page Ad", example: 'You made an ad for "Colleges Page" → it shows on the colleges page for everyone', color: "bg-muted" },
-              { num: "4️⃣", title: "City Ad", example: 'You made an ad for "Mumbai" → it shows on any page for Mumbai visitors', color: "bg-muted" },
-              { num: "5️⃣", title: "Universal Ad (fallback)", example: "No better match found → this generic ad shows up", color: "bg-muted" },
-            ].map((item) => (
-              <div key={item.num} className={`p-3 rounded-xl border ${item.color}`}>
-                <p className="font-medium">{item.num} {item.title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Example: {item.example}</p>
+          <p className="font-semibold mb-3">🎯 Targeting Types — Explained in Detail</p>
+          <div className="space-y-4">
+            <GuideCard
+              emoji="🎯" title="1. Item-Specific Ad (Highest Priority)"
+              what="Shows ONLY on one specific college, course, exam, or article detail page."
+              how={[
+                'Click "New Ad" → Step 2 → Choose "Show on a Specific College / Course / Exam / Article"',
+                'Select the page type (e.g. Colleges Page)',
+                'A dropdown appears listing all items — pick the exact one (e.g. "IIT Delhi")',
+                'The system uses the "slug" (URL name like "iit-delhi") to match the ad to that page',
+              ]}
+              example='Ad for "IIT Delhi Admissions 2026" → only shows when someone visits /colleges/iit-delhi'
+            />
+            <GuideCard
+              emoji="📄📍" title="2. Page + City Ad"
+              what="Shows on a specific listing page only for users in a specific city."
+              how={[
+                'Choose "Show on a Specific Page" → pick the page (e.g. Colleges)',
+                'Then in the "City filter" dropdown, pick a city (e.g. Mumbai)',
+              ]}
+              example='Ad for "Mumbai Colleges Fair" → shows on /colleges only for Mumbai visitors'
+            />
+            <GuideCard
+              emoji="📄" title="3. Page-Only Ad"
+              what="Shows on a specific listing page for ALL visitors regardless of city."
+              how={[
+                'Choose "Show on a Specific Page" → pick the page (e.g. Exams)',
+                'Leave the "City filter" on "All cities"',
+              ]}
+              example='Ad for "JEE Preparation Kit" → shows on /exams page for everyone'
+            />
+            <GuideCard
+              emoji="📍" title="4. City-Only Ad"
+              what="Shows on ANY page for visitors in a specific city."
+              how={[
+                'Choose "Show for a Specific City" → pick the city',
+              ]}
+              example='Ad for "Delhi Coaching Center" → shows on every page for Delhi visitors'
+            />
+            <GuideCard
+              emoji="🌍" title="5. Universal Ad (Lowest Priority — Fallback)"
+              what="Shows on any page when no better-matched ad exists. This is your safety net."
+              how={[
+                'Choose "Show Everywhere" — no other selection needed',
+              ]}
+              example='Generic "Download Our App" ad → shows everywhere when nothing else matches'
+            />
+          </div>
+        </div>
+
+        {/* Priority */}
+        <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
+          <p className="font-semibold mb-2">📊 Priority Order (most specific wins)</p>
+          <div className="flex flex-wrap gap-2 text-xs">
+            {["🎯 Item", "📄📍 Page+City", "📄 Page", "📍 City", "🌍 Universal"].map((label, i) => (
+              <span key={i} className="flex items-center gap-1">
+                <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full font-bold">{i + 1}</span>
+                {label}
+                {i < 4 && <span className="text-muted-foreground mx-1">→</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Image sizes */}
+        <div>
+          <p className="font-semibold mb-3">🖼️ Recommended Image Sizes</p>
+          <div className="grid sm:grid-cols-2 gap-2">
+            {LOOK_OPTIONS.map((opt) => (
+              <div key={opt.value} className="p-3 bg-muted rounded-xl border">
+                <p className="font-medium">{opt.emoji} {opt.label}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{opt.help}</p>
+                <p className="text-xs font-mono mt-1 text-primary">{opt.size}</p>
               </div>
             ))}
           </div>
+          <Hint>Images are optional. Without an image, the ad uses the selected color gradient as background.</Hint>
         </div>
 
         {/* Quick tips */}
@@ -672,9 +784,26 @@ function QuickGuide({ onClose }: { onClose: () => void }) {
             <li>✅ <strong className="text-foreground">Higher priority number wins</strong> — if two ads match the same spot, the one with higher priority shows.</li>
             <li>✅ <strong className="text-foreground">Pause instead of delete</strong> — you can turn ads off temporarily with the toggle.</li>
             <li>✅ <strong className="text-foreground">Use the Duplicate button</strong> — faster than creating from scratch.</li>
+            <li>✅ <strong className="text-foreground">Upload images</strong> for better-looking ads, or use gradient colors for quick setup.</li>
           </ul>
         </div>
       </div>
+    </div>
+  );
+}
+
+function GuideCard({ title, what, how, example }: { emoji: string; title: string; what: string; how: string[]; example: string }) {
+  return (
+    <div className="p-4 bg-muted/50 rounded-xl border border-border">
+      <p className="font-semibold text-sm mb-1">{title}</p>
+      <p className="text-xs text-muted-foreground mb-2"><strong>What:</strong> {what}</p>
+      <p className="text-xs text-muted-foreground mb-1"><strong>How to create:</strong></p>
+      <ol className="list-decimal list-inside text-xs text-muted-foreground space-y-0.5 ml-2 mb-2">
+        {how.map((step, i) => <li key={i}>{step}</li>)}
+      </ol>
+      <p className="text-xs bg-primary/5 rounded-lg px-2 py-1 border border-primary/10">
+        <strong>Example:</strong> {example}
+      </p>
     </div>
   );
 }
