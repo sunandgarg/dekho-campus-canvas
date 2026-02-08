@@ -30,7 +30,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden" aria-label="Hero">
+    <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center overflow-hidden" aria-label="Hero">
       {/* Mesh gradient background */}
       <div className="absolute inset-0 gradient-mesh" />
 
@@ -48,8 +48,8 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
         />
       </div>
 
-      <div className="container relative z-10 py-12 lg:py-16">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+      <div className="container relative z-10 py-8 md:py-12 lg:py-16">
+        <div className="max-w-4xl mx-auto text-center space-y-5 md:space-y-8">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -115,13 +115,13 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
             </form>
 
             {/* Suggested prompts */}
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-              <span className="text-sm text-muted-foreground">Try asking:</span>
+            <div className="mt-3 md:mt-4 flex flex-wrap items-center justify-center gap-1.5 md:gap-2">
+              <span className="text-xs md:text-sm text-muted-foreground">Try asking:</span>
               {suggestedPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => handleSuggestionClick(prompt)}
-                  className="px-3 py-1.5 text-sm glass rounded-full text-foreground/80 hover:text-foreground hover:border-primary/30 transition-all hover:shadow-sm"
+                  className="px-2.5 py-1 md:px-3 md:py-1.5 text-xs md:text-sm glass rounded-full text-foreground/80 hover:text-foreground hover:border-primary/30 transition-all hover:shadow-sm"
                 >
                   {prompt}
                 </button>

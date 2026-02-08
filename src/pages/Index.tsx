@@ -8,6 +8,7 @@ import { FeaturedColleges } from "@/components/FeaturedColleges";
 import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ToolsSection } from "@/components/ToolsSection";
+import { TrustedBySection } from "@/components/TrustedBySection";
 import { Footer } from "@/components/Footer";
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 import { FloatingBot } from "@/components/FloatingBot";
@@ -46,6 +47,7 @@ const Index = () => {
         <NewsSection />
         <ToolsSection />
         <FeaturesSection />
+        <TrustedBySection />
       </main>
 
       <Footer />

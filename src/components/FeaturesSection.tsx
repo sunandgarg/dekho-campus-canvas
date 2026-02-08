@@ -42,7 +42,7 @@ const testimonials = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-16 bg-gradient-to-b from-white to-amber-50/30" aria-labelledby="features-heading">
+    <section className="py-10 md:py-16 bg-gradient-to-b from-card to-secondary/30" aria-labelledby="features-heading">
       <div className="container">
         {/* Header */}
         <motion.div

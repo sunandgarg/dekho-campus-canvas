@@ -253,7 +253,7 @@ export function FloatingBot() {
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             onClick={handleOpen}
-            className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full gradient-primary shadow-glow flex items-center justify-center hover:scale-110 transition-transform"
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 w-14 h-14 md:w-16 md:h-16 rounded-full gradient-primary shadow-glow flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
             aria-label="Talk to AI Counselor"
           >
             <MessageCircle className="w-7 h-7 text-primary-foreground" />
@@ -271,7 +271,7 @@ export function FloatingBot() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-4rem)] rounded-2xl border border-border bg-card shadow-elevated flex flex-col overflow-hidden"
+            className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-50 w-full md:w-[380px] md:max-w-[calc(100vw-2rem)] h-[85vh] md:h-[520px] md:max-h-[calc(100vh-4rem)] md:rounded-2xl rounded-t-2xl border border-border bg-card shadow-elevated flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 gradient-primary text-primary-foreground">

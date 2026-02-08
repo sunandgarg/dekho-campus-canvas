@@ -163,7 +163,7 @@ export function ToolsSection() {
   };
 
   return (
-    <section className="py-16 bg-slate-50/50" aria-labelledby="tools-heading">
+    <section className="py-10 md:py-16 bg-muted/20" aria-labelledby="tools-heading">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

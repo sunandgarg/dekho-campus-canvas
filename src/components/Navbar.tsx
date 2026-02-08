@@ -17,7 +17,7 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full">
       <nav className="glass border-b border-border">
-        <div className="container flex items-center justify-between h-16 md:h-18">
+        <div className="container flex items-center justify-between h-14 md:h-16 lg:h-18">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2" aria-label="DekhoCampus Home">
             <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">

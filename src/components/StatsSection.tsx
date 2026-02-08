@@ -12,7 +12,7 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="py-12 bg-white relative overflow-hidden" aria-label="Platform statistics">
+    <section className="py-8 md:py-12 bg-card relative overflow-hidden" aria-label="Platform statistics">
       <div className="container relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
