@@ -11,7 +11,10 @@ type Message = {
   content: string;
 };
 
+type ChatStep = "chat" | "ask_name" | "ask_situation" | "ask_city" | "ask_contact" | "free";
+
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-counselor`;
+const LEAD_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-lead`;
 
 const suggestedQuestions = [
   "Which entrance exams should I prepare for?",
@@ -32,38 +35,54 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage }: AIChatFull
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState<ChatStep>("chat");
+  const [leadData, setLeadData] = useState({ name: "", situation: "", city: "", state: "", email: "", phone: "", query: "" });
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const hasProcessedInitialMessage = useRef(false);
 
-  // Auto-scroll to bottom
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages]);
 
-  // Focus input when opened
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+    if (isOpen && inputRef.current) setTimeout(() => inputRef.current?.focus(), 100);
   }, [isOpen]);
 
-  // Handle initial message
   useEffect(() => {
     if (isOpen && initialMessage && !hasProcessedInitialMessage.current) {
       hasProcessedInitialMessage.current = true;
-      streamChat(initialMessage);
+      setLeadData(prev => ({ ...prev, query: initialMessage }));
+      // First listen to query, then ask for details
+      addBotMsg(`Great question! Let me help you with that. But first, may I know your **name**? 😊`);
+      setMessages(prev => [...prev, { role: "user", content: initialMessage }]);
+      setStep("ask_name");
     }
   }, [isOpen, initialMessage]);
 
-  // Reset when closed
   useEffect(() => {
     if (!isOpen) {
       hasProcessedInitialMessage.current = false;
     }
   }, [isOpen]);
+
+  const addBotMsg = (content: string) => {
+    setMessages(prev => [...prev, { role: "assistant", content }]);
+  };
+
+  const saveLead = async (data: typeof leadData) => {
+    try {
+      await fetch(LEAD_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        body: JSON.stringify({
+          name: data.name || null, email: data.email || null, phone: data.phone || null,
+          current_situation: data.situation || null, city: data.city || null, state: data.state || null,
+          initial_query: data.query || null, source: "hero_search",
+        }),
+      });
+    } catch (e) { console.error("Lead save:", e); }
+  };
 
   const streamChat = async (userMessage: string) => {
     const userMsg: Message = { role: "user", content: userMessage };
@@ -150,17 +169,91 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage }: AIChatFull
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    streamChat(input.trim());
+    const userInput = input.trim();
+    setMessages(prev => [...prev, { role: "user", content: userInput }]);
+    setInput("");
+
+    switch (step) {
+      case "chat":
+        setLeadData(prev => ({ ...prev, query: userInput }));
+        setTimeout(() => {
+          addBotMsg("Great question! To give you the best guidance, can I know your **name**? 😊");
+          setStep("ask_name");
+        }, 300);
+        break;
+
+      case "ask_name":
+        setLeadData(prev => ({ ...prev, name: userInput }));
+        setTimeout(() => {
+          addBotMsg(`Nice to meet you, **${userInput}**! 🙌\n\nWhat's your current status?\n- Appearing in 12th\n- Passed 12th\n- Graduated\n- Other`);
+          setStep("ask_situation");
+        }, 300);
+        break;
+
+      case "ask_situation":
+        setLeadData(prev => ({ ...prev, situation: userInput }));
+        setTimeout(() => {
+          addBotMsg("Which **city and state** are you from? 📍\n\n(e.g., Mumbai, Maharashtra)");
+          setStep("ask_city");
+        }, 300);
+        break;
+
+      case "ask_city": {
+        const parts = userInput.split(",").map(s => s.trim());
+        const updatedLead = { ...leadData, city: parts[0], state: parts[1] || "" };
+        setLeadData(updatedLead);
+        setTimeout(() => {
+          addBotMsg("Let me find the best options for you! 🔍✨");
+          setStep("free");
+          saveLead(updatedLead);
+          streamChat(leadData.query).then(() => {
+            setTimeout(() => {
+              addBotMsg("📱 For **personalized follow-up**, share your **phone or email**!\n\n(Or type 'skip' to continue chatting)");
+              setStep("ask_contact");
+            }, 500);
+          });
+        }, 300);
+        break;
+      }
+
+      case "ask_contact":
+        if (userInput.toLowerCase() !== "skip") {
+          const isEmail = userInput.includes("@");
+          const update = isEmail ? { email: userInput } : { phone: userInput };
+          const updatedLead = { ...leadData, ...update };
+          setLeadData(updatedLead);
+          saveLead(updatedLead);
+          setTimeout(() => {
+            addBotMsg("Thank you! 🎉 Our counselors will connect with you soon.\n\nFeel free to ask anything else!");
+            setStep("free");
+          }, 300);
+        } else {
+          setTimeout(() => {
+            addBotMsg("No problem! Keep asking me anything 😊");
+            setStep("free");
+          }, 300);
+        }
+        break;
+
+      case "free":
+        streamChat(userInput);
+        break;
+    }
   };
 
   const handleSuggestion = (question: string) => {
     if (isLoading) return;
-    streamChat(question);
+    setLeadData(prev => ({ ...prev, query: question }));
+    setMessages(prev => [...prev, { role: "user", content: question }]);
+    addBotMsg("Great question! To give you the best guidance, can I know your **name**? 😊");
+    setStep("ask_name");
   };
 
   const handleNewChat = () => {
     setMessages([]);
     setInput("");
+    setStep("chat");
+    setLeadData({ name: "", situation: "", city: "", state: "", email: "", phone: "", query: "" });
   };
 
   return (
@@ -170,36 +263,26 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage }: AIChatFull
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-gradient-to-br from-amber-50 via-orange-50/50 to-rose-50"
+          className="fixed inset-0 z-50 gradient-mesh"
         >
           <div className="h-full flex flex-col">
             {/* Header */}
-            <header className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-amber-200/50 bg-white/80 backdrop-blur-sm">
+            <header className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-border glass">
               <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="rounded-xl hover:bg-amber-100"
-                >
+                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-xl hover:bg-secondary">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                    <Bot className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
+                    <Bot className="w-5 h-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <h1 className="font-bold text-foreground">DC Educational AI</h1>
+                    <h1 className="font-bold text-foreground">DekhoCampus AI</h1>
                     <p className="text-xs text-muted-foreground">Your friendly education guide</p>
                   </div>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleNewChat}
-                className="rounded-xl border-amber-200 hover:bg-amber-50"
-              >
+              <Button variant="outline" size="sm" onClick={handleNewChat} className="rounded-xl">
                 New Chat
               </Button>
             </header>
@@ -209,33 +292,27 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage }: AIChatFull
               <div className="max-w-3xl mx-auto px-4 py-6">
                 {messages.length === 0 ? (
                   <div className="space-y-8">
-                    {/* Welcome message */}
                     <div className="text-center py-8">
-                      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 mb-4">
-                        <Sparkles className="w-10 h-10 text-amber-500" />
+                      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-secondary mb-4">
+                        <Sparkles className="w-10 h-10 text-primary" />
                       </div>
                       <h2 className="text-2xl font-bold text-foreground mb-2">
-                        Hi! I'm your DC Educational AI 👋
+                        Hi! I'm your DekhoCampus AI 👋
                       </h2>
                       <p className="text-muted-foreground max-w-md mx-auto">
-                        I'm here to help you navigate your educational journey. Ask me about colleges, 
-                        courses, entrance exams, or career paths!
+                        I'm here to help you navigate your educational journey. Ask me about colleges, courses, entrance exams, or career paths!
                       </p>
                     </div>
-
-                    {/* Suggested questions */}
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-3 text-center">
-                        Here are some things you can ask:
-                      </p>
+                      <p className="text-sm font-medium text-muted-foreground mb-3 text-center">Here are some things you can ask:</p>
                       <div className="grid sm:grid-cols-2 gap-3">
                         {suggestedQuestions.map((q) => (
                           <button
                             key={q}
                             onClick={() => handleSuggestion(q)}
-                            className="flex items-start gap-3 p-4 text-left bg-white hover:bg-amber-50 rounded-xl border border-amber-200/50 transition-all hover:shadow-md hover:border-amber-300"
+                            className="flex items-start gap-3 p-4 text-left bg-card hover:bg-secondary rounded-xl border border-border transition-all hover:shadow-md hover:border-primary/30"
                           >
-                            <MessageCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                            <MessageCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                             <span className="text-sm text-foreground">{q}</span>
                           </button>
                         ))}
@@ -245,30 +322,11 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage }: AIChatFull
                 ) : (
                   <div className="space-y-6">
                     {messages.map((msg, i) => (
-                      <div
-                        key={i}
-                        className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
-                      >
-                        <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                            msg.role === "user"
-                              ? "bg-gradient-to-br from-amber-400 to-orange-500"
-                              : "bg-gradient-to-br from-slate-100 to-slate-200"
-                          }`}
-                        >
-                          {msg.role === "user" ? (
-                            <User className="w-5 h-5 text-white" />
-                          ) : (
-                            <Bot className="w-5 h-5 text-slate-600" />
-                          )}
+                      <div key={i} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${msg.role === "user" ? "gradient-accent" : "bg-secondary"}`}>
+                          {msg.role === "user" ? <User className="w-5 h-5 text-accent-foreground" /> : <Bot className="w-5 h-5 text-secondary-foreground" />}
                         </div>
-                        <div
-                          className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                            msg.role === "user"
-                              ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-br-md"
-                              : "bg-white border border-amber-100 rounded-bl-md shadow-sm"
-                          }`}
-                        >
+                        <div className={`max-w-[80%] px-4 py-3 rounded-2xl ${msg.role === "user" ? "user-bubble rounded-br-md" : "ai-bubble rounded-bl-md"}`}>
                           {msg.role === "assistant" ? (
                             <div className="prose prose-sm max-w-none text-foreground">
                               <ReactMarkdown>{msg.content || "..."}</ReactMarkdown>
@@ -281,11 +339,11 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage }: AIChatFull
                     ))}
                     {isLoading && messages[messages.length - 1]?.role === "user" && (
                       <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                          <Bot className="w-5 h-5 text-slate-600" />
+                        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Bot className="w-5 h-5 text-secondary-foreground" />
                         </div>
-                        <div className="bg-white border border-amber-100 px-4 py-3 rounded-2xl rounded-bl-md shadow-sm">
-                          <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
+                        <div className="ai-bubble px-4 py-3 rounded-2xl rounded-bl-md">
+                          <Loader2 className="w-5 h-5 animate-spin text-primary" />
                         </div>
                       </div>
                     )}
@@ -295,28 +353,30 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage }: AIChatFull
             </div>
 
             {/* Input Area */}
-            <div className="border-t border-amber-200/50 bg-white/80 backdrop-blur-sm">
+            <div className="border-t border-border glass">
               <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-4">
                 <div className="flex gap-3">
                   <Input
                     ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask me anything about your education journey..."
-                    className="flex-1 rounded-xl border-amber-200 focus-visible:ring-amber-400 text-base py-6"
+                    placeholder={
+                      step === "ask_name" ? "Enter your name..." :
+                      step === "ask_situation" ? "e.g., Appearing in 12th" :
+                      step === "ask_city" ? "e.g., Delhi, Delhi" :
+                      step === "ask_contact" ? "Email or phone (or 'skip')" :
+                      "Ask me anything about your education journey..."
+                    }
+                    className="flex-1 rounded-xl text-base py-6"
                     disabled={isLoading}
                   />
                   <Button
                     type="submit"
                     size="lg"
-                    className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-6"
+                    className="rounded-xl gradient-primary btn-glow px-6"
                     disabled={isLoading || !input.trim()}
                   >
-                    {isLoading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <Send className="w-5 h-5" />
-                    )}
+                    {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
                 </div>
                 <p className="mt-2 text-xs text-center text-muted-foreground">

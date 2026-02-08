@@ -1,1 +1,7 @@
 project_id = "lzjwtjzpsdgibqtcvcco"
+
+[functions.ai-counselor]
+verify_jwt = false
+
+[functions.save-lead]
+verify_jwt = false
