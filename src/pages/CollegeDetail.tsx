@@ -81,6 +81,22 @@ export default function CollegeDetail() {
               ))}
             </div>
 
+            {/* Approvals & NAAC */}
+            <div className="bg-card rounded-2xl border border-border p-5">
+              <div className="flex flex-wrap items-center gap-4">
+                <div>
+                  <span className="text-sm font-medium text-muted-foreground">Approvals: </span>
+                  {college.approvals.map((a) => (
+                    <Badge key={a} variant="outline" className="text-xs ml-1 font-semibold">{a}</Badge>
+                  ))}
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-muted-foreground">NAAC Grade: </span>
+                  <Badge className="bg-success/10 text-success border-success/30 ml-1">{college.naacGrade}</Badge>
+                </div>
+              </div>
+            </div>
+
             {/* About */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">About {college.name}</h2>
@@ -123,6 +139,8 @@ export default function CollegeDetail() {
                   { label: "Ranking", value: college.ranking },
                   { label: "Reviews", value: `${college.reviews} reviews` },
                   { label: "State", value: college.state },
+                  { label: "NAAC Grade", value: college.naacGrade },
+                  { label: "Approvals", value: college.approvals.join(", ") },
                 ].map((info) => (
                   <div key={info.label} className="flex justify-between py-2 border-b border-border last:border-0">
                     <span className="text-sm text-muted-foreground">{info.label}</span>
@@ -131,6 +149,8 @@ export default function CollegeDetail() {
                 ))}
               </div>
             </section>
+
+            <AdBanner variant="horizontal" position="College Detail Bottom" />
 
             {/* Inline Lead Form */}
             <LeadCaptureForm
