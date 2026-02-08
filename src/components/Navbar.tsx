@@ -53,14 +53,12 @@ export function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            {isAdmin && (
-              <Link to="/admin">
-                <Button variant="outline" size="sm" className="hidden md:flex gap-2 rounded-xl border-amber-200 text-amber-600 hover:bg-amber-50">
-                  <Shield className="w-4 h-4" />
-                  Admin
-                </Button>
-              </Link>
-            )}
+            <Link to="/admin">
+              <Button variant="outline" size="sm" className="hidden md:flex gap-2 rounded-xl border-amber-200 text-amber-600 hover:bg-amber-50">
+                <Shield className="w-4 h-4" />
+                Admin
+              </Button>
+            </Link>
 
             {user ? (
               <>
@@ -127,16 +125,14 @@ export function Navbar() {
                   </Link>
                 ))}
 
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 w-full px-4 py-3 text-sm font-medium text-amber-600 hover:bg-amber-50 rounded-xl transition-colors"
-                  >
-                    <Shield className="w-4 h-4" />
-                    Admin Panel
-                  </Link>
-                )}
+                <Link
+                  to="/admin"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 w-full px-4 py-3 text-sm font-medium text-amber-600 hover:bg-amber-50 rounded-xl transition-colors"
+                >
+                  <Shield className="w-4 h-4" />
+                  Admin Panel
+                </Link>
 
                 <div className="pt-4 flex flex-col gap-2 border-t border-border">
                   {user ? (
