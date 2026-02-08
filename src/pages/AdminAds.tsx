@@ -398,10 +398,10 @@ export default function AdminAds() {
 
               {(form.target_type === "city" || form.target_type === "page") && (
                 <Field label={form.target_type === "city" ? "Which city?" : "City filter (optional)"} error={errors.target_city} hint={form.target_type === "page" ? "Leave empty to show on this page for all cities" : undefined}>
-                  <Select value={form.target_city} onValueChange={(v) => { setForm({ ...form, target_city: v }); setErrors({ ...errors, target_city: "" }); }}>
+                  <Select value={form.target_city || (form.target_type === "page" ? "__all__" : "")} onValueChange={(v) => { setForm({ ...form, target_city: v === "__all__" ? "" : v }); setErrors({ ...errors, target_city: "" }); }}>
                     <SelectTrigger className={`rounded-xl ${errors.target_city ? "border-destructive" : ""}`}><SelectValue placeholder="Choose a city..." /></SelectTrigger>
                     <SelectContent>
-                      {form.target_type === "page" && <SelectItem value="">All cities</SelectItem>}
+                      {form.target_type === "page" && <SelectItem value="__all__">All cities</SelectItem>}
                       {CITIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                     </SelectContent>
                   </Select>
