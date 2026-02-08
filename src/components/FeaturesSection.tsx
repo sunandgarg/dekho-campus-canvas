@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Sparkles, Target, Lightbulb, Users, Check, ArrowRight, Heart, BookOpen, MessageCircle, Award } from "lucide-react";
+import { Target, Check, ArrowRight, Heart, BookOpen, MessageCircle, Award, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 
 const features = [
   {
@@ -136,6 +137,21 @@ export function FeaturesSection() {
           </div>
         </motion.div>
 
+        {/* Lead Capture Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12"
+        >
+          <LeadCaptureForm
+            variant="banner"
+            title="🎓 Get Personalized College Recommendations"
+            subtitle="Talk to our expert counselors — completely free!"
+            source="features_banner"
+          />
+        </motion.div>
+
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -144,7 +160,7 @@ export function FeaturesSection() {
           className="mt-12 text-center"
         >
           <p className="text-muted-foreground mb-4">Ready to start your journey?</p>
-          <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-base shadow-lg">
+          <Button size="lg" className="gradient-accent btn-accent-glow rounded-xl text-base">
             Try DC Educational AI Free
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
