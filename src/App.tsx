@@ -7,13 +7,14 @@ import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
-// Lazy-load listing & detail pages for better initial load
 const AllColleges = lazy(() => import("./pages/AllColleges"));
 const AllCourses = lazy(() => import("./pages/AllCourses"));
 const AllExams = lazy(() => import("./pages/AllExams"));
+const AllArticles = lazy(() => import("./pages/AllArticles"));
 const CollegeDetail = lazy(() => import("./pages/CollegeDetail"));
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const ExamDetail = lazy(() => import("./pages/ExamDetail"));
+const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
 
 const queryClient = new QueryClient();
 
@@ -40,7 +41,8 @@ const App = () => (
             <Route path="/courses/:slug" element={<CourseDetail />} />
             <Route path="/exams" element={<AllExams />} />
             <Route path="/exams/:slug" element={<ExamDetail />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/articles" element={<AllArticles />} />
+            <Route path="/articles/:slug" element={<ArticleDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

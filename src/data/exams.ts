@@ -1,206 +1,47 @@
-export interface Exam {
-  slug: string;
-  name: string;
-  fullName: string;
-  category: string;
-  level: "National" | "State" | "University" | "International" | "Professional";
-  date: string;
-  applicants: string;
-  eligibility: string;
-  mode: string;
-  description: string;
-  importantDates: { event: string; date: string }[];
-  syllabus: string[];
-  topColleges: string[];
-  image: string;
-  registrationUrl: string;
-}
+import type { Exam } from "./types";
+
+const IMG = {
+  exam1: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
+  medical: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop",
+  business: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop",
+  law: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop",
+  design: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop",
+};
 
 export const exams: Exam[] = [
-  {
-    slug: "jee-main-2026",
-    name: "JEE Main 2026",
-    fullName: "Joint Entrance Examination Main 2026",
-    category: "Engineering",
-    level: "National",
-    date: "April 2026",
-    applicants: "15L+",
-    eligibility: "10+2 with PCM, minimum 75% marks (65% for SC/ST)",
-    mode: "Online (CBT)",
-    description: "JEE Main is India's largest engineering entrance exam, the gateway to NITs, IIITs, and GFTIs. It's also the qualifying exam for JEE Advanced.",
-    importantDates: [
-      { event: "Registration Opens", date: "November 2025" },
-      { event: "Admit Card", date: "March 2026" },
-      { event: "Exam Date (Session 1)", date: "January 2026" },
-      { event: "Exam Date (Session 2)", date: "April 2026" },
-      { event: "Result", date: "May 2026" },
-    ],
-    syllabus: ["Physics", "Chemistry", "Mathematics"],
-    topColleges: ["NIT Trichy", "NIT Warangal", "NIT Surathkal", "IIIT Hyderabad"],
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
-  {
-    slug: "jee-advanced-2026",
-    name: "JEE Advanced 2026",
-    fullName: "Joint Entrance Examination Advanced 2026",
-    category: "Engineering",
-    level: "National",
-    date: "May 2026",
-    applicants: "2.5L+",
-    eligibility: "Must qualify JEE Main (top 2,50,000 candidates)",
-    mode: "Online (CBT)",
-    description: "JEE Advanced is the gateway to IITs — India's most prestigious engineering institutions. Only top JEE Main qualifiers can appear.",
-    importantDates: [
-      { event: "Registration Opens", date: "April 2026" },
-      { event: "Admit Card", date: "May 2026" },
-      { event: "Exam Date", date: "May 2026" },
-      { event: "Result", date: "June 2026" },
-      { event: "Counseling (JoSAA)", date: "June 2026" },
-    ],
-    syllabus: ["Physics", "Chemistry", "Mathematics"],
-    topColleges: ["IIT Delhi", "IIT Bombay", "IIT Kanpur", "IIT Madras", "IIT Kharagpur"],
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
-  {
-    slug: "neet-ug-2026",
-    name: "NEET UG 2026",
-    fullName: "National Eligibility cum Entrance Test (Undergraduate) 2026",
-    category: "Medical",
-    level: "National",
-    date: "May 2026",
-    applicants: "20L+",
-    eligibility: "10+2 with PCB, minimum 50% marks (40% for SC/ST/OBC)",
-    mode: "Offline (Pen & Paper)",
-    description: "NEET UG is the sole entrance exam for MBBS, BDS, BAMS, BHMS, and other medical courses in India.",
-    importantDates: [
-      { event: "Registration Opens", date: "January 2026" },
-      { event: "Admit Card", date: "April 2026" },
-      { event: "Exam Date", date: "May 2026" },
-      { event: "Result", date: "June 2026" },
-      { event: "Counseling", date: "July 2026" },
-    ],
-    syllabus: ["Physics", "Chemistry", "Biology (Botany & Zoology)"],
-    topColleges: ["AIIMS Delhi", "JIPMER", "CMC Vellore", "AFMC Pune", "Maulana Azad Medical College"],
-    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
-  {
-    slug: "cat-2026",
-    name: "CAT 2026",
-    fullName: "Common Admission Test 2026",
-    category: "Management",
-    level: "National",
-    date: "November 2026",
-    applicants: "3L+",
-    eligibility: "Bachelor's degree with minimum 50% marks (45% for SC/ST)",
-    mode: "Online (CBT)",
-    description: "CAT is the premier MBA entrance exam in India, the gateway to all IIMs and top B-schools nationwide.",
-    importantDates: [
-      { event: "Registration Opens", date: "August 2026" },
-      { event: "Admit Card", date: "October 2026" },
-      { event: "Exam Date", date: "November 2026" },
-      { event: "Result", date: "January 2027" },
-      { event: "IIM Interviews", date: "Feb-March 2027" },
-    ],
-    syllabus: ["Quantitative Aptitude", "Verbal Ability & Reading Comprehension", "Data Interpretation & Logical Reasoning"],
-    topColleges: ["IIM Ahmedabad", "IIM Bangalore", "IIM Calcutta", "IIM Lucknow", "IIM Kozhikode"],
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
-  {
-    slug: "clat-2026",
-    name: "CLAT 2026",
-    fullName: "Common Law Admission Test 2026",
-    category: "Law",
-    level: "National",
-    date: "December 2025",
-    applicants: "75K+",
-    eligibility: "10+2 with minimum 45% marks (40% for SC/ST)",
-    mode: "Online (CBT)",
-    description: "CLAT is the centralized entrance exam for admissions to all 22 National Law Universities across India.",
-    importantDates: [
-      { event: "Registration Opens", date: "August 2025" },
-      { event: "Admit Card", date: "November 2025" },
-      { event: "Exam Date", date: "December 2025" },
-      { event: "Result", date: "December 2025" },
-      { event: "Counseling", date: "January 2026" },
-    ],
-    syllabus: ["English Language", "Current Affairs & GK", "Legal Reasoning", "Logical Reasoning", "Quantitative Techniques"],
-    topColleges: ["NLSIU Bangalore", "NLU Delhi", "NALSAR Hyderabad", "WBNUJS Kolkata"],
-    image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
-  {
-    slug: "cuet-2026",
-    name: "CUET 2026",
-    fullName: "Common University Entrance Test 2026",
-    category: "Science",
-    level: "National",
-    date: "May 2026",
-    applicants: "15L+",
-    eligibility: "10+2 from any recognized board",
-    mode: "Online (CBT)",
-    description: "CUET is the mandatory entrance exam for UG admissions to all central universities including DU, BHU, JNU, and 200+ others.",
-    importantDates: [
-      { event: "Registration Opens", date: "February 2026" },
-      { event: "Admit Card", date: "April 2026" },
-      { event: "Exam Date", date: "May 2026" },
-      { event: "Result", date: "June 2026" },
-      { event: "Counseling", date: "July 2026" },
-    ],
-    syllabus: ["Domain Subjects", "General Test", "Language"],
-    topColleges: ["DU Colleges", "BHU", "JNU", "Jamia Millia Islamia", "Aligarh Muslim University"],
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
-  {
-    slug: "bitsat-2026",
-    name: "BITSAT 2026",
-    fullName: "BITS Admission Test 2026",
-    category: "Engineering",
-    level: "University",
-    date: "May 2026",
-    applicants: "3L+",
-    eligibility: "10+2 with PCM, minimum 75% in each of PCM and 60% overall",
-    mode: "Online (CBT)",
-    description: "BITSAT is the entrance exam for BITS Pilani, Goa, and Hyderabad campuses — India's top private engineering university.",
-    importantDates: [
-      { event: "Registration Opens", date: "January 2026" },
-      { event: "Admit Card", date: "April 2026" },
-      { event: "Exam Date", date: "May 2026" },
-      { event: "Result", date: "June 2026" },
-      { event: "Counseling", date: "June 2026" },
-    ],
-    syllabus: ["Physics", "Chemistry", "Mathematics", "English Proficiency", "Logical Reasoning"],
-    topColleges: ["BITS Pilani", "BITS Goa", "BITS Hyderabad"],
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
-  {
-    slug: "uceed-2026",
-    name: "UCEED 2026",
-    fullName: "Undergraduate Common Entrance Examination for Design 2026",
-    category: "Design",
-    level: "National",
-    date: "January 2026",
-    applicants: "15K+",
-    eligibility: "10+2 from any stream, age below 25",
-    mode: "Online (CBT)",
-    description: "UCEED is the entrance exam for undergraduate design programs at IIT Bombay, IIT Delhi, IIT Guwahati, and IIITDM Jabalpur.",
-    importantDates: [
-      { event: "Registration Opens", date: "October 2025" },
-      { event: "Admit Card", date: "December 2025" },
-      { event: "Exam Date", date: "January 2026" },
-      { event: "Result", date: "March 2026" },
-    ],
-    syllabus: ["Visualization & Spatial Ability", "Observation & Design Sensitivity", "Analytical & Logical Reasoning", "Environmental & Social Awareness"],
-    topColleges: ["IIT Bombay IDC", "IIT Delhi", "IIT Guwahati", "IIITDM Jabalpur"],
-    image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop",
-    registrationUrl: "#",
-  },
+  // ── Engineering ──
+  { slug: "jee-main-2026", name: "JEE Main 2026", fullName: "Joint Entrance Examination Main 2026", category: "Engineering", level: "National", date: "April 2026", applicants: "15L+", eligibility: "10+2 with PCM, minimum 75% marks (65% for SC/ST)", mode: "Online (CBT)", description: "JEE Main is India's largest engineering entrance exam, the gateway to NITs, IIITs, and GFTIs.", importantDates: [{ event: "Registration Opens", date: "November 2025" }, { event: "Exam Date (Session 1)", date: "January 2026" }, { event: "Exam Date (Session 2)", date: "April 2026" }, { event: "Result", date: "May 2026" }], syllabus: ["Physics", "Chemistry", "Mathematics"], topColleges: ["NIT Trichy", "NIT Warangal", "NIT Surathkal", "IIIT Hyderabad"], image: IMG.exam1, registrationUrl: "#" },
+  { slug: "jee-advanced-2026", name: "JEE Advanced 2026", fullName: "Joint Entrance Examination Advanced 2026", category: "Engineering", level: "National", date: "May 2026", applicants: "2.5L+", eligibility: "Must qualify JEE Main (top 2,50,000 candidates)", mode: "Online (CBT)", description: "JEE Advanced is the gateway to IITs — India's most prestigious engineering institutions.", importantDates: [{ event: "Registration", date: "April 2026" }, { event: "Exam Date", date: "May 2026" }, { event: "Result", date: "June 2026" }, { event: "Counseling (JoSAA)", date: "June 2026" }], syllabus: ["Physics", "Chemistry", "Mathematics"], topColleges: ["IIT Delhi", "IIT Bombay", "IIT Kanpur", "IIT Madras", "IIT Kharagpur"], image: IMG.exam1, registrationUrl: "#" },
+  { slug: "bitsat-2026", name: "BITSAT 2026", fullName: "BITS Admission Test 2026", category: "Engineering", level: "University", date: "May 2026", applicants: "3L+", eligibility: "10+2 with PCM, minimum 75% in each of PCM", mode: "Online (CBT)", description: "BITSAT is the entrance exam for BITS Pilani, Goa, and Hyderabad campuses.", importantDates: [{ event: "Registration", date: "January 2026" }, { event: "Exam Date", date: "May 2026" }, { event: "Result", date: "June 2026" }], syllabus: ["Physics", "Chemistry", "Mathematics", "English", "Logical Reasoning"], topColleges: ["BITS Pilani", "BITS Goa", "BITS Hyderabad"], image: IMG.exam1, registrationUrl: "#" },
+  { slug: "viteee-2026", name: "VITEEE 2026", fullName: "VIT Engineering Entrance Examination 2026", category: "Engineering", level: "University", date: "April 2026", applicants: "2L+", eligibility: "10+2 with PCM, minimum 60% aggregate", mode: "Online (CBT)", description: "VITEEE is the entrance exam for VIT Vellore, Chennai, AP, and Bhopal campuses.", importantDates: [{ event: "Registration", date: "November 2025" }, { event: "Exam Date", date: "April 2026" }, { event: "Result", date: "May 2026" }], syllabus: ["Physics", "Chemistry", "Mathematics", "Aptitude"], topColleges: ["VIT Vellore", "VIT Chennai", "VIT AP"], image: IMG.exam1, registrationUrl: "#" },
+  { slug: "srmjeee-2026", name: "SRMJEEE 2026", fullName: "SRM Joint Engineering Entrance Examination 2026", category: "Engineering", level: "University", date: "April 2026", applicants: "1.5L+", eligibility: "10+2 with PCM, minimum 50% aggregate", mode: "Online (CBT)", description: "SRMJEEE is the entrance exam for SRM Institute campuses across India.", importantDates: [{ event: "Registration", date: "December 2025" }, { event: "Exam Date", date: "April 2026" }, { event: "Result", date: "May 2026" }], syllabus: ["Physics", "Chemistry", "Mathematics", "Aptitude"], topColleges: ["SRM Chennai", "SRM AP", "SRM Delhi-NCR", "SRM Sonepat"], image: IMG.exam1, registrationUrl: "#" },
+  { slug: "gate-2026", name: "GATE 2026", fullName: "Graduate Aptitude Test in Engineering 2026", category: "Engineering", level: "National", date: "February 2026", applicants: "9L+", eligibility: "B.Tech/B.E. final year or graduated", mode: "Online (CBT)", description: "GATE is the entrance exam for M.Tech/PhD admissions at IITs and NITs, and PSU recruitment.", importantDates: [{ event: "Registration", date: "August 2025" }, { event: "Exam Date", date: "February 2026" }, { event: "Result", date: "March 2026" }], syllabus: ["Engineering Mathematics", "Core Subject", "General Aptitude"], topColleges: ["IIT Delhi", "IIT Bombay", "IISc Bangalore", "NIT Trichy"], image: IMG.exam1, registrationUrl: "#" },
+
+  // ── Medical ──
+  { slug: "neet-ug-2026", name: "NEET UG 2026", fullName: "National Eligibility cum Entrance Test (Undergraduate) 2026", category: "Medical", level: "National", date: "May 2026", applicants: "20L+", eligibility: "10+2 with PCB, minimum 50% marks (40% for SC/ST/OBC)", mode: "Offline (Pen & Paper)", description: "NEET UG is the sole entrance exam for MBBS, BDS, BAMS, BHMS admissions.", importantDates: [{ event: "Registration", date: "January 2026" }, { event: "Admit Card", date: "April 2026" }, { event: "Exam Date", date: "May 2026" }, { event: "Result", date: "June 2026" }, { event: "Counseling", date: "July 2026" }], syllabus: ["Physics", "Chemistry", "Biology (Botany & Zoology)"], topColleges: ["AIIMS Delhi", "JIPMER", "CMC Vellore", "AFMC Pune"], image: IMG.medical, registrationUrl: "#" },
+  { slug: "neet-pg-2026", name: "NEET PG 2026", fullName: "National Eligibility cum Entrance Test (Postgraduate) 2026", category: "Medical", level: "National", date: "March 2026", applicants: "2L+", eligibility: "MBBS degree with internship completion", mode: "Online (CBT)", description: "NEET PG is the entrance exam for MD, MS, and PG Diploma medical courses.", importantDates: [{ event: "Registration", date: "January 2026" }, { event: "Exam Date", date: "March 2026" }, { event: "Result", date: "April 2026" }], syllabus: ["Pre-Clinical", "Para-Clinical", "Clinical Subjects"], topColleges: ["AIIMS", "JIPMER", "MAMC", "KMC Manipal"], image: IMG.medical, registrationUrl: "#" },
+  { slug: "aiims-inicet-2026", name: "AIIMS INI-CET 2026", fullName: "AIIMS Institute of National Importance Combined Entrance Test 2026", category: "Medical", level: "National", date: "June 2026", applicants: "50K+", eligibility: "MBBS degree", mode: "Online (CBT)", description: "INI-CET is the entrance for PG courses at AIIMS, JIPMER, PGIMER, and NIMHANS.", importantDates: [{ event: "Registration", date: "April 2026" }, { event: "Exam Date", date: "June 2026" }, { event: "Result", date: "July 2026" }], syllabus: ["All MBBS Subjects"], topColleges: ["AIIMS Delhi", "JIPMER", "PGIMER", "NIMHANS"], image: IMG.medical, registrationUrl: "#" },
+
+  // ── Management ──
+  { slug: "cat-2026", name: "CAT 2026", fullName: "Common Admission Test 2026", category: "Management", level: "National", date: "November 2026", applicants: "3L+", eligibility: "Bachelor's degree with minimum 50% marks (45% for SC/ST)", mode: "Online (CBT)", description: "CAT is the premier MBA entrance exam, gateway to all IIMs and top B-schools.", importantDates: [{ event: "Registration", date: "August 2026" }, { event: "Exam Date", date: "November 2026" }, { event: "Result", date: "January 2027" }, { event: "IIM Interviews", date: "Feb-March 2027" }], syllabus: ["Quantitative Aptitude", "Verbal Ability & RC", "DILR"], topColleges: ["IIM Ahmedabad", "IIM Bangalore", "IIM Calcutta", "IIM Lucknow"], image: IMG.business, registrationUrl: "#" },
+  { slug: "xat-2026", name: "XAT 2026", fullName: "Xavier Aptitude Test 2026", category: "Management", level: "National", date: "January 2026", applicants: "1L+", eligibility: "Bachelor's degree from recognized university", mode: "Online (CBT)", description: "XAT is conducted by XLRI and accepted by 200+ B-schools across India.", importantDates: [{ event: "Registration", date: "August 2025" }, { event: "Exam Date", date: "January 2026" }, { event: "Result", date: "February 2026" }], syllabus: ["Verbal Ability", "Decision Making", "Quantitative Aptitude", "GK"], topColleges: ["XLRI Jamshedpur", "XIMB", "TAPMI", "Great Lakes"], image: IMG.business, registrationUrl: "#" },
+  { slug: "mat-2026", name: "MAT 2026", fullName: "Management Aptitude Test 2026", category: "Management", level: "National", date: "Multiple Sessions", applicants: "50K+", eligibility: "Bachelor's degree from any recognized university", mode: "Online/Offline", description: "MAT is conducted by AIMA and accepted by 600+ B-schools for MBA admissions.", importantDates: [{ event: "Feb Session", date: "February 2026" }, { event: "May Session", date: "May 2026" }, { event: "Sep Session", date: "September 2026" }, { event: "Dec Session", date: "December 2026" }], syllabus: ["Language Comprehension", "Mathematical Skills", "Data Analysis", "Intelligence & Critical Reasoning", "Indian & Global Environment"], topColleges: ["Various AIMA member B-schools"], image: IMG.business, registrationUrl: "#" },
+  { slug: "snap-2026", name: "SNAP 2026", fullName: "Symbiosis National Aptitude Test 2026", category: "Management", level: "University", date: "December 2026", applicants: "75K+", eligibility: "Bachelor's degree with minimum 50%", mode: "Online (CBT)", description: "SNAP is the entrance exam for all Symbiosis International University MBA programs.", importantDates: [{ event: "Registration", date: "August 2026" }, { event: "Exam Date", date: "December 2026" }, { event: "Result", date: "January 2027" }], syllabus: ["General English", "Quantitative Aptitude", "Analytical & Logical Reasoning"], topColleges: ["SIBM Pune", "SCMHRD Pune", "SIIB Pune"], image: IMG.business, registrationUrl: "#" },
+
+  // ── Law ──
+  { slug: "clat-2026", name: "CLAT 2026", fullName: "Common Law Admission Test 2026", category: "Law", level: "National", date: "December 2025", applicants: "75K+", eligibility: "10+2 with minimum 45% (40% for SC/ST)", mode: "Online (CBT)", description: "CLAT is the centralized entrance exam for all 22 National Law Universities.", importantDates: [{ event: "Registration", date: "August 2025" }, { event: "Exam Date", date: "December 2025" }, { event: "Result", date: "December 2025" }, { event: "Counseling", date: "January 2026" }], syllabus: ["English", "Current Affairs", "Legal Reasoning", "Logical Reasoning", "Quantitative Techniques"], topColleges: ["NLSIU Bangalore", "NLU Delhi", "NALSAR Hyderabad"], image: IMG.law, registrationUrl: "#" },
+  { slug: "ailet-2026", name: "AILET 2026", fullName: "All India Law Entrance Test 2026", category: "Law", level: "University", date: "May 2026", applicants: "20K+", eligibility: "10+2 with minimum 50%", mode: "Online (CBT)", description: "AILET is the entrance exam for NLU Delhi, one of India's top 2 law schools.", importantDates: [{ event: "Registration", date: "January 2026" }, { event: "Exam Date", date: "May 2026" }, { event: "Result", date: "June 2026" }], syllabus: ["English", "General Knowledge", "Legal Aptitude", "Reasoning", "Mathematics"], topColleges: ["NLU Delhi"], image: IMG.law, registrationUrl: "#" },
+  { slug: "lsat-india-2026", name: "LSAT India 2026", fullName: "Law School Admission Test India 2026", category: "Law", level: "National", date: "Multiple Sessions", applicants: "15K+", eligibility: "10+2 completed or appearing", mode: "Online (CBT)", description: "LSAT India is accepted by 100+ law schools including Jindal Global Law School.", importantDates: [{ event: "Registration", date: "Year-round" }, { event: "Exam Sessions", date: "Multiple" }], syllabus: ["Analytical Reasoning", "Logical Reasoning", "Reading Comprehension"], topColleges: ["Jindal Global Law School", "Various private law schools"], image: IMG.law, registrationUrl: "#" },
+
+  // ── Design ──
+  { slug: "uceed-2026", name: "UCEED 2026", fullName: "Undergraduate Common Entrance Examination for Design 2026", category: "Design", level: "National", date: "January 2026", applicants: "15K+", eligibility: "10+2 from any stream, age below 25", mode: "Online (CBT)", description: "UCEED is the entrance for UG design programs at IIT Bombay, IIT Delhi, IIT Guwahati.", importantDates: [{ event: "Registration", date: "October 2025" }, { event: "Exam Date", date: "January 2026" }, { event: "Result", date: "March 2026" }], syllabus: ["Visualization", "Observation & Design", "Analytical Reasoning", "Environmental Awareness"], topColleges: ["IIT Bombay IDC", "IIT Delhi", "IIT Guwahati"], image: IMG.design, registrationUrl: "#" },
+  { slug: "nid-dat-2026", name: "NID DAT 2026", fullName: "National Institute of Design Design Aptitude Test 2026", category: "Design", level: "National", date: "January 2026", applicants: "20K+", eligibility: "10+2 from any stream", mode: "Offline", description: "NID DAT is the entrance exam for all NID campuses across India.", importantDates: [{ event: "Registration", date: "October 2025" }, { event: "Prelims", date: "January 2026" }, { event: "Mains (Studio)", date: "April 2026" }, { event: "Result", date: "May 2026" }], syllabus: ["Drawing", "Design Aptitude", "Creativity & Innovation", "Observation"], topColleges: ["NID Ahmedabad", "NID Gandhinagar", "NID Bangalore"], image: IMG.design, registrationUrl: "#" },
+  { slug: "nift-entrance-2026", name: "NIFT Entrance 2026", fullName: "National Institute of Fashion Technology Entrance 2026", category: "Design", level: "National", date: "February 2026", applicants: "50K+", eligibility: "10+2 from any stream", mode: "Online + Studio", description: "NIFT Entrance is the test for admission to India's premier fashion design institutes.", importantDates: [{ event: "Registration", date: "November 2025" }, { event: "Written Test", date: "February 2026" }, { event: "Situation Test", date: "April 2026" }, { event: "Result", date: "May 2026" }], syllabus: ["Creative Ability", "General Ability", "Situation Test"], topColleges: ["NIFT Delhi", "NIFT Mumbai", "NIFT Bangalore", "NIFT Hyderabad"], image: IMG.design, registrationUrl: "#" },
+
+  // ── Science ──
+  { slug: "cuet-2026", name: "CUET 2026", fullName: "Common University Entrance Test 2026", category: "Science", level: "National", date: "May 2026", applicants: "15L+", eligibility: "10+2 from any recognized board", mode: "Online (CBT)", description: "CUET is mandatory for UG admissions to all central universities including DU, BHU, JNU.", importantDates: [{ event: "Registration", date: "February 2026" }, { event: "Exam Date", date: "May 2026" }, { event: "Result", date: "June 2026" }, { event: "Counseling", date: "July 2026" }], syllabus: ["Domain Subjects", "General Test", "Language"], topColleges: ["DU Colleges", "BHU", "JNU", "Jamia Millia Islamia"], image: IMG.exam1, registrationUrl: "#" },
+  { slug: "iit-jam-2026", name: "IIT JAM 2026", fullName: "IIT Joint Admission Test for M.Sc 2026", category: "Science", level: "National", date: "February 2026", applicants: "60K+", eligibility: "B.Sc or equivalent degree", mode: "Online (CBT)", description: "IIT JAM is the entrance for M.Sc, Integrated PhD at IITs and IISc.", importantDates: [{ event: "Registration", date: "September 2025" }, { event: "Exam Date", date: "February 2026" }, { event: "Result", date: "March 2026" }], syllabus: ["Physics", "Chemistry", "Mathematics", "Biotechnology", "Geology", "Economics"], topColleges: ["IIT Delhi", "IIT Bombay", "IISc Bangalore", "IIT Kanpur"], image: IMG.exam1, registrationUrl: "#" },
 ];
 
-export const examCategories = ["All", "Engineering", "Medical", "Management", "Law", "Design", "Science"];
-export const examLevels = ["All", "National", "State", "University", "International", "Professional"];
+export const examCategories = ["All", "Engineering", "Medical", "Management", "Law", "Design", "Science"] as const;
+export const examLevels = ["All", "National", "State", "University", "International", "Professional"] as const;
