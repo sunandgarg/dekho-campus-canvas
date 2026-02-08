@@ -46,7 +46,7 @@ const featuredColleges = [
 
 export function FeaturedColleges() {
   return (
-    <section className="py-16 bg-background" aria-labelledby="featured-heading">
+    <section className="py-10 md:py-16 bg-background" aria-labelledby="featured-heading">
       <div className="container">
         {/* Header */}
         <motion.div
@@ -74,9 +74,9 @@ export function FeaturedColleges() {
         </motion.div>
 
         {/* Main content grid with sidebar */}
-        <div className="grid lg:grid-cols-4 gap-6">
-          {/* College cards - 3 columns */}
-          <div className="lg:col-span-3 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-4 gap-4 md:gap-6">
+          {/* College cards */}
+          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {featuredColleges.map((college, index) => (
               <motion.article
                 key={college.name}

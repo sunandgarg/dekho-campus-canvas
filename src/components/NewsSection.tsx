@@ -66,7 +66,7 @@ const categoryColors: Record<string, string> = {
 
 export function NewsSection() {
   return (
-    <section className="py-16 bg-muted/30" aria-label="Latest Education News">
+    <section className="py-10 md:py-16 bg-muted/30" aria-label="Latest Education News">
       <div className="container">
         {/* Leaderboard Ad at top */}
         <div className="mb-8">
