@@ -2,19 +2,20 @@ import { ReactNode } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 
 interface ListingPageLayoutProps {
   children: ReactNode;
   title: string;
   description: string;
+  page?: string;
 }
 
-export function ListingPageLayout({ children, title, description }: ListingPageLayoutProps) {
+export function ListingPageLayout({ children, title, description, page }: ListingPageLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <AdBanner variant="leaderboard" />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page={page} />
       <main className="container py-4 md:py-6">
         <header className="mb-6 md:mb-8">
           <h1 className="text-headline font-bold text-foreground">{title}</h1>

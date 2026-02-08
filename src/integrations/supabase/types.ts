@@ -14,6 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
+      ads: {
+        Row: {
+          bg_gradient: string
+          created_at: string
+          cta_text: string
+          end_date: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          link_url: string
+          position: string
+          priority: number
+          start_date: string | null
+          subtitle: string | null
+          target_city: string | null
+          target_item_slug: string | null
+          target_page: string | null
+          target_type: string
+          title: string
+          updated_at: string
+          variant: string
+        }
+        Insert: {
+          bg_gradient?: string
+          created_at?: string
+          cta_text?: string
+          end_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string
+          position?: string
+          priority?: number
+          start_date?: string | null
+          subtitle?: string | null
+          target_city?: string | null
+          target_item_slug?: string | null
+          target_page?: string | null
+          target_type?: string
+          title: string
+          updated_at?: string
+          variant?: string
+        }
+        Update: {
+          bg_gradient?: string
+          created_at?: string
+          cta_text?: string
+          end_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string
+          position?: string
+          priority?: number
+          start_date?: string | null
+          subtitle?: string | null
+          target_city?: string | null
+          target_item_slug?: string | null
+          target_page?: string | null
+          target_type?: string
+          title?: string
+          updated_at?: string
+          variant?: string
+        }
+        Relationships: []
+      }
+      featured_colleges: {
+        Row: {
+          category: string | null
+          college_slug: string
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          state: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          college_slug: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          state?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          college_slug?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          state?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           city: string | null
@@ -56,15 +155,72 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -191,6 +347,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

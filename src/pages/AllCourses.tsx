@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { ListingPageLayout } from "@/components/ListingPageLayout";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CourseCard } from "@/components/CourseCard";
 import { courses, courseCategories, courseLevels, courseModes, courseDurations } from "@/data/courses";
 
@@ -35,7 +35,7 @@ export default function AllCourses() {
   const clearAll = () => { setCategory("All"); setLevel("All"); setMode("All"); setDuration("All"); };
 
   return (
-    <ListingPageLayout title="All Courses in India 2026" description="Explore 10,000+ courses — compare eligibility, fees, career prospects & top colleges">
+    <ListingPageLayout title="All Courses in India 2026" description="Explore 10,000+ courses — compare eligibility, fees, career prospects & top colleges" page="courses">
       <PageBreadcrumb items={[{ label: "Courses" }]} />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -85,14 +85,14 @@ export default function AllCourses() {
             </div>
           )}
 
-          <div className="mt-6"><AdBanner variant="horizontal" position="Courses Mid-page" /></div>
+          <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="courses" /></div>
         </div>
 
         <aside className="space-y-6">
           <LeadCaptureForm variant="sidebar" title="Confused About Courses?" subtitle="Get free career counseling from our experts" source="courses_listing" />
-          <AdBanner variant="vertical" position="Courses Sidebar" />
+          <DynamicAdBanner variant="vertical" position="sidebar" page="courses" />
           <LeadCaptureForm variant="card" title="Get Course Alerts" subtitle="Stay updated on admission deadlines" source="courses_sidebar_card" />
-          <AdBanner variant="square" position="Courses Sidebar 2" />
+          <DynamicAdBanner variant="square" position="sidebar" page="courses" />
         </aside>
       </div>
 

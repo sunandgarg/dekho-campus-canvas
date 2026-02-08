@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { ListingPageLayout } from "@/components/ListingPageLayout";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ExamCard } from "@/components/ExamCard";
 import { exams, examCategories, examLevels, examModes, examStatuses } from "@/data/exams";
 
@@ -35,7 +35,7 @@ export default function AllExams() {
   const clearAll = () => { setCategory("All"); setLevel("All"); setMode("All"); setStatus("All"); };
 
   return (
-    <ListingPageLayout title="All Entrance Exams 2026" description="Complete guide to 500+ entrance exams — dates, eligibility, syllabus & preparation tips">
+    <ListingPageLayout title="All Entrance Exams 2026" description="Complete guide to 500+ entrance exams — dates, eligibility, syllabus & preparation tips" page="exams">
       <PageBreadcrumb items={[{ label: "Exams" }]} />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -84,14 +84,14 @@ export default function AllExams() {
             </div>
           )}
 
-          <div className="mt-6"><AdBanner variant="horizontal" position="Exams Mid-page" /></div>
+          <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="exams" /></div>
         </div>
 
         <aside className="space-y-6">
           <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy from experts" source="exams_listing" />
-          <AdBanner variant="vertical" position="Exams Sidebar" />
+          <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
           <LeadCaptureForm variant="card" title="Exam Date Alerts" subtitle="Get notified about registration deadlines" source="exams_sidebar_card" />
-          <AdBanner variant="square" position="Exams Sidebar 2" />
+          <DynamicAdBanner variant="square" position="sidebar" page="exams" />
         </aside>
       </div>
 

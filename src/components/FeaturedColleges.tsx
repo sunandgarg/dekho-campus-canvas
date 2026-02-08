@@ -4,7 +4,7 @@ import { Star, MapPin, ArrowRight, GraduationCap, Calendar, Shield, Download } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { colleges } from "@/data/colleges";
 
 const topColleges = colleges.slice(0, 6);
@@ -109,12 +109,12 @@ export function FeaturedColleges() {
 
           <div className="space-y-6">
             <LeadCaptureForm variant="sidebar" title="Need Help?" subtitle="Get expert guidance" source="colleges_sidebar" />
-            <AdBanner variant="vertical" position="Sponsored" />
+            <DynamicAdBanner variant="vertical" position="sidebar" />
           </div>
         </div>
 
         <div className="mt-10">
-          <AdBanner variant="horizontal" position="Ad" />
+          <DynamicAdBanner variant="horizontal" position="mid-page" />
         </div>
       </div>
     </section>

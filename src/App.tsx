@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { AuthProvider } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -15,6 +17,11 @@ const CollegeDetail = lazy(() => import("./pages/CollegeDetail"));
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const ExamDetail = lazy(() => import("./pages/ExamDetail"));
 const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
+const Auth = lazy(() => import("./pages/Auth"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminAds = lazy(() => import("./pages/AdminAds"));
+const AdminFeatured = lazy(() => import("./pages/AdminFeatured"));
+const AdminLeads = lazy(() => import("./pages/AdminLeads"));
 
 const queryClient = new QueryClient();
 
@@ -28,26 +35,34 @@ function PageLoader() {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/colleges" element={<AllColleges />} />
-            <Route path="/colleges/:slug" element={<CollegeDetail />} />
-            <Route path="/courses" element={<AllCourses />} />
-            <Route path="/courses/:slug" element={<CourseDetail />} />
-            <Route path="/exams" element={<AllExams />} />
-            <Route path="/exams/:slug" element={<ExamDetail />} />
-            <Route path="/articles" element={<AllArticles />} />
-            <Route path="/articles/:slug" element={<ArticleDetail />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/colleges" element={<AllColleges />} />
+              <Route path="/colleges/:slug" element={<CollegeDetail />} />
+              <Route path="/courses" element={<AllCourses />} />
+              <Route path="/courses/:slug" element={<CourseDetail />} />
+              <Route path="/exams" element={<AllExams />} />
+              <Route path="/exams/:slug" element={<ExamDetail />} />
+              <Route path="/articles" element={<AllArticles />} />
+              <Route path="/articles/:slug" element={<ArticleDetail />} />
+              {/* Admin routes */}
+              <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/admin/ads" element={<ProtectedRoute requireAdmin><AdminAds /></ProtectedRoute>} />
+              <Route path="/admin/featured" element={<ProtectedRoute requireAdmin><AdminFeatured /></ProtectedRoute>} />
+              <Route path="/admin/leads" element={<ProtectedRoute requireAdmin><AdminLeads /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, Sparkles } from "lucide-react";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
+import { Link } from "react-router-dom";
 
 const footerLinks = {
   explore: [
@@ -67,12 +68,12 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
           {/* Brand */}
           <div className="col-span-2">
-            <a href="/" className="flex items-center gap-2 mb-4">
+            <Link to="/" className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-primary-foreground" />
               </div>
               <span className="text-2xl font-bold text-background">DekhoCampus</span>
-            </a>
+            </Link>
             <p className="text-background/70 mb-6 max-w-xs">
               India's #1 AI-powered education platform helping students find their perfect career path.
             </p>
@@ -98,12 +99,12 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.explore.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-background/70 hover:text-accent transition-colors text-sm"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -114,12 +115,7 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-background/70 hover:text-accent transition-colors text-sm"
-                  >
-                    {link.label}
-                  </a>
+                  <Link to={link.href} className="text-background/70 hover:text-accent transition-colors text-sm">{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -130,12 +126,7 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-background/70 hover:text-accent transition-colors text-sm"
-                  >
-                    {link.label}
-                  </a>
+                  <Link to={link.href} className="text-background/70 hover:text-accent transition-colors text-sm">{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -146,12 +137,7 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-background/70 hover:text-accent transition-colors text-sm"
-                  >
-                    {link.label}
-                  </a>
+                  <Link to={link.href} className="text-background/70 hover:text-accent transition-colors text-sm">{link.label}</Link>
                 </li>
               ))}
             </ul>

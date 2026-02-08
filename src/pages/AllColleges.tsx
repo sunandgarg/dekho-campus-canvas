@@ -7,9 +7,10 @@ import { motion } from "framer-motion";
 import { ListingPageLayout } from "@/components/ListingPageLayout";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CollegeCard } from "@/components/CollegeCard";
 import { colleges, collegeCategories, collegeStates, collegeTypes, collegeApprovals, collegeNaacGrades } from "@/data/colleges";
+import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
 
 export default function AllColleges() {
   const [search, setSearch] = useState("");
@@ -20,10 +21,12 @@ export default function AllColleges() {
   const [naacGrade, setNaacGrade] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
 
+  const { data: featuredSlugs } = useFeaturedColleges(category, state);
+
   const activeFilters = [category, state, type, approval, naacGrade].filter((f) => f !== "All").length;
 
   const filtered = useMemo(() => {
-    return colleges.filter((c) => {
+    const base = colleges.filter((c) => {
       const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.location.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === "All" || c.category === category;
       const matchState = state === "All" || c.state === state;
@@ -32,12 +35,22 @@ export default function AllColleges() {
       const matchNaac = naacGrade === "All" || c.naacGrade === naacGrade;
       return matchSearch && matchCategory && matchState && matchType && matchApproval && matchNaac;
     });
-  }, [search, category, state, type, approval, naacGrade]);
+
+    // Sort: featured colleges first
+    if (featuredSlugs && featuredSlugs.length > 0) {
+      const featuredSet = new Set(featuredSlugs);
+      return [
+        ...base.filter((c) => featuredSet.has(c.slug)),
+        ...base.filter((c) => !featuredSet.has(c.slug)),
+      ];
+    }
+    return base;
+  }, [search, category, state, type, approval, naacGrade, featuredSlugs]);
 
   const clearAll = () => { setCategory("All"); setState("All"); setType("All"); setApproval("All"); setNaacGrade("All"); };
 
   return (
-    <ListingPageLayout title="All Colleges in India 2026" description="Explore 5,000+ colleges across India — compare fees, placements, rankings & more">
+    <ListingPageLayout title="All Colleges in India 2026" description="Explore 5,000+ colleges across India — compare fees, placements, rankings & more" page="colleges">
       <PageBreadcrumb items={[{ label: "Colleges" }]} />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -87,14 +100,14 @@ export default function AllColleges() {
             </div>
           )}
 
-          <div className="mt-6"><AdBanner variant="horizontal" position="Colleges Mid-page" /></div>
+          <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" /></div>
         </div>
 
         <aside className="space-y-6">
           <LeadCaptureForm variant="sidebar" title="Need Help Choosing?" subtitle="Get free expert counseling for admissions" source="colleges_listing" />
-          <AdBanner variant="vertical" position="Colleges Sidebar" />
+          <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" />
           <LeadCaptureForm variant="card" title="Get Admission Alerts" subtitle="Never miss an important deadline" source="colleges_sidebar_card" />
-          <AdBanner variant="square" position="Colleges Sidebar 2" />
+          <DynamicAdBanner variant="square" position="sidebar" page="colleges" />
         </aside>
       </div>
 
