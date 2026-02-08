@@ -52,11 +52,11 @@ const App = () => (
               <Route path="/exams/:slug" element={<ExamDetail />} />
               <Route path="/articles" element={<AllArticles />} />
               <Route path="/articles/:slug" element={<ArticleDetail />} />
-              {/* Admin routes */}
-              <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
-              <Route path="/admin/ads" element={<ProtectedRoute requireAdmin><AdminAds /></ProtectedRoute>} />
-              <Route path="/admin/featured" element={<ProtectedRoute requireAdmin><AdminFeatured /></ProtectedRoute>} />
-              <Route path="/admin/leads" element={<ProtectedRoute requireAdmin><AdminLeads /></ProtectedRoute>} />
+              {/* Admin routes - open to everyone */}
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/ads" element={<AdminAds />} />
+              <Route path="/admin/featured" element={<AdminFeatured />} />
+              <Route path="/admin/leads" element={<AdminLeads />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
