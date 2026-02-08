@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Pencil, Trash2, X, Eye, EyeOff, ExternalLink, Copy, Search, Megaphone } from "lucide-react";
+import { Plus, Pencil, Trash2, X, ExternalLink, Copy, Search, Megaphone } from "lucide-react";
 import { colleges } from "@/data/colleges";
 import { courses } from "@/data/courses";
 import { exams } from "@/data/exams";
@@ -677,29 +677,252 @@ export default function AdminAds() {
         </div>
       )}
 
-      {/* Targeting guide */}
-      <div className="mt-8 bg-card rounded-2xl border border-border p-5">
-        <h3 className="font-semibold text-foreground mb-3">📋 Ad Targeting Priority Guide</h3>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
-          <div className="p-3 bg-primary/5 rounded-xl border border-primary/20 text-center">
-            <div className="font-bold text-primary mb-1">#1 Highest</div>
-            <div className="text-muted-foreground">Item-specific</div>
+      {/* Comprehensive Ad Flow Guide */}
+      <div className="mt-8 space-y-4">
+        <h2 className="text-xl font-bold text-foreground">📋 Complete Ad System Documentation</h2>
+
+        {/* Priority Hierarchy */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-3">🎯 Ad Targeting Priority (Highest → Lowest)</h3>
+          <p className="text-sm text-muted-foreground mb-4">When a page loads, the system finds the best matching ad using this priority chain. The first match wins:</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
+            <div className="p-3 bg-primary/5 rounded-xl border border-primary/20 text-center">
+              <div className="font-bold text-primary mb-1">#1 Highest</div>
+              <div className="text-muted-foreground">Item-specific</div>
+            </div>
+            <div className="p-3 bg-muted rounded-xl text-center">
+              <div className="font-bold text-foreground mb-1">#2</div>
+              <div className="text-muted-foreground">Page + City</div>
+            </div>
+            <div className="p-3 bg-muted rounded-xl text-center">
+              <div className="font-bold text-foreground mb-1">#3</div>
+              <div className="text-muted-foreground">Page-only</div>
+            </div>
+            <div className="p-3 bg-muted rounded-xl text-center">
+              <div className="font-bold text-foreground mb-1">#4</div>
+              <div className="text-muted-foreground">City-only</div>
+            </div>
+            <div className="p-3 bg-muted rounded-xl text-center">
+              <div className="font-bold text-foreground mb-1">#5 Fallback</div>
+              <div className="text-muted-foreground">Universal</div>
+            </div>
           </div>
-          <div className="p-3 bg-muted rounded-xl text-center">
-            <div className="font-bold text-foreground mb-1">#2</div>
-            <div className="text-muted-foreground">Page + City</div>
+        </div>
+
+        {/* Type 1: Item-Specific */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+            Item-Specific Ads (Highest Priority)
+          </h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            These ads appear <strong className="text-foreground">only on a specific college, course, exam, or article detail page</strong>. They override all other ad types.
+          </p>
+          <div className="bg-muted rounded-xl p-4 space-y-3 text-sm">
+            <div>
+              <strong className="text-foreground">How to create:</strong>
+              <ol className="list-decimal list-inside text-muted-foreground mt-1 space-y-1">
+                <li>Set <strong>Target Type</strong> → "Item-specific"</li>
+                <li>Select <strong>Target Page</strong> → e.g. "All Colleges"</li>
+                <li>Pick the <strong>Item</strong> from the dropdown → e.g. "IITD — IIT Delhi"</li>
+                <li>The ad will only appear on <code className="bg-background px-1 rounded text-xs">/colleges/iit-delhi</code></li>
+              </ol>
+            </div>
+            <div className="border-t border-border pt-3">
+              <strong className="text-foreground">Use cases:</strong>
+              <ul className="list-disc list-inside text-muted-foreground mt-1 space-y-1">
+                <li>Promote IIT Delhi's admission counseling on the IIT Delhi detail page</li>
+                <li>Show JEE Main crash course ad only on the JEE Main exam page</li>
+                <li>Advertise MBA coaching only on the MBA course page</li>
+                <li>Show NEET toppers' guide only on the NEET UG exam page</li>
+              </ul>
+            </div>
+            <div className="border-t border-border pt-3">
+              <strong className="text-foreground">Available item types:</strong>
+              <div className="flex flex-wrap gap-2 mt-1">
+                <Badge variant="outline">Colleges (slug: iit-delhi, iit-bombay, etc.)</Badge>
+                <Badge variant="outline">Courses (slug: btech-computer-science, mba, etc.)</Badge>
+                <Badge variant="outline">Exams (slug: jee-main-2026, neet-ug-2026, etc.)</Badge>
+                <Badge variant="outline">Articles (slug from articles data)</Badge>
+              </div>
+            </div>
           </div>
-          <div className="p-3 bg-muted rounded-xl text-center">
-            <div className="font-bold text-foreground mb-1">#3</div>
-            <div className="text-muted-foreground">Page-only</div>
+        </div>
+
+        {/* Type 2: Page + City */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-foreground text-background flex items-center justify-center text-xs font-bold">2</span>
+            Page + City Combo Ads
+          </h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            Show a specific ad on a listing page <strong className="text-foreground">only for users in a specific city</strong>. Combines page targeting with city geo-targeting.
+          </p>
+          <div className="bg-muted rounded-xl p-4 space-y-3 text-sm">
+            <div>
+              <strong className="text-foreground">How to create:</strong>
+              <ol className="list-decimal list-inside text-muted-foreground mt-1 space-y-1">
+                <li>Set <strong>Target Type</strong> → "Page-specific"</li>
+                <li>Select <strong>Target Page</strong> → e.g. "All Colleges"</li>
+                <li>Select a <strong>City</strong> → e.g. "Delhi"</li>
+                <li>The ad shows on the Colleges listing page only for Delhi users</li>
+              </ol>
+            </div>
+            <div className="border-t border-border pt-3">
+              <strong className="text-foreground">Example:</strong> "Top Engineering Colleges in Delhi" ad that only shows on /colleges when the user's city context is Delhi.
+            </div>
           </div>
-          <div className="p-3 bg-muted rounded-xl text-center">
-            <div className="font-bold text-foreground mb-1">#4</div>
-            <div className="text-muted-foreground">City-only</div>
+        </div>
+
+        {/* Type 3: Page-only */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-foreground text-background flex items-center justify-center text-xs font-bold">3</span>
+            Page-Only Ads
+          </h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            Ads that appear on <strong className="text-foreground">all listing pages of a specific type</strong> (e.g. all colleges, all courses) regardless of city.
+          </p>
+          <div className="bg-muted rounded-xl p-4 space-y-3 text-sm">
+            <div>
+              <strong className="text-foreground">How to create:</strong>
+              <ol className="list-decimal list-inside text-muted-foreground mt-1 space-y-1">
+                <li>Set <strong>Target Type</strong> → "Page-specific"</li>
+                <li>Select <strong>Target Page</strong> → e.g. "All Exams"</li>
+                <li>Leave <strong>City</strong> → "No specific city"</li>
+                <li>The ad shows on /exams page for everyone</li>
+              </ol>
+            </div>
+            <div className="border-t border-border pt-3">
+              <strong className="text-foreground">Available pages:</strong>
+              <div className="flex flex-wrap gap-2 mt-1">
+                <Badge>colleges → /colleges & /colleges/:slug</Badge>
+                <Badge>courses → /courses & /courses/:slug</Badge>
+                <Badge>exams → /exams & /exams/:slug</Badge>
+                <Badge>articles → /articles & /articles/:slug</Badge>
+              </div>
+            </div>
           </div>
-          <div className="p-3 bg-muted rounded-xl text-center">
-            <div className="font-bold text-foreground mb-1">#5 Fallback</div>
-            <div className="text-muted-foreground">Universal</div>
+        </div>
+
+        {/* Type 4: City-only */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-foreground text-background flex items-center justify-center text-xs font-bold">4</span>
+            City-Only Ads
+          </h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            Ads that appear <strong className="text-foreground">everywhere for users in a specific city</strong>, regardless of which page they're on.
+          </p>
+          <div className="bg-muted rounded-xl p-4 space-y-3 text-sm">
+            <div>
+              <strong className="text-foreground">How to create:</strong>
+              <ol className="list-decimal list-inside text-muted-foreground mt-1 space-y-1">
+                <li>Set <strong>Target Type</strong> → "City-specific"</li>
+                <li>Select a <strong>City</strong> → e.g. "Mumbai"</li>
+                <li>The ad shows on any page when the user is in Mumbai</li>
+              </ol>
+            </div>
+            <div className="border-t border-border pt-3">
+              <strong className="text-foreground">Supported cities:</strong>
+              <div className="flex flex-wrap gap-1.5 mt-1">
+                {["Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune", "Ahmedabad", "Jaipur", "Lucknow", "Chandigarh", "Bhopal", "Kochi", "Indore"].map((c) => (
+                  <Badge key={c} variant="outline" className="text-xs">{c}</Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Type 5: Universal */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-muted-foreground text-background flex items-center justify-center text-xs font-bold">5</span>
+            Universal Ads (Fallback)
+          </h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            The <strong className="text-foreground">default fallback</strong>. If no item-specific, page-specific, or city-specific ad exists, the universal ad is shown.
+          </p>
+          <div className="bg-muted rounded-xl p-4 space-y-3 text-sm">
+            <div>
+              <strong className="text-foreground">How to create:</strong>
+              <ol className="list-decimal list-inside text-muted-foreground mt-1 space-y-1">
+                <li>Set <strong>Target Type</strong> → "Universal"</li>
+                <li>No page, item, or city selection needed</li>
+                <li>The ad shows everywhere as a fallback</li>
+              </ol>
+            </div>
+            <div className="border-t border-border pt-3">
+              <strong className="text-foreground">Best for:</strong> General scholarship offers, career counseling ads, platform-wide promotions.
+            </div>
+          </div>
+        </div>
+
+        {/* Ad Variants & Positions */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-3">🎨 Ad Variants & Positions</h3>
+          <div className="grid sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <strong className="text-foreground">Variants (visual layout):</strong>
+              <ul className="mt-2 space-y-2 text-muted-foreground">
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">Leaderboard</Badge> Full-width thin strip at the top of pages</li>
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">Horizontal</Badge> Wide banner placed in content area</li>
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">Vertical</Badge> Tall sidebar ad in the right column</li>
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">Square</Badge> Compact square ad in the sidebar</li>
+              </ul>
+            </div>
+            <div>
+              <strong className="text-foreground">Positions (placement on page):</strong>
+              <ul className="mt-2 space-y-2 text-muted-foreground">
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">leaderboard</Badge> Top strip across the page</li>
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">mid-page</Badge> Between content sections</li>
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">sidebar</Badge> Right column on desktop</li>
+                <li className="flex items-start gap-2"><Badge variant="outline" className="shrink-0 text-xs">top / bottom</Badge> Top or bottom of content</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Example Scenarios */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-3">💡 Example Scenarios</h3>
+          <div className="space-y-3 text-sm">
+            <div className="p-3 bg-muted rounded-xl">
+              <strong className="text-foreground">Scenario 1:</strong> User visits <code className="bg-background px-1 rounded text-xs">/colleges/iit-delhi</code>
+              <div className="text-muted-foreground mt-1">→ System checks: Is there an item-specific ad for slug "iit-delhi"? <span className="text-success font-medium">✅ Yes → shows "IIT Delhi Admissions" ad</span></div>
+            </div>
+            <div className="p-3 bg-muted rounded-xl">
+              <strong className="text-foreground">Scenario 2:</strong> User visits <code className="bg-background px-1 rounded text-xs">/colleges</code> from Delhi
+              <div className="text-muted-foreground mt-1">→ No item-specific → checks page+city: <span className="text-success font-medium">✅ "Top Engineering Colleges in Delhi" ad found</span></div>
+            </div>
+            <div className="p-3 bg-muted rounded-xl">
+              <strong className="text-foreground">Scenario 3:</strong> User visits <code className="bg-background px-1 rounded text-xs">/exams</code> from Jaipur
+              <div className="text-muted-foreground mt-1">→ No item, no page+city combo → checks page-only: <span className="text-success font-medium">✅ "Free JEE/NEET Mock Tests" page ad found</span></div>
+            </div>
+            <div className="p-3 bg-muted rounded-xl">
+              <strong className="text-foreground">Scenario 4:</strong> User visits <code className="bg-background px-1 rounded text-xs">/colleges/vit-vellore</code> from Pune
+              <div className="text-muted-foreground mt-1">→ No item-specific for VIT → no page+city → page-only "Top Engineering Colleges" → or <span className="text-success font-medium">Universal fallback</span></div>
+            </div>
+          </div>
+        </div>
+
+        {/* How Matching Works */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-semibold text-foreground mb-3">⚙️ How Ad Matching Works Internally</h3>
+          <div className="text-sm text-muted-foreground space-y-2">
+            <p>Each ad placement on the website requests an ad with these parameters:</p>
+            <div className="bg-muted rounded-xl p-3 font-mono text-xs">
+              {`DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" itemSlug="iit-delhi"`}
+            </div>
+            <p className="mt-2">The system then:</p>
+            <ol className="list-decimal list-inside space-y-1">
+              <li>Fetches all active ads from the database</li>
+              <li>Filters by <strong className="text-foreground">variant</strong> (horizontal/vertical/square/leaderboard)</li>
+              <li>Filters by <strong className="text-foreground">position</strong> (mid-page/sidebar/leaderboard/top/bottom)</li>
+              <li>Applies priority chain: Item → Page+City → Page → City → Universal</li>
+              <li>Returns the first match (highest priority within each tier wins)</li>
+              <li>If no match at any tier, the ad slot stays empty (no fallback ad = no ad shown)</li>
+            </ol>
           </div>
         </div>
       </div>

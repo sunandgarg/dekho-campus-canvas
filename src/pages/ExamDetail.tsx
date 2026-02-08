@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Calendar, Users, FileText, Award, CheckCircle, BookOpen, Building } from "lucide-react";
+import { Calendar, Users, FileText, Award, Building } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { exams } from "@/data/exams";
 
 export default function ExamDetail() {
@@ -33,12 +33,11 @@ export default function ExamDetail() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <AdBanner variant="leaderboard" />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page="exams" itemSlug={slug} />
 
       <main className="container py-4 md:py-6">
         <PageBreadcrumb items={[{ label: "Exams", href: "/exams" }, { label: exam.name }]} />
 
-        {/* Hero */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative rounded-2xl overflow-hidden mb-6">
           <img src={exam.image} alt={exam.name} className="w-full h-48 md:h-64 object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
@@ -54,7 +53,6 @@ export default function ExamDetail() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { icon: Calendar, label: "Exam Date", value: exam.date, color: "text-primary" },
@@ -70,21 +68,18 @@ export default function ExamDetail() {
               ))}
             </div>
 
-            {/* About */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">About {exam.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{exam.description}</p>
             </section>
 
-            {/* Eligibility */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Eligibility Criteria</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{exam.eligibility}</p>
             </section>
 
-            <AdBanner variant="horizontal" position="Exam Detail Mid" />
+            <DynamicAdBanner variant="horizontal" position="mid-page" page="exams" itemSlug={slug} />
 
-            {/* Important Dates */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Important Dates</h2>
               <div className="space-y-3">
@@ -100,7 +95,6 @@ export default function ExamDetail() {
               </div>
             </section>
 
-            {/* Syllabus */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Exam Syllabus</h2>
               <div className="flex flex-wrap gap-2">
@@ -110,7 +104,6 @@ export default function ExamDetail() {
               </div>
             </section>
 
-            {/* Top Colleges */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Top Colleges Accepting {exam.name}</h2>
               <div className="grid sm:grid-cols-2 gap-2">
@@ -128,7 +121,7 @@ export default function ExamDetail() {
 
           <aside className="space-y-6">
             <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} />
-            <AdBanner variant="vertical" position="Exam Detail Sidebar" />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="exams" itemSlug={slug} />
             <LeadCaptureForm variant="sidebar" title="Exam Alerts" subtitle="Get notified about deadlines" source="exam_alert_sidebar" />
           </aside>
         </div>

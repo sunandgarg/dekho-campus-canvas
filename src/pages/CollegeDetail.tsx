@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, MapPin, Calendar, GraduationCap, TrendingUp, Building, CheckCircle, ArrowLeft } from "lucide-react";
+import { Star, MapPin, Calendar, GraduationCap, TrendingUp, Building, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { colleges } from "@/data/colleges";
 
 export default function CollegeDetail() {
@@ -35,7 +35,7 @@ export default function CollegeDetail() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <AdBanner variant="leaderboard" />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page="colleges" itemSlug={slug} />
 
       <main className="container py-4 md:py-6">
         <PageBreadcrumb items={[{ label: "Colleges", href: "/colleges" }, { label: college.name }]} />
@@ -116,7 +116,7 @@ export default function CollegeDetail() {
               </div>
             </section>
 
-            <AdBanner variant="horizontal" position="College Detail Mid" />
+            <DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" itemSlug={slug} />
 
             {/* Facilities */}
             <section className="bg-card rounded-2xl border border-border p-5">
@@ -150,9 +150,8 @@ export default function CollegeDetail() {
               </div>
             </section>
 
-            <AdBanner variant="horizontal" position="College Detail Bottom" />
+            <DynamicAdBanner variant="horizontal" position="bottom" page="colleges" itemSlug={slug} />
 
-            {/* Inline Lead Form */}
             <LeadCaptureForm
               variant="inline"
               title={`Get admission details for ${college.name}`}
@@ -168,7 +167,7 @@ export default function CollegeDetail() {
               subtitle="Get free counseling and application support"
               source={`college_detail_sidebar_${college.slug}`}
             />
-            <AdBanner variant="vertical" position="College Detail Sidebar" />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" itemSlug={slug} />
             <LeadCaptureForm
               variant="sidebar"
               title="Compare Colleges"

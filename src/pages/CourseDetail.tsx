@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Building, TrendingUp, BookOpen, CheckCircle, ArrowRight, Briefcase, FileText } from "lucide-react";
+import { Clock, Building, TrendingUp, BookOpen, CheckCircle, Briefcase, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
-import { AdBanner } from "@/components/AdBanner";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { courses } from "@/data/courses";
 
 export default function CourseDetail() {
@@ -33,7 +33,7 @@ export default function CourseDetail() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <AdBanner variant="leaderboard" />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page="courses" itemSlug={slug} />
 
       <main className="container py-4 md:py-6">
         <PageBreadcrumb items={[{ label: "Courses", href: "/courses" }, { label: course.name }]} />
@@ -54,7 +54,6 @@ export default function CourseDetail() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { icon: Clock, label: "Duration", value: course.duration, color: "text-primary" },
@@ -70,21 +69,18 @@ export default function CourseDetail() {
               ))}
             </div>
 
-            {/* About */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">About {course.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{course.description}</p>
             </section>
 
-            {/* Eligibility */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Eligibility</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{course.eligibility}</p>
             </section>
 
-            <AdBanner variant="horizontal" position="Course Detail Mid" />
+            <DynamicAdBanner variant="horizontal" position="mid-page" page="courses" itemSlug={slug} />
 
-            {/* Subjects */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Key Subjects</h2>
               <div className="flex flex-wrap gap-2">
@@ -94,7 +90,6 @@ export default function CourseDetail() {
               </div>
             </section>
 
-            {/* Top Exams */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Entrance Exams</h2>
               <div className="flex flex-wrap gap-2">
@@ -107,7 +102,6 @@ export default function CourseDetail() {
               </div>
             </section>
 
-            {/* Career Options */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Career Options</h2>
               <div className="grid sm:grid-cols-2 gap-2">
@@ -120,7 +114,6 @@ export default function CourseDetail() {
               </div>
             </section>
 
-            {/* Fees */}
             <section className="bg-card rounded-2xl border border-border p-5">
               <h2 className="text-lg font-bold text-foreground mb-3">Fee Range</h2>
               <p className="text-xl font-bold text-foreground">{course.avgFees}</p>
@@ -132,7 +125,7 @@ export default function CourseDetail() {
 
           <aside className="space-y-6">
             <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} />
-            <AdBanner variant="vertical" position="Course Detail Sidebar" />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="courses" itemSlug={slug} />
             <LeadCaptureForm variant="sidebar" title="Compare Courses" subtitle="Compare with similar courses" source="course_compare_sidebar" />
           </aside>
         </div>
