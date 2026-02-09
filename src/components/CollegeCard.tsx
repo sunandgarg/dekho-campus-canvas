@@ -100,7 +100,7 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
                 Know More
               </Button>
             </Link>
-            <Button className="w-full rounded-xl h-10 text-sm gradient-accent text-white border-0">
+            <Button className="w-full rounded-xl h-10 text-sm bg-primary text-primary-foreground hover:bg-primary/90 border-0">
               Apply Now
             </Button>
           </div>

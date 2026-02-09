@@ -130,7 +130,7 @@ export default function CollegeDetail() {
             </div>
 
             {/* Overview */}
-            <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">About {college.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{college.description}</p>
               <div className="grid sm:grid-cols-2 gap-3 mt-4">
@@ -153,7 +153,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Highlights */}
-            <section id="highlights" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="highlights" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Key Highlights</h2>
               <div className="grid sm:grid-cols-2 gap-2">
                 {college.highlights.map((h) => (
@@ -166,7 +166,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Courses */}
-            <section id="courses" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="courses" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Popular Courses at {college.short_name}</h2>
               <div className="grid sm:grid-cols-2 gap-2">
                 {popularCourses.map((c) => (
@@ -184,7 +184,7 @@ export default function CollegeDetail() {
             <DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" itemSlug={slug} />
 
             {/* Facilities */}
-            <section id="facilities" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="facilities" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Facilities</h2>
               <div className="flex flex-wrap gap-2">
                 {college.facilities.map((f) => (
@@ -194,7 +194,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Placements */}
-            <section id="placements" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="placements" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Placements</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                 <div className="bg-muted rounded-xl p-3 text-center">
@@ -216,7 +216,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Admissions */}
-            <section id="admissions" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="admissions" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Admission Process</h2>
               <div className="space-y-3">
                 {[
@@ -235,7 +235,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Top Recruiters */}
-            <section id="recruiters" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="recruiters" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Top Recruiters</h2>
               <div className="flex flex-wrap gap-2">
                 {(college.top_recruiters.length > 0 ? college.top_recruiters : ["Google", "Microsoft", "Amazon", "TCS", "Infosys", "Wipro"]).map((r) => (
@@ -250,7 +250,7 @@ export default function CollegeDetail() {
             <DynamicAdBanner variant="horizontal" position="bottom" page="colleges" itemSlug={slug} />
 
             {/* Similar Colleges */}
-            <section id="similar" className="scroll-mt-32">
+            <section id="similar" className="scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Similar {college.category} Colleges</h2>
               <div className="grid sm:grid-cols-2 gap-3">
                 {(similarColleges ?? []).slice(0, 4).map((c) => (
@@ -272,7 +272,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Same State */}
-            <section id="same-state" className="scroll-mt-32">
+            <section id="same-state" className="scroll-mt-28 md:scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Colleges in {college.state}</h2>
               {(sameStateColleges ?? []).length > 0 ? (
                 <div className="grid sm:grid-cols-2 gap-3">
@@ -295,7 +295,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* FAQ */}
-            <section id="faq" className="scroll-mt-32">
+            <section id="faq" className="scroll-mt-28 md:scroll-mt-32">
               <FAQSection page="colleges" itemSlug={slug} title={`FAQs about ${college.name}`} />
             </section>
 

@@ -26,7 +26,7 @@ export function ScrollSpy({ sections, className }: ScrollSpyProps) {
           setActiveId(visible[0].target.id);
         }
       },
-      { rootMargin: "-80px 0px -60% 0px", threshold: 0.1 }
+      { rootMargin: "-120px 0px -50% 0px", threshold: 0.15 }
     );
 
     sections.forEach(({ id }) => {
