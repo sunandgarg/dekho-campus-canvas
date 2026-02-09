@@ -16,20 +16,13 @@ const categories = [
   { id: "commerce", label: "Commerce", emoji: "💼" },
 ];
 
-const subTabs = [
-  { id: "colleges", label: "Colleges", icon: GraduationCap },
-  { id: "courses", label: "Courses", icon: BookOpen },
-  { id: "exams", label: "Exams", icon: FileText },
-];
-
-// Sample data for each category
 const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any[] }> = {
   engineering: {
     colleges: [
-      { rank: 1, name: "IIT Delhi", location: "New Delhi", rating: 4.9, reviews: 2500, courses: "50+ Courses", fees: "₹2.5L/year", placement: "₹25 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop", tags: ["NIRF #1", "Govt"] },
-      { rank: 2, name: "IIT Bombay", location: "Mumbai", rating: 4.9, reviews: 2200, courses: "45+ Courses", fees: "₹2.5L/year", placement: "₹28 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop", tags: ["NIRF #2", "Govt"] },
-      { rank: 3, name: "IIT Kanpur", location: "Uttar Pradesh", rating: 4.8, reviews: 1900, courses: "42+ Courses", fees: "₹2.5L/year", placement: "₹22 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop", tags: ["NIRF #3", "Govt"] },
-      { rank: 4, name: "NIT Trichy", location: "Tamil Nadu", rating: 4.7, reviews: 1800, courses: "35+ Courses", fees: "₹1.5L/year", placement: "₹15 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop", tags: ["NIT #1", "Govt"] },
+      { rank: 1, name: "IIT Delhi", location: "New Delhi", rating: 4.9, courses: "50+ Courses", placement: "₹25 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop" },
+      { rank: 2, name: "IIT Bombay", location: "Mumbai", rating: 4.9, courses: "45+ Courses", placement: "₹28 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop" },
+      { rank: 3, name: "IIT Kanpur", location: "Uttar Pradesh", rating: 4.8, courses: "42+ Courses", placement: "₹22 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop" },
+      { rank: 4, name: "NIT Trichy", location: "Tamil Nadu", rating: 4.7, courses: "35+ Courses", placement: "₹15 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "B.Tech Computer Science", colleges: 1200, avgSalary: "₹12 LPA", growth: "+25%" },
@@ -46,10 +39,10 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
   },
   medical: {
     colleges: [
-      { rank: 1, name: "AIIMS Delhi", location: "New Delhi", rating: 4.9, reviews: 3200, courses: "25+ Courses", fees: "₹1.5K/year", placement: "₹15 LPA avg", image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop", tags: ["NIRF #1", "Govt"] },
-      { rank: 2, name: "JIPMER", location: "Puducherry", rating: 4.8, reviews: 2100, courses: "20+ Courses", fees: "₹2K/year", placement: "₹12 LPA avg", image: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=300&fit=crop", tags: ["NIRF #2", "Govt"] },
-      { rank: 3, name: "CMC Vellore", location: "Tamil Nadu", rating: 4.8, reviews: 2400, courses: "30+ Courses", fees: "₹80K/year", placement: "₹14 LPA avg", image: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=300&fit=crop", tags: ["Private", "Top 5"] },
-      { rank: 4, name: "AFMC Pune", location: "Maharashtra", rating: 4.7, reviews: 1500, courses: "15+ Courses", fees: "Free", placement: "₹10 LPA avg", image: "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=400&h=300&fit=crop", tags: ["Defence", "Govt"] },
+      { rank: 1, name: "AIIMS Delhi", location: "New Delhi", rating: 4.9, courses: "25+ Courses", placement: "₹15 LPA avg", image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop" },
+      { rank: 2, name: "JIPMER", location: "Puducherry", rating: 4.8, courses: "20+ Courses", placement: "₹12 LPA avg", image: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=300&fit=crop" },
+      { rank: 3, name: "CMC Vellore", location: "Tamil Nadu", rating: 4.8, courses: "30+ Courses", placement: "₹14 LPA avg", image: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=300&fit=crop" },
+      { rank: 4, name: "AFMC Pune", location: "Maharashtra", rating: 4.7, courses: "15+ Courses", placement: "₹10 LPA avg", image: "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "MBBS", colleges: 612, avgSalary: "₹10 LPA", growth: "+15%" },
@@ -66,10 +59,10 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
   },
   management: {
     colleges: [
-      { rank: 1, name: "IIM Ahmedabad", location: "Gujarat", rating: 4.9, reviews: 1800, courses: "10+ Programs", fees: "₹24L/year", placement: "₹32 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop", tags: ["#1 MBA", "Govt"] },
-      { rank: 2, name: "IIM Bangalore", location: "Karnataka", rating: 4.9, reviews: 1600, courses: "12+ Programs", fees: "₹25L/year", placement: "₹30 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop", tags: ["#2 MBA", "Govt"] },
-      { rank: 3, name: "IIM Calcutta", location: "West Bengal", rating: 4.8, reviews: 1500, courses: "10+ Programs", fees: "₹23L/year", placement: "₹28 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop", tags: ["#3 MBA", "Govt"] },
-      { rank: 4, name: "ISB Hyderabad", location: "Telangana", rating: 4.8, reviews: 1200, courses: "5+ Programs", fees: "₹35L/year", placement: "₹34 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop", tags: ["Private", "Top 5"] },
+      { rank: 1, name: "IIM Ahmedabad", location: "Gujarat", rating: 4.9, courses: "10+ Programs", placement: "₹32 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop" },
+      { rank: 2, name: "IIM Bangalore", location: "Karnataka", rating: 4.9, courses: "12+ Programs", placement: "₹30 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop" },
+      { rank: 3, name: "IIM Calcutta", location: "West Bengal", rating: 4.8, courses: "10+ Programs", placement: "₹28 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop" },
+      { rank: 4, name: "ISB Hyderabad", location: "Telangana", rating: 4.8, courses: "5+ Programs", placement: "₹34 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "MBA (General)", colleges: 3500, avgSalary: "₹12 LPA", growth: "+18%" },
@@ -86,10 +79,10 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
   },
   design: {
     colleges: [
-      { rank: 1, name: "NID Ahmedabad", location: "Gujarat", rating: 4.9, reviews: 800, courses: "15+ Programs", fees: "₹4L/year", placement: "₹12 LPA avg", image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&h=300&fit=crop", tags: ["#1 Design", "Govt"] },
-      { rank: 2, name: "IIT Bombay IDC", location: "Mumbai", rating: 4.8, reviews: 600, courses: "8+ Programs", fees: "₹2.5L/year", placement: "₹15 LPA avg", image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=400&h=300&fit=crop", tags: ["IIT", "Govt"] },
-      { rank: 3, name: "NIFT Delhi", location: "New Delhi", rating: 4.7, reviews: 1200, courses: "20+ Programs", fees: "₹3L/year", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop", tags: ["Fashion", "Govt"] },
-      { rank: 4, name: "Srishti Bangalore", location: "Karnataka", rating: 4.6, reviews: 500, courses: "18+ Programs", fees: "₹5L/year", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=300&fit=crop", tags: ["Private", "Art"] },
+      { rank: 1, name: "NID Ahmedabad", location: "Gujarat", rating: 4.9, courses: "15+ Programs", placement: "₹12 LPA avg", image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&h=300&fit=crop" },
+      { rank: 2, name: "IIT Bombay IDC", location: "Mumbai", rating: 4.8, courses: "8+ Programs", placement: "₹15 LPA avg", image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=400&h=300&fit=crop" },
+      { rank: 3, name: "NIFT Delhi", location: "New Delhi", rating: 4.7, courses: "20+ Programs", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" },
+      { rank: 4, name: "Srishti Bangalore", location: "Karnataka", rating: 4.6, courses: "18+ Programs", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "B.Des Industrial Design", colleges: 120, avgSalary: "₹8 LPA", growth: "+30%" },
@@ -106,10 +99,10 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
   },
   law: {
     colleges: [
-      { rank: 1, name: "NLSIU Bangalore", location: "Karnataka", rating: 4.9, reviews: 900, courses: "5+ Programs", fees: "₹2.5L/year", placement: "₹20 LPA avg", image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=300&fit=crop", tags: ["#1 Law", "Govt"] },
-      { rank: 2, name: "NLU Delhi", location: "New Delhi", rating: 4.8, reviews: 750, courses: "5+ Programs", fees: "₹2L/year", placement: "₹18 LPA avg", image: "https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=400&h=300&fit=crop", tags: ["#2 Law", "Govt"] },
-      { rank: 3, name: "NALSAR Hyderabad", location: "Telangana", rating: 4.8, reviews: 680, courses: "4+ Programs", fees: "₹2L/year", placement: "₹16 LPA avg", image: "https://images.unsplash.com/photo-1479142506502-19b3a3b7ff33?w=400&h=300&fit=crop", tags: ["#3 Law", "Govt"] },
-      { rank: 4, name: "WBNUJS Kolkata", location: "West Bengal", rating: 4.7, reviews: 550, courses: "4+ Programs", fees: "₹1.8L/year", placement: "₹14 LPA avg", image: "https://images.unsplash.com/photo-1423592707957-3b212afa6733?w=400&h=300&fit=crop", tags: ["NLU", "Govt"] },
+      { rank: 1, name: "NLSIU Bangalore", location: "Karnataka", rating: 4.9, courses: "5+ Programs", placement: "₹20 LPA avg", image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=300&fit=crop" },
+      { rank: 2, name: "NLU Delhi", location: "New Delhi", rating: 4.8, courses: "5+ Programs", placement: "₹18 LPA avg", image: "https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=400&h=300&fit=crop" },
+      { rank: 3, name: "NALSAR Hyderabad", location: "Telangana", rating: 4.8, courses: "4+ Programs", placement: "₹16 LPA avg", image: "https://images.unsplash.com/photo-1479142506502-19b3a3b7ff33?w=400&h=300&fit=crop" },
+      { rank: 4, name: "WBNUJS Kolkata", location: "West Bengal", rating: 4.7, courses: "4+ Programs", placement: "₹14 LPA avg", image: "https://images.unsplash.com/photo-1423592707957-3b212afa6733?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "BA LLB (5 Years)", colleges: 450, avgSalary: "₹8 LPA", growth: "+18%" },
@@ -126,10 +119,10 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
   },
   science: {
     colleges: [
-      { rank: 1, name: "IISc Bangalore", location: "Karnataka", rating: 4.9, reviews: 1200, courses: "40+ Programs", fees: "₹50K/year", placement: "₹18 LPA avg", image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&h=300&fit=crop", tags: ["#1 Science", "Govt"] },
-      { rank: 2, name: "St. Stephen's College", location: "New Delhi", rating: 4.8, reviews: 1800, courses: "20+ Programs", fees: "₹30K/year", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop", tags: ["DU", "Prestigious"] },
-      { rank: 3, name: "Hindu College", location: "New Delhi", rating: 4.7, reviews: 1500, courses: "18+ Programs", fees: "₹25K/year", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop", tags: ["DU", "Top 5"] },
-      { rank: 4, name: "Presidency College", location: "Kolkata", rating: 4.6, reviews: 900, courses: "15+ Programs", fees: "₹20K/year", placement: "₹6 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop", tags: ["Historic", "Govt"] },
+      { rank: 1, name: "IISc Bangalore", location: "Karnataka", rating: 4.9, courses: "40+ Programs", placement: "₹18 LPA avg", image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&h=300&fit=crop" },
+      { rank: 2, name: "St. Stephen's College", location: "New Delhi", rating: 4.8, courses: "20+ Programs", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop" },
+      { rank: 3, name: "Hindu College", location: "New Delhi", rating: 4.7, courses: "18+ Programs", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop" },
+      { rank: 4, name: "Presidency College", location: "Kolkata", rating: 4.6, courses: "15+ Programs", placement: "₹6 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "B.Sc Physics", colleges: 2000, avgSalary: "₹5 LPA", growth: "+15%" },
@@ -146,10 +139,10 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
   },
   arts: {
     colleges: [
-      { rank: 1, name: "JNU Delhi", location: "New Delhi", rating: 4.8, reviews: 2200, courses: "50+ Programs", fees: "₹15K/year", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop", tags: ["#1 Humanities", "Govt"] },
-      { rank: 2, name: "Lady Shri Ram College", location: "New Delhi", rating: 4.8, reviews: 1800, courses: "25+ Programs", fees: "₹35K/year", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop", tags: ["DU", "Women"] },
-      { rank: 3, name: "Miranda House", location: "New Delhi", rating: 4.7, reviews: 1600, courses: "22+ Programs", fees: "₹30K/year", placement: "₹6 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop", tags: ["DU", "Women"] },
-      { rank: 4, name: "Loyola College", location: "Chennai", rating: 4.6, reviews: 1200, courses: "20+ Programs", fees: "₹40K/year", placement: "₹5 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop", tags: ["Autonomous", "Chennai"] },
+      { rank: 1, name: "JNU Delhi", location: "New Delhi", rating: 4.8, courses: "50+ Programs", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop" },
+      { rank: 2, name: "Lady Shri Ram College", location: "New Delhi", rating: 4.8, courses: "25+ Programs", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop" },
+      { rank: 3, name: "Miranda House", location: "New Delhi", rating: 4.7, courses: "22+ Programs", placement: "₹6 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop" },
+      { rank: 4, name: "Loyola College", location: "Chennai", rating: 4.6, courses: "20+ Programs", placement: "₹5 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "BA English Literature", colleges: 3000, avgSalary: "₹4 LPA", growth: "+10%" },
@@ -166,10 +159,10 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
   },
   commerce: {
     colleges: [
-      { rank: 1, name: "SRCC Delhi", location: "New Delhi", rating: 4.9, reviews: 2000, courses: "5+ Programs", fees: "₹40K/year", placement: "₹12 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop", tags: ["#1 Commerce", "DU"] },
-      { rank: 2, name: "Hindu College", location: "New Delhi", rating: 4.8, reviews: 1500, courses: "6+ Programs", fees: "₹30K/year", placement: "₹10 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop", tags: ["DU", "Top 5"] },
-      { rank: 3, name: "Christ University", location: "Bangalore", rating: 4.7, reviews: 2500, courses: "15+ Programs", fees: "₹1.2L/year", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop", tags: ["Private", "Top 10"] },
-      { rank: 4, name: "Hansraj College", location: "New Delhi", rating: 4.6, reviews: 1200, courses: "5+ Programs", fees: "₹25K/year", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop", tags: ["DU", "Popular"] },
+      { rank: 1, name: "SRCC Delhi", location: "New Delhi", rating: 4.9, courses: "5+ Programs", placement: "₹12 LPA avg", image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop" },
+      { rank: 2, name: "Hindu College", location: "New Delhi", rating: 4.8, courses: "6+ Programs", placement: "₹10 LPA avg", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop" },
+      { rank: 3, name: "Christ University", location: "Bangalore", rating: 4.7, courses: "15+ Programs", placement: "₹8 LPA avg", image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop" },
+      { rank: 4, name: "Hansraj College", location: "New Delhi", rating: 4.6, courses: "5+ Programs", placement: "₹7 LPA avg", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop" },
     ],
     courses: [
       { name: "B.Com (Honours)", colleges: 4000, avgSalary: "₹5 LPA", growth: "+12%" },
@@ -188,7 +181,6 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
 
 export function CategorySection() {
   const [activeCategory, setActiveCategory] = useState("engineering");
-  const [activeSubTab, setActiveSubTab] = useState("colleges");
   const data = categoryData[activeCategory];
 
   return (
@@ -204,16 +196,16 @@ export function CategorySection() {
           </p>
         </motion.div>
 
-        {/* Category Tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide" role="tablist">
+        {/* Category Pills */}
+        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide justify-center flex-wrap" role="tablist">
           {categories.map((cat) => (
             <Button
               key={cat.id}
               variant={activeCategory === cat.id ? "default" : "outline"}
               size="sm"
-              onClick={() => { setActiveCategory(cat.id); setActiveSubTab("colleges"); }}
-              className={`whitespace-nowrap flex-shrink-0 rounded-xl gap-2 ${
-                activeCategory === cat.id ? "gradient-primary text-primary-foreground border-0" : "border-border hover:bg-primary/5"
+              onClick={() => setActiveCategory(cat.id)}
+              className={`whitespace-nowrap flex-shrink-0 rounded-full gap-2 ${
+                activeCategory === cat.id ? "gradient-primary text-primary-foreground border-0 shadow-md" : "border-border hover:bg-primary/5"
               }`}
               role="tab"
               aria-selected={activeCategory === cat.id}
@@ -224,106 +216,117 @@ export function CategorySection() {
           ))}
         </div>
 
-        {/* Sub-tabs: Colleges / Courses / Exams */}
-        <div className="flex gap-1 mb-6 bg-accent/10 rounded-xl p-1 w-fit border border-accent/20">
-          {subTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveSubTab(tab.id)}
-              className={`flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                activeSubTab === tab.id
-                  ? "gradient-accent text-accent-foreground shadow-md"
-                  : "text-foreground/70 hover:text-foreground hover:bg-card"
-              }`}
-            >
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Content */}
-        <motion.div key={`${activeCategory}-${activeSubTab}`} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
-          {activeSubTab === "colleges" && (
+        {/* 3-Column Layout: Colleges | Courses | Exams */}
+        <motion.div
+          key={activeCategory}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-5"
+        >
+          {/* Column 1: Top Colleges */}
+          <div className="bg-card rounded-2xl border border-border p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-bold text-foreground flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-primary" /> Top Colleges
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">Based on NIRF rankings</p>
+              </div>
+              <Link to={`/colleges?category=${activeCategory}`}>
+                <span className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></span>
+              </Link>
+            </div>
             <div className="space-y-3">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-muted-foreground">Top {categories.find(c => c.id === activeCategory)?.label} colleges by NIRF ranking</p>
-                <Link to={`/colleges?category=${activeCategory}`}>
-                  <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">View All <ArrowRight className="w-4 h-4 ml-1" /></Button>
+              {data.colleges.map((college) => (
+                <Link key={college.rank} to="/colleges" className="group flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/50 transition-colors">
+                  <div className="relative flex-shrink-0">
+                    <span className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center z-10">#{college.rank}</span>
+                    <img src={college.image} alt={college.name} className="w-12 h-12 rounded-lg object-cover" loading="lazy" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">{college.name}</h4>
+                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
+                      <span className="flex items-center gap-0.5"><MapPin className="w-3 h-3" />{college.location}</span>
+                      <span>•</span>
+                      <span>{college.courses}</span>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="flex items-center gap-1 text-sm font-bold text-foreground">
+                      <Star className="w-3.5 h-3.5 fill-primary text-primary" /> {college.rating}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">{college.placement}</span>
+                  </div>
                 </Link>
-              </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {data.colleges.map((college) => (
-                  <Link key={college.rank} to="/colleges" className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-md transition-all">
-                    <div className="relative h-36 overflow-hidden">
-                      <img src={college.image} alt={college.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                      <div className="absolute top-2 left-2 flex gap-1">
-                        {college.tags.map((t: string) => (
-                          <Badge key={t} className="bg-foreground/70 text-background border-0 text-[10px]">{t}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="p-3 space-y-2">
-                      <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{college.name}</h4>
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{college.location}</span>
-                        <span className="flex items-center gap-1"><Star className="w-3 h-3 fill-primary text-primary" />{college.rating}</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">{college.fees}</span>
-                        <span className="font-medium text-accent">{college.placement}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              ))}
             </div>
-          )}
+          </div>
 
-          {activeSubTab === "courses" && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-muted-foreground">Trending {categories.find(c => c.id === activeCategory)?.label} courses</p>
-                <Link to="/courses"><Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">View All <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+          {/* Column 2: Trending Courses */}
+          <div className="bg-card rounded-2xl border border-border p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-bold text-foreground flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-primary" /> Trending Courses
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">High demand programs</p>
               </div>
-              <div className="grid sm:grid-cols-2 gap-3">
-                {data.courses.map((course) => (
-                  <Link key={course.name} to="/courses" className="group flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:border-primary/30 transition-all">
-                    <div>
-                      <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{course.name}</h4>
-                      <span className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><Users className="w-3 h-3" />{course.colleges}+ colleges</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-success/15 text-success hover:bg-success/15 text-xs"><TrendingUp className="w-3 h-3 mr-1" />{course.growth}</Badge>
-                      <Badge className="bg-primary/10 text-primary hover:bg-primary/10 text-xs">{course.avgSalary}</Badge>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              <Link to="/courses">
+                <span className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></span>
+              </Link>
             </div>
-          )}
+            <div className="space-y-3">
+              {data.courses.map((course) => (
+                <Link key={course.name} to="/courses" className="group block p-3 rounded-xl hover:bg-muted/50 transition-colors">
+                  <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{course.name}</h4>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-[11px] text-muted-foreground flex items-center gap-1"><Users className="w-3 h-3" />{course.colleges}+ colleges</span>
+                    <div className="flex items-center gap-1.5">
+                      <Badge className="bg-accent/10 text-accent hover:bg-accent/10 text-[10px] px-1.5 py-0"><TrendingUp className="w-3 h-3 mr-0.5" />{course.growth}</Badge>
+                      <Badge className="bg-primary/10 text-primary hover:bg-primary/10 text-[10px] px-1.5 py-0">{course.avgSalary}</Badge>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
 
-          {activeSubTab === "exams" && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-muted-foreground">Upcoming {categories.find(c => c.id === activeCategory)?.label} exams</p>
-                <Link to="/exams"><Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">View All <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+          {/* Column 3: Upcoming Exams */}
+          <div className="bg-card rounded-2xl border border-border p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-bold text-foreground flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-primary" /> Upcoming Exams
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">Don't miss deadlines!</p>
               </div>
-              <div className="grid sm:grid-cols-2 gap-3">
-                {data.exams.map((exam) => (
-                  <Link key={exam.name} to="/exams" className="group flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:border-primary/30 transition-all">
-                    <div>
-                      <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{exam.name}</h4>
-                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                        <Clock className="w-3 h-3" /><span>{exam.date}</span><span>•</span><span>{exam.applicants} applicants</span>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="border-primary/30 text-primary text-xs">{exam.type}</Badge>
-                  </Link>
-                ))}
-              </div>
+              <Link to="/exams">
+                <span className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></span>
+              </Link>
             </div>
-          )}
+            <div className="space-y-3">
+              {data.exams.map((exam) => (
+                <Link key={exam.name} to="/exams" className="group flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors">
+                  <div>
+                    <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{exam.name}</h4>
+                    <div className="flex items-center gap-2 mt-1 text-[11px] text-muted-foreground">
+                      <Clock className="w-3 h-3" />
+                      <span>{exam.date}</span>
+                      <span>•</span>
+                      <span>{exam.applicants} applicants</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${
+                      exam.type === "National" ? "border-destructive/40 text-destructive" : "border-primary/30 text-primary"
+                    }`}>{exam.type}</Badge>
+                    <Bookmark className="w-4 h-4 text-muted-foreground/40 hover:text-primary cursor-pointer transition-colors" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
