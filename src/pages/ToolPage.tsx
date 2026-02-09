@@ -1,4 +1,6 @@
 import { useParams, Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
@@ -15,10 +17,10 @@ import { CGPAConverterTool } from "@/components/tools/CGPAConverterTool";
 import { EMICalculatorTool } from "@/components/tools/EMICalculatorTool";
 import { RankPredictorTool } from "@/components/tools/RankPredictorTool";
 import { EligibilityCheckerTool } from "@/components/tools/EligibilityCheckerTool";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { CompareCollegesTool } from "@/components/tools/CompareCollegesTool";
 
 const toolRegistry: Record<string, { title: string; description: string; component: React.FC }> = {
+  "compare-colleges": { title: "Compare Colleges", description: "Side-by-side college comparison on fees, placements, and rankings.", component: CompareCollegesTool },
   "cgpa-converter": { title: "CGPA/SGPA to Percentage Converter", description: "Convert your CGPA or SGPA to percentage easily.", component: CGPAConverterTool },
   "emi-calculator": { title: "Education Loan EMI Calculator", description: "Calculate your monthly EMI for education loans.", component: EMICalculatorTool },
   "rank-predictor": { title: "Exam Rank Predictor", description: "Get an estimated rank based on your expected score.", component: RankPredictorTool },
@@ -54,8 +56,8 @@ export default function ToolPage() {
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="tools" />
       <main className="container py-4 md:py-6">
-        <PageBreadcrumb items={[{ label: "Tools", href: "/#tools-heading" }, { label: tool.title }]} />
-        <Link to="/#tools-heading" className="inline-flex items-center gap-1 text-sm text-primary hover:underline mb-4">
+        <PageBreadcrumb items={[{ label: "Tools", href: "/tools" }, { label: tool.title }]} />
+        <Link to="/tools" className="inline-flex items-center gap-1 text-sm text-primary hover:underline mb-4">
           <ArrowLeft className="w-4 h-4" /> Back to All Tools
         </Link>
         <div className="grid lg:grid-cols-3 gap-6">
