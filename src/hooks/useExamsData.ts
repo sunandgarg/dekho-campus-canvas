@@ -30,6 +30,32 @@ export type DbExam = {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  // New fields
+  short_name: string;
+  logo: string;
+  application_start_date: string;
+  application_end_date: string;
+  result_date: string;
+  website: string;
+  negative_marking: boolean;
+  seats: string;
+  age_limit: string;
+  sample_paper_url: string;
+  summary_content: string;
+  application_process: string;
+  exam_pattern: string;
+  cutoff_content: string;
+  preparation_tips: string;
+  counselling_content: string;
+  center_content: string;
+  question_paper: string;
+  gender_wise: string;
+  result_content: string;
+  cast_wise_fee: string;
+  dates_content: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
 };
 
 export function useDbExams() {

@@ -80,89 +80,209 @@ export type Database = {
         }
         Relationships: []
       }
-      colleges: {
+      articles: {
         Row: {
-          approvals: string[]
+          author: string
           category: string
-          city: string
-          courses_count: number
+          content: string
           created_at: string
           description: string
+          featured_image: string
+          id: string
+          is_active: boolean
+          meta_description: string
+          meta_keywords: string
+          meta_title: string
+          slug: string
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          vertical: string
+          views: number
+        }
+        Insert: {
+          author?: string
+          category?: string
+          content?: string
+          created_at?: string
+          description?: string
+          featured_image?: string
+          id?: string
+          is_active?: boolean
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
+          slug: string
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          vertical?: string
+          views?: number
+        }
+        Update: {
+          author?: string
+          category?: string
+          content?: string
+          created_at?: string
+          description?: string
+          featured_image?: string
+          id?: string
+          is_active?: boolean
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
+          slug?: string
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          vertical?: string
+          views?: number
+        }
+        Relationships: []
+      }
+      colleges: {
+        Row: {
+          admission_process: string
+          approvals: string[]
+          banner_ad_image: string
+          brochure_url: string
+          carousel_images: string[]
+          category: string
+          city: string
+          course_fee_content: string
+          courses_count: number
+          created_at: string
+          cutoff: string
+          description: string
+          eligibility_criteria: string
           established: number
           facilities: string[]
+          facilities_content: string
           fees: string
+          gallery_images: string[]
           highlights: string[]
+          hostel_life: string
           id: string
           image: string
           is_active: boolean
           location: string
+          logo: string
+          meta_description: string
+          meta_keywords: string
+          meta_title: string
           naac_grade: string
           name: string
           placement: string
+          placement_content: string
           ranking: string
+          rankings_content: string
           rating: number
           reviews: number
+          scholarship_details: string
           short_name: string
           slug: string
+          square_ad_image: string
           state: string
+          status: string
           tags: string[]
           top_recruiters: string[]
           type: string
           updated_at: string
         }
         Insert: {
+          admission_process?: string
           approvals?: string[]
+          banner_ad_image?: string
+          brochure_url?: string
+          carousel_images?: string[]
           category?: string
           city?: string
+          course_fee_content?: string
           courses_count?: number
           created_at?: string
+          cutoff?: string
           description?: string
+          eligibility_criteria?: string
           established?: number
           facilities?: string[]
+          facilities_content?: string
           fees?: string
+          gallery_images?: string[]
           highlights?: string[]
+          hostel_life?: string
           id?: string
           image?: string
           is_active?: boolean
           location?: string
+          logo?: string
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
           naac_grade?: string
           name: string
           placement?: string
+          placement_content?: string
           ranking?: string
+          rankings_content?: string
           rating?: number
           reviews?: number
+          scholarship_details?: string
           short_name?: string
           slug: string
+          square_ad_image?: string
           state?: string
+          status?: string
           tags?: string[]
           top_recruiters?: string[]
           type?: string
           updated_at?: string
         }
         Update: {
+          admission_process?: string
           approvals?: string[]
+          banner_ad_image?: string
+          brochure_url?: string
+          carousel_images?: string[]
           category?: string
           city?: string
+          course_fee_content?: string
           courses_count?: number
           created_at?: string
+          cutoff?: string
           description?: string
+          eligibility_criteria?: string
           established?: number
           facilities?: string[]
+          facilities_content?: string
           fees?: string
+          gallery_images?: string[]
           highlights?: string[]
+          hostel_life?: string
           id?: string
           image?: string
           is_active?: boolean
           location?: string
+          logo?: string
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
           naac_grade?: string
           name?: string
           placement?: string
+          placement_content?: string
           ranking?: string
+          rankings_content?: string
           rating?: number
           reviews?: number
+          scholarship_details?: string
           short_name?: string
           slug?: string
+          square_ad_image?: string
           state?: string
+          status?: string
           tags?: string[]
           top_recruiters?: string[]
           type?: string
@@ -172,74 +292,146 @@ export type Database = {
       }
       courses: {
         Row: {
+          about_content: string
+          admission_process: string
           avg_fees: string
           avg_salary: string
           careers: string[]
           category: string
           colleges_count: number
           created_at: string
+          cutoff_content: string
           description: string
+          domain: string
           duration: string
+          duration_type: string
           eligibility: string
+          fee: number
+          fee_type: string
+          fees_content: string
           full_name: string
           growth: string
+          high_fee: number
           id: string
           image: string
           is_active: boolean
           level: string
+          low_fee: number
+          meta_description: string
+          meta_keywords: string
+          meta_title: string
           mode: string
           name: string
+          placements_content: string
+          rating: number
+          recruiters_content: string
+          scope_content: string
+          short_description: string
           slug: string
+          specialization_content: string
           specializations: string[]
+          status: string
+          study_type: string
           subjects: string[]
+          subjects_content: string
+          syllabus_content: string
+          syllabus_pdf_url: string
           top_exams: string[]
           updated_at: string
         }
         Insert: {
+          about_content?: string
+          admission_process?: string
           avg_fees?: string
           avg_salary?: string
           careers?: string[]
           category?: string
           colleges_count?: number
           created_at?: string
+          cutoff_content?: string
           description?: string
+          domain?: string
           duration?: string
+          duration_type?: string
           eligibility?: string
+          fee?: number
+          fee_type?: string
+          fees_content?: string
           full_name?: string
           growth?: string
+          high_fee?: number
           id?: string
           image?: string
           is_active?: boolean
           level?: string
+          low_fee?: number
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
           mode?: string
           name: string
+          placements_content?: string
+          rating?: number
+          recruiters_content?: string
+          scope_content?: string
+          short_description?: string
           slug: string
+          specialization_content?: string
           specializations?: string[]
+          status?: string
+          study_type?: string
           subjects?: string[]
+          subjects_content?: string
+          syllabus_content?: string
+          syllabus_pdf_url?: string
           top_exams?: string[]
           updated_at?: string
         }
         Update: {
+          about_content?: string
+          admission_process?: string
           avg_fees?: string
           avg_salary?: string
           careers?: string[]
           category?: string
           colleges_count?: number
           created_at?: string
+          cutoff_content?: string
           description?: string
+          domain?: string
           duration?: string
+          duration_type?: string
           eligibility?: string
+          fee?: number
+          fee_type?: string
+          fees_content?: string
           full_name?: string
           growth?: string
+          high_fee?: number
           id?: string
           image?: string
           is_active?: boolean
           level?: string
+          low_fee?: number
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
           mode?: string
           name?: string
+          placements_content?: string
+          rating?: number
+          recruiters_content?: string
+          scope_content?: string
+          short_description?: string
           slug?: string
+          specialization_content?: string
           specializations?: string[]
+          status?: string
+          study_type?: string
           subjects?: string[]
+          subjects_content?: string
+          syllabus_content?: string
+          syllabus_pdf_url?: string
           top_exams?: string[]
           updated_at?: string
         }
@@ -247,85 +439,160 @@ export type Database = {
       }
       exams: {
         Row: {
+          age_limit: string
           applicants: string
+          application_end_date: string
           application_mode: string
+          application_process: string
+          application_start_date: string
+          cast_wise_fee: string
           category: string
+          center_content: string
+          counselling_content: string
           created_at: string
+          cutoff_content: string
+          dates_content: string
           description: string
           duration: string
           eligibility: string
           exam_date: string
+          exam_pattern: string
           exam_type: string
           frequency: string
           full_name: string
+          gender_wise: string
           id: string
           image: string
           important_dates: Json
           is_active: boolean
           language: string
           level: string
+          logo: string
+          meta_description: string
+          meta_keywords: string
+          meta_title: string
           mode: string
           name: string
+          negative_marking: boolean
+          preparation_tips: string
+          question_paper: string
           registration_url: string
+          result_content: string
+          result_date: string
+          sample_paper_url: string
+          seats: string
+          short_name: string
           slug: string
           status: string
+          summary_content: string
           syllabus: string[]
           top_colleges: string[]
           updated_at: string
+          website: string
         }
         Insert: {
+          age_limit?: string
           applicants?: string
+          application_end_date?: string
           application_mode?: string
+          application_process?: string
+          application_start_date?: string
+          cast_wise_fee?: string
           category?: string
+          center_content?: string
+          counselling_content?: string
           created_at?: string
+          cutoff_content?: string
+          dates_content?: string
           description?: string
           duration?: string
           eligibility?: string
           exam_date?: string
+          exam_pattern?: string
           exam_type?: string
           frequency?: string
           full_name?: string
+          gender_wise?: string
           id?: string
           image?: string
           important_dates?: Json
           is_active?: boolean
           language?: string
           level?: string
+          logo?: string
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
           mode?: string
           name: string
+          negative_marking?: boolean
+          preparation_tips?: string
+          question_paper?: string
           registration_url?: string
+          result_content?: string
+          result_date?: string
+          sample_paper_url?: string
+          seats?: string
+          short_name?: string
           slug: string
           status?: string
+          summary_content?: string
           syllabus?: string[]
           top_colleges?: string[]
           updated_at?: string
+          website?: string
         }
         Update: {
+          age_limit?: string
           applicants?: string
+          application_end_date?: string
           application_mode?: string
+          application_process?: string
+          application_start_date?: string
+          cast_wise_fee?: string
           category?: string
+          center_content?: string
+          counselling_content?: string
           created_at?: string
+          cutoff_content?: string
+          dates_content?: string
           description?: string
           duration?: string
           eligibility?: string
           exam_date?: string
+          exam_pattern?: string
           exam_type?: string
           frequency?: string
           full_name?: string
+          gender_wise?: string
           id?: string
           image?: string
           important_dates?: Json
           is_active?: boolean
           language?: string
           level?: string
+          logo?: string
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
           mode?: string
           name?: string
+          negative_marking?: boolean
+          preparation_tips?: string
+          question_paper?: string
           registration_url?: string
+          result_content?: string
+          result_date?: string
+          sample_paper_url?: string
+          seats?: string
+          short_name?: string
           slug?: string
           status?: string
+          summary_content?: string
           syllabus?: string[]
           top_colleges?: string[]
           updated_at?: string
+          website?: string
         }
         Relationships: []
       }
