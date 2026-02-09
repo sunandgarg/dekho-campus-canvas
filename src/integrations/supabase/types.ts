@@ -80,6 +80,42 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          item_slug: string | null
+          page: string
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          item_slug?: string | null
+          page?: string
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          item_slug?: string | null
+          page?: string
+          question?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       featured_colleges: {
         Row: {
           category: string | null
@@ -151,6 +187,42 @@ export type Database = {
           phone?: string | null
           source?: string | null
           state?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      popular_places: {
+        Row: {
+          college_count: number
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          state: string
+          updated_at: string
+        }
+        Insert: {
+          college_count?: number
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          state: string
+          updated_at?: string
+        }
+        Update: {
+          college_count?: number
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          state?: string
           updated_at?: string
         }
         Relationships: []
