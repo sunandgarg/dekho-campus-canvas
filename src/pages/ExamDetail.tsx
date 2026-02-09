@@ -98,7 +98,7 @@ export default function ExamDetail() {
             </div>
 
             {/* Overview */}
-            <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">About {exam.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">{exam.description}</p>
               <div className="grid sm:grid-cols-2 gap-3">
@@ -119,7 +119,7 @@ export default function ExamDetail() {
             </section>
 
             {/* Eligibility */}
-            <section id="eligibility" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="eligibility" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Eligibility Criteria</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{exam.eligibility}</p>
             </section>
@@ -127,7 +127,7 @@ export default function ExamDetail() {
             <DynamicAdBanner variant="horizontal" position="mid-page" page="exams" itemSlug={slug} />
 
             {/* Important Dates */}
-            <section id="dates" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="dates" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Important Dates</h2>
               <div className="space-y-3">
                 {exam.important_dates.map((d, i) => (
@@ -143,7 +143,7 @@ export default function ExamDetail() {
             </section>
 
             {/* Exam Pattern */}
-            <section id="pattern" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="pattern" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Exam Pattern</h2>
               <div className="grid sm:grid-cols-2 gap-3 mb-4">
                 {[
@@ -164,7 +164,7 @@ export default function ExamDetail() {
             </section>
 
             {/* Syllabus */}
-            <section id="syllabus" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="syllabus" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Syllabus</h2>
               <div className="flex flex-wrap gap-2">
                 {exam.syllabus.map((s) => (
@@ -174,7 +174,7 @@ export default function ExamDetail() {
             </section>
 
             {/* Top Colleges */}
-            <section id="colleges" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="colleges" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Top Colleges Accepting {exam.name}</h2>
               <div className="grid sm:grid-cols-2 gap-2">
                 {exam.top_colleges.map((c) => (
@@ -187,7 +187,7 @@ export default function ExamDetail() {
             </section>
 
             {/* Preparation Tips */}
-            <section id="preparation" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="preparation" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Preparation Tips for {exam.name}</h2>
               <div className="space-y-3">
                 {[
@@ -207,7 +207,7 @@ export default function ExamDetail() {
             </section>
 
             {/* FAQ */}
-            <section id="faq" className="scroll-mt-28 md:scroll-mt-32">
+            <section id="faq" className="scroll-mt-32">
               <FAQSection page="exams" itemSlug={slug} title={`FAQs about ${exam.name}`} />
             </section>
 

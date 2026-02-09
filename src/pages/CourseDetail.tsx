@@ -100,7 +100,7 @@ export default function CourseDetail() {
             </div>
 
             {/* Overview */}
-            <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">About {course.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{course.description}</p>
               <div className="mt-4">
@@ -110,7 +110,7 @@ export default function CourseDetail() {
             </section>
 
             {/* Scope */}
-            <section id="scope" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="scope" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Scope of {course.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 With a {course.growth} growth rate, {course.name} graduates are in high demand across industries. The average starting salary is {course.avg_salary} with top performers earning significantly more.
@@ -126,7 +126,7 @@ export default function CourseDetail() {
             </section>
 
             {/* Subjects */}
-            <section id="subjects" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="subjects" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Key Subjects</h2>
               <div className="flex flex-wrap gap-2">
                 {course.subjects.map((s) => (
@@ -138,7 +138,7 @@ export default function CourseDetail() {
             <DynamicAdBanner variant="horizontal" position="mid-page" page="courses" itemSlug={slug} />
 
             {/* Placements */}
-            <section id="placements" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="placements" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Placements</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                 <div className="bg-muted rounded-xl p-3 text-center">
@@ -160,7 +160,7 @@ export default function CourseDetail() {
             </section>
 
             {/* Admission Process */}
-            <section id="admission" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="admission" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Admission Process</h2>
               <div className="space-y-3 mb-4">
                 {[
@@ -187,7 +187,7 @@ export default function CourseDetail() {
             </section>
 
             {/* Fees */}
-            <section id="fees" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="fees" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Fee Structure</h2>
               <div className="flex items-center gap-3 mb-3">
                 <IndianRupee className="w-8 h-8 text-golden" />
@@ -202,7 +202,7 @@ export default function CourseDetail() {
             </section>
 
             {/* Syllabus */}
-            <section id="syllabus" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="syllabus" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">{course.name} Syllabus</h2>
               <p className="text-sm text-muted-foreground mb-3">
                 The {course.duration} program covers the following core and elective subjects:
@@ -215,7 +215,7 @@ export default function CourseDetail() {
             </section>
 
             {/* Cut Off */}
-            <section id="cutoff" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="cutoff" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Cut Off</h2>
               <p className="text-sm text-muted-foreground mb-3">
                 Cut-off scores vary by college and category. Here are typical ranges:
@@ -235,7 +235,7 @@ export default function CourseDetail() {
             </section>
 
             {/* Specializations */}
-            <section id="specializations" className="bg-card rounded-2xl border border-border p-5 scroll-mt-28 md:scroll-mt-32">
+            <section id="specializations" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Specializations</h2>
               <div className="grid sm:grid-cols-2 gap-2">
                 {course.specializations.map((s) => (
@@ -248,7 +248,7 @@ export default function CourseDetail() {
             </section>
 
             {/* FAQ */}
-            <section id="faq" className="scroll-mt-28 md:scroll-mt-32">
+            <section id="faq" className="scroll-mt-32">
               <FAQSection page="courses" itemSlug={slug} title={`FAQs about ${course.name}`} />
             </section>
 
