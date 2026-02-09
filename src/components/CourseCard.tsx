@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Building, TrendingUp, BookOpen, Briefcase } from "lucide-react";
+import { Clock, Building, TrendingUp, Briefcase } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import type { Course } from "@/data/types";
+import type { DbCourse } from "@/hooks/useCoursesData";
 
 interface CourseCardProps {
-  course: Course;
+  course: DbCourse;
   index: number;
 }
 
@@ -29,7 +28,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
             </div>
 
             <h2 className="text-base font-bold text-foreground mb-1">{course.name}</h2>
-            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{course.fullName}</p>
+            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{course.full_name}</p>
 
             {/* Specializations */}
             {course.specializations.length > 0 && (
@@ -55,7 +54,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
               </div>
               <div className="flex items-center gap-1.5">
                 <Building className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-xs text-foreground">{course.colleges} colleges</span>
+                <span className="text-xs text-foreground">{course.colleges_count} colleges</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5 text-success" />
@@ -63,7 +62,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
               </div>
               <div className="flex items-center gap-1.5">
                 <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-xs text-foreground">{course.avgSalary}</span>
+                <span className="text-xs text-foreground">{course.avg_salary}</span>
               </div>
             </div>
           </div>

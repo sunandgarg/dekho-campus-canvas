@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { Clock, Globe, Users, Languages, Calendar, FileText, Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { Exam } from "@/data/types";
+import type { DbExam } from "@/hooks/useExamsData";
 
 interface ExamCardProps {
-  exam: Exam;
+  exam: DbExam;
   index: number;
 }
 
@@ -18,6 +18,10 @@ const statusColors: Record<string, string> = {
 };
 
 export function ExamCard({ exam, index }: ExamCardProps) {
+  const importantDates = Array.isArray(exam.important_dates)
+    ? (exam.important_dates as { event: string; date: string }[])
+    : [];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -34,7 +38,7 @@ export function ExamCard({ exam, index }: ExamCardProps) {
             <div className="flex items-start justify-between gap-2">
               <div>
                 <h2 className="text-lg font-bold text-foreground">{exam.name}</h2>
-                <p className="text-sm text-muted-foreground line-clamp-1">{exam.fullName}</p>
+                <p className="text-sm text-muted-foreground line-clamp-1">{exam.full_name}</p>
               </div>
               <Badge className={`text-xs border flex-shrink-0 ${statusColors[exam.status] || ""}`}>
                 {exam.status}
@@ -71,7 +75,7 @@ export function ExamCard({ exam, index }: ExamCardProps) {
             <Users className="w-4 h-4 text-muted-foreground" />
             <div>
               <span className="text-xs text-muted-foreground">Type: </span>
-              <span className="text-xs font-medium text-foreground">{exam.examType}</span>
+              <span className="text-xs font-medium text-foreground">{exam.exam_type}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -84,19 +88,21 @@ export function ExamCard({ exam, index }: ExamCardProps) {
         </div>
 
         {/* Important Dates */}
-        <div className="mb-4">
-          <h3 className="text-sm font-semibold text-foreground mb-2">Important Dates</h3>
-          <div className="space-y-1.5">
-            {exam.importantDates.slice(0, 4).map((d, i) => (
-              <div key={i} className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">{d.event}:</span>
-                <span className={`font-medium ${i >= 2 ? "text-destructive" : "text-foreground"}`}>
-                  {d.date}
-                </span>
-              </div>
-            ))}
+        {importantDates.length > 0 && (
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-foreground mb-2">Important Dates</h3>
+            <div className="space-y-1.5">
+              {importantDates.slice(0, 4).map((d, i) => (
+                <div key={i} className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">{d.event}:</span>
+                  <span className={`font-medium ${i >= 2 ? "text-destructive" : "text-foreground"}`}>
+                    {d.date}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Frequency & Apply mode */}
         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4 pb-4 border-b border-border">
@@ -106,7 +112,7 @@ export function ExamCard({ exam, index }: ExamCardProps) {
           </span>
           <span className="flex items-center gap-1">
             <FileText className="w-3.5 h-3.5" />
-            Apply: {exam.applicationMode}
+            Apply: {exam.application_mode}
           </span>
         </div>
 

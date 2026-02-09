@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, MapPin, Building2, Calendar, Shield, Download, ChevronRight } from "lucide-react";
+import { Star, MapPin, Calendar, Shield, Download, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { College } from "@/data/types";
+import type { DbCollege } from "@/hooks/useCollegesData";
 
 interface CollegeCardProps {
-  college: College;
+  college: DbCollege;
   index: number;
 }
 
@@ -33,9 +33,8 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
 
         {/* Content */}
         <div className="p-4 space-y-3">
-          {/* Name & full name */}
           <div>
-            <h2 className="text-lg font-bold text-foreground">{college.shortName}</h2>
+            <h2 className="text-lg font-bold text-foreground">{college.short_name}</h2>
             <p className="text-sm text-muted-foreground line-clamp-1">
               {college.name}, {college.location.split(",")[0]}
             </p>
@@ -58,7 +57,7 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
             </div>
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
               <MapPin className="w-3 h-3" />
-              {college.location}
+              {college.city || college.location}
             </span>
           </div>
 
@@ -66,7 +65,7 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
           <div className="flex items-center gap-2 text-sm">
             <span className="text-muted-foreground font-medium">Approvals:</span>
             <div className="flex gap-1.5">
-              {college.approvals.map((a) => (
+              {college.approvals.slice(0, 3).map((a) => (
                 <Badge key={a} variant="outline" className="text-xs px-1.5 py-0.5 font-semibold">
                   {a}
                 </Badge>
@@ -80,10 +79,12 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
               <Calendar className="w-3.5 h-3.5" />
               Established {college.established}
             </span>
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <Shield className="w-3.5 h-3.5" />
-              NAAC {college.naacGrade} Grade
-            </span>
+            {college.naac_grade && (
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <Shield className="w-3.5 h-3.5" />
+                NAAC {college.naac_grade}
+              </span>
+            )}
           </div>
 
           {/* Brochure Button */}

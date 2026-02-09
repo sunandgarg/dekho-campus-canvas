@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, MapPin, ArrowRight, GraduationCap, Calendar, Shield, Download } from "lucide-react";
+import { Star, MapPin, ArrowRight, GraduationCap, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
-import { colleges } from "@/data/colleges";
-
-const topColleges = colleges.slice(0, 6);
+import { useDbColleges } from "@/hooks/useCollegesData";
 
 export function FeaturedColleges() {
+  const { data: dbColleges } = useDbColleges();
+  const topColleges = (dbColleges ?? []).slice(0, 6);
+
   return (
     <section className="py-10 md:py-16 bg-background" aria-labelledby="featured-heading">
       <div className="container">
@@ -50,7 +51,6 @@ export function FeaturedColleges() {
                 transition={{ delay: index * 0.08 }}
                 className="group bg-card rounded-2xl border border-amber-100 overflow-hidden shadow-sm hover:shadow-lg transition-all"
               >
-                {/* Image */}
                 <div className="relative h-44 overflow-hidden">
                   <img src={college.image} alt={college.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
                   <Badge className="absolute top-3 left-3 bg-foreground/80 text-background border-0 text-xs">
@@ -58,14 +58,12 @@ export function FeaturedColleges() {
                   </Badge>
                 </div>
 
-                {/* Content */}
                 <div className="p-4 space-y-3">
                   <div>
-                    <h3 className="text-lg font-bold text-foreground">{college.shortName}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-1">{college.name}, {college.location.split(",")[0]}</p>
+                    <h3 className="text-lg font-bold text-foreground">{college.short_name}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-1">{college.name}, {college.city || college.location.split(",")[0]}</p>
                   </div>
 
-                  {/* Rating & Location */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       {Array.from({ length: 5 }).map((_, i) => (
@@ -75,11 +73,10 @@ export function FeaturedColleges() {
                     </div>
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <MapPin className="w-3 h-3" />
-                      {college.location.split(",")[0]}
+                      {college.city || college.location.split(",")[0]}
                     </span>
                   </div>
 
-                  {/* Approvals */}
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground text-xs">Approvals:</span>
                     <div className="flex gap-1">
@@ -89,13 +86,13 @@ export function FeaturedColleges() {
                     </div>
                   </div>
 
-                  {/* Established & NAAC */}
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Est. {college.established}</span>
-                    <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> NAAC {college.naacGrade}</span>
+                    {college.naac_grade && (
+                      <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> NAAC {college.naac_grade}</span>
+                    )}
                   </div>
 
-                  {/* CTA */}
                   <div className="grid grid-cols-2 gap-2 pt-1">
                     <Link to={`/colleges/${college.slug}`}>
                       <Button variant="outline" size="sm" className="w-full rounded-xl text-xs h-9">Know More</Button>

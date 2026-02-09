@@ -9,7 +9,12 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ExamCard } from "@/components/ExamCard";
-import { exams, examCategories, examLevels, examModes, examStatuses } from "@/data/exams";
+import { useDbExams } from "@/hooks/useExamsData";
+
+const examCategories = ["All", "Engineering", "Medical", "Management", "Law", "Design", "Science"] as const;
+const examLevels = ["All", "National", "State", "University", "International", "Professional"] as const;
+const examModes = ["All", "Online (CBT)", "Offline (Pen & Paper)", "Both"] as const;
+const examStatuses = ["All", "Upcoming", "Applications Open", "Applications Closed", "Exam Over"] as const;
 
 export default function AllExams() {
   const [search, setSearch] = useState("");
@@ -18,19 +23,21 @@ export default function AllExams() {
   const [mode, setMode] = useState("All");
   const [status, setStatus] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const { data: dbExams } = useDbExams();
+  const exams = dbExams ?? [];
 
   const activeFilters = [category, level, mode, status].filter((f) => f !== "All").length;
 
   const filtered = useMemo(() => {
     return exams.filter((e) => {
-      const matchSearch = e.name.toLowerCase().includes(search.toLowerCase()) || e.fullName.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = e.name.toLowerCase().includes(search.toLowerCase()) || e.full_name.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === "All" || e.category === category;
       const matchLevel = level === "All" || e.level === level;
       const matchMode = mode === "All" || e.mode === mode;
       const matchStatus = status === "All" || e.status === status;
       return matchSearch && matchCategory && matchLevel && matchMode && matchStatus;
     });
-  }, [search, category, level, mode, status]);
+  }, [search, category, level, mode, status, exams]);
 
   const clearAll = () => { setCategory("All"); setLevel("All"); setMode("All"); setStatus("All"); };
 
