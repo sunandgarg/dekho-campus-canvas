@@ -18,6 +18,7 @@ import { FloatingBot } from "@/components/FloatingBot";
 import { AILeadForm } from "@/components/AILeadForm";
 import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
+import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -51,7 +52,7 @@ const Index = () => {
       <Navbar />
       <main id="main-content">
         <HeroSection onOpenChat={handleOpenChat} />
-        {/* Universal search merged into hero */}
+        <HeroBannerCarousel />
         <TopRankedColleges />
         <CategorySection />
         <UpcomingExams />

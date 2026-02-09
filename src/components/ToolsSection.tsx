@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Building2, Calculator, GraduationCap, Search, ArrowRight, Percent, IndianRupee, BarChart3, FileCheck, Heart, CalendarDays, Wallet, AlignLeft } from "lucide-react";
 import { BMICalculator } from "@/components/tools/BMICalculator";
 import { PercentageCalculator } from "@/components/tools/PercentageCalculator";
@@ -11,16 +12,16 @@ import { Input } from "@/components/ui/input";
 
 // Tools data
 const tools = [
-  { id: "compare", title: "Compare Colleges", desc: "Side-by-side college comparison", icon: Building2 },
-  { id: "converter", title: "CGPA Converter", desc: "SGPA/CGPA to Percentage", icon: Percent },
-  { id: "emi", title: "EMI Calculator", desc: "Education loan EMI planner", icon: IndianRupee },
-  { id: "rank", title: "Rank Predictor", desc: "Predict your rank from score", icon: BarChart3 },
-  { id: "eligibility", title: "Eligibility Checker", desc: "Check college eligibility", icon: FileCheck },
-  { id: "bmi", title: "BMI Calculator", desc: "Check your body mass index", icon: Heart },
-  { id: "percentage", title: "Percentage Calc", desc: "Calculate any percentage", icon: Calculator },
-  { id: "age", title: "Age Calculator", desc: "Calculate exact age from DOB", icon: CalendarDays },
-  { id: "sip", title: "SIP Calculator", desc: "Plan your investments", icon: Wallet },
-  { id: "wordcount", title: "Word Counter", desc: "Count words & characters", icon: AlignLeft },
+  { id: "compare", title: "Compare Colleges", desc: "Side-by-side college comparison", icon: Building2, slug: "" },
+  { id: "converter", title: "CGPA Converter", desc: "SGPA/CGPA to Percentage", icon: Percent, slug: "cgpa-converter" },
+  { id: "emi", title: "EMI Calculator", desc: "Education loan EMI planner", icon: IndianRupee, slug: "emi-calculator" },
+  { id: "rank", title: "Rank Predictor", desc: "Predict your rank from score", icon: BarChart3, slug: "rank-predictor" },
+  { id: "eligibility", title: "Eligibility Checker", desc: "Check college eligibility", icon: FileCheck, slug: "eligibility-checker" },
+  { id: "bmi", title: "BMI Calculator", desc: "Check your body mass index", icon: Heart, slug: "bmi-calculator" },
+  { id: "percentage", title: "Percentage Calc", desc: "Calculate any percentage", icon: Calculator, slug: "percentage-calculator" },
+  { id: "age", title: "Age Calculator", desc: "Calculate exact age from DOB", icon: CalendarDays, slug: "age-calculator" },
+  { id: "sip", title: "SIP Calculator", desc: "Plan your investments", icon: Wallet, slug: "sip-calculator" },
+  { id: "wordcount", title: "Word Counter", desc: "Count words & characters", icon: AlignLeft, slug: "word-counter" },
 ];
 
 // College compare data
@@ -313,6 +314,15 @@ export function ToolsSection() {
           {activeTool === "age" && <AgeCalculator />}
           {activeTool === "sip" && <SIPCalculator />}
           {activeTool === "wordcount" && <WordCounter />}
+
+          {/* Link to full page */}
+          {tools.find(t => t.id === activeTool)?.slug && (
+            <div className="mt-4 text-center">
+              <Link to={`/tools/${tools.find(t => t.id === activeTool)?.slug}`} className="text-sm text-primary hover:underline font-medium">
+                Open full page →
+              </Link>
+            </div>
+          )}
         </motion.div>
       </div>
     </section>
