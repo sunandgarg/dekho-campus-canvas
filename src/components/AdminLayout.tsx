@@ -1,13 +1,17 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Megaphone, Star, Users, ChevronLeft } from "lucide-react";
+import { LayoutDashboard, Megaphone, Star, Users, ChevronLeft, GraduationCap, BookOpen, FileText, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { label: "Colleges", href: "/admin/colleges", icon: GraduationCap },
+  { label: "Courses", href: "/admin/courses", icon: BookOpen },
+  { label: "Exams", href: "/admin/exams", icon: FileText },
   { label: "Ads Manager", href: "/admin/ads", icon: Megaphone },
-  { label: "Featured Colleges", href: "/admin/featured", icon: Star },
+  { label: "Featured", href: "/admin/featured", icon: Star },
   { label: "Leads", href: "/admin/leads", icon: Users },
+  { label: "Content", href: "/admin/content", icon: HelpCircle },
 ];
 
 interface AdminLayoutProps {

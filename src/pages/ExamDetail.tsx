@@ -11,7 +11,7 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ScrollSpy, type ScrollSection } from "@/components/ScrollSpy";
 import { FAQSection } from "@/components/FAQSection";
-import { exams } from "@/data/exams";
+import { useDbExam } from "@/hooks/useExamsData";
 
 const EXAM_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
@@ -26,7 +26,19 @@ const EXAM_SECTIONS: ScrollSection[] = [
 
 export default function ExamDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const exam = exams.find((e) => e.slug === slug);
+  const { data: exam, isLoading } = useDbExam(slug);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container py-20 text-center">
+          <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!exam) {
     return (
@@ -42,10 +54,6 @@ export default function ExamDetail() {
       </div>
     );
   }
-
-  const similarExams = exams
-    .filter((e) => e.slug !== exam.slug && e.category === exam.category)
-    .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background">
@@ -65,7 +73,7 @@ export default function ExamDetail() {
               <Badge className={`text-xs ${exam.status === "Applications Open" ? "bg-success/90 text-success-foreground" : "bg-muted text-muted-foreground"}`}>{exam.status}</Badge>
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-background mb-1">{exam.name}</h1>
-            <p className="text-background/80 text-sm">{exam.fullName}</p>
+            <p className="text-background/80 text-sm">{exam.full_name}</p>
           </div>
         </motion.div>
 
@@ -76,7 +84,7 @@ export default function ExamDetail() {
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { icon: Calendar, label: "Exam Date", value: exam.date, color: "text-primary" },
+                { icon: Calendar, label: "Exam Date", value: exam.exam_date, color: "text-primary" },
                 { icon: Users, label: "Applicants", value: exam.applicants, color: "text-accent" },
                 { icon: Award, label: "Mode", value: exam.mode, color: "text-golden" },
                 { icon: Clock, label: "Duration", value: exam.duration, color: "text-success" },
@@ -97,10 +105,10 @@ export default function ExamDetail() {
                 {[
                   { label: "Category", value: exam.category },
                   { label: "Level", value: exam.level },
-                  { label: "Exam Type", value: exam.examType },
+                  { label: "Exam Type", value: exam.exam_type },
                   { label: "Language", value: exam.language },
                   { label: "Frequency", value: exam.frequency },
-                  { label: "Application Mode", value: exam.applicationMode },
+                  { label: "Application Mode", value: exam.application_mode },
                 ].map((info) => (
                   <div key={info.label} className="flex justify-between py-2 border-b border-border last:border-0">
                     <span className="text-sm text-muted-foreground">{info.label}</span>
@@ -122,7 +130,7 @@ export default function ExamDetail() {
             <section id="dates" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Important Dates</h2>
               <div className="space-y-3">
-                {exam.importantDates.map((d, i) => (
+                {exam.important_dates.map((d, i) => (
                   <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-primary" />
@@ -138,22 +146,17 @@ export default function ExamDetail() {
             <section id="pattern" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Exam Pattern</h2>
               <div className="grid sm:grid-cols-2 gap-3 mb-4">
-                <div className="bg-muted rounded-xl p-3">
-                  <p className="text-xs text-muted-foreground">Mode</p>
-                  <p className="text-sm font-semibold text-foreground">{exam.mode}</p>
-                </div>
-                <div className="bg-muted rounded-xl p-3">
-                  <p className="text-xs text-muted-foreground">Duration</p>
-                  <p className="text-sm font-semibold text-foreground">{exam.duration}</p>
-                </div>
-                <div className="bg-muted rounded-xl p-3">
-                  <p className="text-xs text-muted-foreground">Language</p>
-                  <p className="text-sm font-semibold text-foreground">{exam.language}</p>
-                </div>
-                <div className="bg-muted rounded-xl p-3">
-                  <p className="text-xs text-muted-foreground">Frequency</p>
-                  <p className="text-sm font-semibold text-foreground">{exam.frequency}</p>
-                </div>
+                {[
+                  { label: "Mode", value: exam.mode },
+                  { label: "Duration", value: exam.duration },
+                  { label: "Language", value: exam.language },
+                  { label: "Frequency", value: exam.frequency },
+                ].map((item) => (
+                  <div key={item.label} className="bg-muted rounded-xl p-3">
+                    <p className="text-xs text-muted-foreground">{item.label}</p>
+                    <p className="text-sm font-semibold text-foreground">{item.value}</p>
+                  </div>
+                ))}
               </div>
               <p className="text-sm text-muted-foreground">
                 {exam.name} is conducted in {exam.mode} mode with {exam.syllabus.length} sections covering {exam.syllabus.join(", ")}. Candidates have {exam.duration} to complete the exam.
@@ -174,7 +177,7 @@ export default function ExamDetail() {
             <section id="colleges" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Top Colleges Accepting {exam.name}</h2>
               <div className="grid sm:grid-cols-2 gap-2">
-                {exam.topColleges.map((c) => (
+                {exam.top_colleges.map((c) => (
                   <div key={c} className="flex items-center gap-2 p-2">
                     <Building className="w-4 h-4 text-primary flex-shrink-0" />
                     <span className="text-sm text-foreground">{c}</span>
@@ -203,42 +206,23 @@ export default function ExamDetail() {
               </div>
             </section>
 
-            {/* Similar Exams */}
-            {similarExams.length > 0 && (
-              <section className="scroll-mt-32">
-                <h2 className="text-lg font-bold text-foreground mb-3">Similar {exam.category} Exams</h2>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {similarExams.map((e) => (
-                    <Link key={e.slug} to={`/exams/${e.slug}`} className="bg-card rounded-xl border border-border p-3 hover:shadow-md transition-shadow">
-                      <p className="text-sm font-semibold text-foreground">{e.name}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{e.fullName}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge variant="outline" className="text-[10px]">{e.level}</Badge>
-                        <span className="text-xs text-muted-foreground">{e.date}</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-
             {/* FAQ */}
             <section id="faq" className="scroll-mt-32">
               <FAQSection page="exams" itemSlug={slug} title={`FAQs about ${exam.name}`} />
             </section>
 
-            <LeadCaptureForm variant="inline" title={`Get preparation tips for ${exam.name}`} source={`exam_detail_${exam.slug}`} />
+            <LeadCaptureForm variant="inline" title={`Get preparation tips for ${exam.name}`} source={`exam_detail_${exam.slug}`} interestedExamSlug={exam.slug} />
           </div>
 
           <aside className="space-y-6">
-            <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} />
+            <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} interestedExamSlug={exam.slug} />
             <DynamicAdBanner variant="vertical" position="sidebar" page="exams" itemSlug={slug} />
             <LeadCaptureForm variant="sidebar" title="Exam Alerts" subtitle="Get notified about deadlines" source="exam_alert_sidebar" />
           </aside>
         </div>
 
         <div className="mt-10">
-          <LeadCaptureForm variant="banner" title={`📝 Preparing for ${exam.name}? Get expert strategy for free!`} subtitle="Our mentors have helped thousands score top ranks" source={`exam_detail_bottom_${exam.slug}`} />
+          <LeadCaptureForm variant="banner" title={`📝 Preparing for ${exam.name}? Get expert strategy for free!`} subtitle="Our mentors have helped thousands score top ranks" source={`exam_detail_bottom_${exam.slug}`} interestedExamSlug={exam.slug} />
         </div>
       </main>
 

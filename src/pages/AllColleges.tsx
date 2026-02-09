@@ -9,8 +9,14 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CollegeCard } from "@/components/CollegeCard";
-import { colleges, collegeCategories, collegeStates, collegeTypes, collegeApprovals, collegeNaacGrades } from "@/data/colleges";
+import { useDbColleges } from "@/hooks/useCollegesData";
 import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
+
+const collegeCategories = ["All", "Engineering", "Medical", "Management", "Law", "Design", "Science", "Commerce"] as const;
+const collegeStates = ["All", "Delhi", "Maharashtra", "Tamil Nadu", "Karnataka", "West Bengal", "Gujarat", "Rajasthan", "Uttar Pradesh", "Telangana", "Jharkhand", "Punjab"] as const;
+const collegeTypes = ["All", "Government", "Private", "Deemed", "Autonomous"] as const;
+const collegeApprovals = ["All", "AICTE", "UGC", "NAAC", "MCI", "BCI", "AACSB"] as const;
+const collegeNaacGrades = ["All", "A++", "A+", "A", "B++", "B+"] as const;
 
 export default function AllColleges() {
   const [search, setSearch] = useState("");
@@ -20,9 +26,10 @@ export default function AllColleges() {
   const [approval, setApproval] = useState("All");
   const [naacGrade, setNaacGrade] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const { data: dbColleges } = useDbColleges();
+  const colleges = dbColleges ?? [];
 
   const { data: featuredSlugs } = useFeaturedColleges(category, state);
-
   const activeFilters = [category, state, type, approval, naacGrade].filter((f) => f !== "All").length;
 
   const filtered = useMemo(() => {

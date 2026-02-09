@@ -11,9 +11,8 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ScrollSpy, type ScrollSection } from "@/components/ScrollSpy";
 import { FAQSection } from "@/components/FAQSection";
-import { CollegeCard } from "@/components/CollegeCard";
-import { colleges } from "@/data/colleges";
-import { courses } from "@/data/courses";
+import { useDbCollege, useCollegesByState, useCollegesByCategory } from "@/hooks/useCollegesData";
+import { useDbCourses } from "@/hooks/useCoursesData";
 
 const COLLEGE_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
@@ -28,12 +27,24 @@ const COLLEGE_SECTIONS: ScrollSection[] = [
   { id: "faq", label: "FAQ" },
 ];
 
-// Static top recruiters for demo
-const TOP_RECRUITERS = ["Google", "Microsoft", "Amazon", "TCS", "Infosys", "Wipro", "Flipkart", "Goldman Sachs", "JP Morgan", "Deloitte", "McKinsey", "Accenture"];
-
 export default function CollegeDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const college = colleges.find((c) => c.slug === slug);
+  const { data: college, isLoading } = useDbCollege(slug);
+  const { data: sameStateColleges } = useCollegesByState(college?.state, slug);
+  const { data: similarColleges } = useCollegesByCategory(college?.category, slug);
+  const { data: allCourses } = useDbCourses();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container py-20 text-center">
+          <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!college) {
     return (
@@ -50,15 +61,7 @@ export default function CollegeDetail() {
     );
   }
 
-  const similarColleges = colleges
-    .filter((c) => c.slug !== college.slug && c.category === college.category)
-    .slice(0, 4);
-
-  const sameStateColleges = colleges
-    .filter((c) => c.slug !== college.slug && c.state === college.state)
-    .slice(0, 4);
-
-  const popularCourses = courses
+  const popularCourses = (allCourses ?? [])
     .filter((c) => c.category === college.category || c.category === "Engineering")
     .slice(0, 6);
 
@@ -96,7 +99,7 @@ export default function CollegeDetail() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { icon: Star, label: "Rating", value: `${college.rating}/5`, color: "text-golden" },
-                { icon: GraduationCap, label: "Courses", value: `${college.courses}+`, color: "text-primary" },
+                { icon: GraduationCap, label: "Courses", value: `${college.courses_count}+`, color: "text-primary" },
                 { icon: TrendingUp, label: "Placement", value: college.placement, color: "text-success" },
                 { icon: Calendar, label: "Estd.", value: String(college.established), color: "text-accent" },
               ].map((stat) => (
@@ -117,10 +120,12 @@ export default function CollegeDetail() {
                     <Badge key={a} variant="outline" className="text-xs ml-1 font-semibold">{a}</Badge>
                   ))}
                 </div>
-                <div>
-                  <span className="text-sm font-medium text-muted-foreground">NAAC Grade: </span>
-                  <Badge className="bg-success/10 text-success border-success/30 ml-1">{college.naacGrade}</Badge>
-                </div>
+                {college.naac_grade && (
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">NAAC Grade: </span>
+                    <Badge className="bg-success/10 text-success border-success/30 ml-1">{college.naac_grade}</Badge>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -136,7 +141,7 @@ export default function CollegeDetail() {
                   { label: "Ranking", value: college.ranking },
                   { label: "Reviews", value: `${college.reviews} reviews` },
                   { label: "State", value: college.state },
-                  { label: "NAAC Grade", value: college.naacGrade },
+                  { label: "NAAC Grade", value: college.naac_grade },
                   { label: "Approvals", value: college.approvals.join(", ") },
                 ].map((info) => (
                   <div key={info.label} className="flex justify-between py-2 border-b border-border last:border-0">
@@ -162,14 +167,14 @@ export default function CollegeDetail() {
 
             {/* Courses */}
             <section id="courses" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Popular Courses at {college.shortName}</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">Popular Courses at {college.short_name}</h2>
               <div className="grid sm:grid-cols-2 gap-2">
                 {popularCourses.map((c) => (
                   <Link key={c.slug} to={`/courses/${c.slug}`} className="flex items-center gap-2 p-3 rounded-xl hover:bg-muted transition-colors">
                     <BookOpen className="w-4 h-4 text-primary flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-foreground">{c.name}</p>
-                      <p className="text-xs text-muted-foreground">{c.duration} • {c.avgFees}</p>
+                      <p className="text-xs text-muted-foreground">{c.duration} • {c.avg_fees}</p>
                     </div>
                   </Link>
                 ))}
@@ -201,12 +206,12 @@ export default function CollegeDetail() {
                   <p className="text-xs text-muted-foreground">Placement Rate</p>
                 </div>
                 <div className="bg-muted rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-foreground">200+</p>
+                  <p className="text-lg font-bold text-foreground">{college.top_recruiters.length > 0 ? `${college.top_recruiters.length}+` : "200+"}</p>
                   <p className="text-xs text-muted-foreground">Recruiters</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                {college.name} offers excellent placement support with dedicated training & placement cell. Top companies from IT, finance, consulting, and core sectors visit the campus every year.
+                {college.name} offers excellent placement support with dedicated training & placement cell.
               </p>
             </section>
 
@@ -233,7 +238,7 @@ export default function CollegeDetail() {
             <section id="recruiters" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Top Recruiters</h2>
               <div className="flex flex-wrap gap-2">
-                {TOP_RECRUITERS.map((r) => (
+                {(college.top_recruiters.length > 0 ? college.top_recruiters : ["Google", "Microsoft", "Amazon", "TCS", "Infosys", "Wipro"]).map((r) => (
                   <div key={r} className="flex items-center gap-2 bg-muted rounded-xl px-3 py-2">
                     <Briefcase className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">{r}</span>
@@ -248,7 +253,7 @@ export default function CollegeDetail() {
             <section id="similar" className="scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Similar {college.category} Colleges</h2>
               <div className="grid sm:grid-cols-2 gap-3">
-                {similarColleges.map((c) => (
+                {(similarColleges ?? []).slice(0, 4).map((c) => (
                   <Link key={c.slug} to={`/colleges/${c.slug}`} className="bg-card rounded-xl border border-border p-3 hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3">
                       <img src={c.image} alt={c.name} className="w-14 h-14 rounded-lg object-cover" loading="lazy" />
@@ -269,9 +274,9 @@ export default function CollegeDetail() {
             {/* Same State */}
             <section id="same-state" className="scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Colleges in {college.state}</h2>
-              {sameStateColleges.length > 0 ? (
+              {(sameStateColleges ?? []).length > 0 ? (
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {sameStateColleges.map((c) => (
+                  {(sameStateColleges ?? []).slice(0, 4).map((c) => (
                     <Link key={c.slug} to={`/colleges/${c.slug}`} className="bg-card rounded-xl border border-border p-3 hover:shadow-md transition-shadow">
                       <div className="flex items-center gap-3">
                         <img src={c.image} alt={c.name} className="w-14 h-14 rounded-lg object-cover" loading="lazy" />
@@ -294,19 +299,19 @@ export default function CollegeDetail() {
               <FAQSection page="colleges" itemSlug={slug} title={`FAQs about ${college.name}`} />
             </section>
 
-            <LeadCaptureForm variant="inline" title={`Get admission details for ${college.name}`} source={`college_detail_${college.slug}`} />
+            <LeadCaptureForm variant="inline" title={`Get admission details for ${college.name}`} source={`college_detail_${college.slug}`} interestedCollegeSlug={college.slug} />
           </div>
 
           {/* Sidebar */}
           <aside className="space-y-6">
-            <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} />
+            <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
             <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" itemSlug={slug} />
             <LeadCaptureForm variant="sidebar" title="Compare Colleges" subtitle="Not sure? Compare this with similar colleges" source="college_compare_sidebar" />
           </aside>
         </div>
 
         <div className="mt-10">
-          <LeadCaptureForm variant="banner" title={`🎓 Want to get into ${college.name}? Get expert guidance!`} subtitle="Our counselors have helped thousands of students with admissions" source={`college_detail_bottom_${college.slug}`} />
+          <LeadCaptureForm variant="banner" title={`🎓 Want to get into ${college.name}? Get expert guidance!`} subtitle="Our counselors have helped thousands of students with admissions" source={`college_detail_bottom_${college.slug}`} interestedCollegeSlug={college.slug} />
         </div>
       </main>
 
