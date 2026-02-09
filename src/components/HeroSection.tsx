@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, Brain, Zap, GraduationCap } from "lucide-react";
+import { Send, Sparkles, Brain, Zap, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import logo from "@/assets/dekhocampus-logo.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
@@ -13,6 +14,36 @@ const suggestedPrompts = [
   "Top MBA colleges after graduation?",
 ];
 
+const searchableItems = [
+  { type: "College", name: "IIT Delhi", location: "New Delhi", slug: "iit-delhi", icon: GraduationCap },
+  { type: "College", name: "IIT Bombay", location: "Mumbai", slug: "iit-bombay", icon: GraduationCap },
+  { type: "College", name: "IIT Madras", location: "Chennai", slug: "iit-madras", icon: GraduationCap },
+  { type: "College", name: "AIIMS Delhi", location: "New Delhi", slug: "aiims-delhi", icon: GraduationCap },
+  { type: "College", name: "IIM Ahmedabad", location: "Ahmedabad", slug: "iim-ahmedabad", icon: GraduationCap },
+  { type: "College", name: "NIT Trichy", location: "Tiruchirappalli", slug: "nit-trichy", icon: GraduationCap },
+  { type: "College", name: "BITS Pilani", location: "Pilani", slug: "bits-pilani", icon: GraduationCap },
+  { type: "College", name: "Delhi University", location: "New Delhi", slug: "delhi-university", icon: GraduationCap },
+  { type: "Course", name: "B.Tech Computer Science", location: "", slug: "btech-computer-science", icon: BookOpen },
+  { type: "Course", name: "MBBS", location: "", slug: "mbbs", icon: BookOpen },
+  { type: "Course", name: "MBA", location: "", slug: "mba", icon: BookOpen },
+  { type: "Course", name: "B.Com Honours", location: "", slug: "bcom-honours", icon: BookOpen },
+  { type: "Course", name: "BA LLB", location: "", slug: "ba-llb", icon: BookOpen },
+  { type: "Exam", name: "JEE Main 2026", location: "", slug: "jee-main", icon: FileText },
+  { type: "Exam", name: "JEE Advanced 2026", location: "", slug: "jee-advanced", icon: FileText },
+  { type: "Exam", name: "NEET UG 2026", location: "", slug: "neet-ug", icon: FileText },
+  { type: "Exam", name: "CUET 2026", location: "", slug: "cuet", icon: FileText },
+  { type: "Exam", name: "CAT 2026", location: "", slug: "cat", icon: FileText },
+];
+
+const quickCategories = [
+  { label: "13000+ Colleges", icon: GraduationCap, bgColor: "bg-rose-50", iconBg: "bg-rose-100", href: "/colleges" },
+  { label: "840+ Courses", icon: BookOpen, bgColor: "bg-sky-50", iconBg: "bg-sky-100", href: "/courses" },
+  { label: "219+ Exams", icon: FileText, bgColor: "bg-cyan-50", iconBg: "bg-cyan-100", href: "/exams" },
+  { label: "Application Form", icon: ClipboardList, bgColor: "bg-emerald-50", iconBg: "bg-emerald-100", href: "/colleges" },
+  { label: "Review", icon: Star, bgColor: "bg-amber-50", iconBg: "bg-amber-100", href: "/articles" },
+  { label: "News", icon: Newspaper, bgColor: "bg-blue-50", iconBg: "bg-blue-100", href: "/articles" },
+];
+
 interface HeroSectionProps {
   onOpenChat?: (initialMessage?: string) => void;
 }
@@ -20,6 +51,8 @@ interface HeroSectionProps {
 export function HeroSection({ onOpenChat }: HeroSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
+  const [isFocused, setIsFocused] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,7 +61,15 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const results = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return searchableItems
+      .filter(item => item.name.toLowerCase().includes(q) || item.type.toLowerCase().includes(q))
+      .slice(0, 6);
+  }, [searchQuery]);
+
+  const handleAskAI = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim() && onOpenChat) {
       onOpenChat(searchQuery.trim());
@@ -36,9 +77,18 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
     }
   };
 
+  const handleResultClick = (item: typeof searchableItems[0]) => {
+    setSearchQuery("");
+    setIsFocused(false);
+    const typeRoute = item.type === "College" ? "colleges" : item.type === "Course" ? "courses" : "exams";
+    navigate(`/${typeRoute}/${item.slug}`);
+  };
+
   const handleSuggestionClick = (prompt: string) => {
     if (onOpenChat) onOpenChat(prompt);
   };
+
+  const showDropdown = isFocused && searchQuery.trim() && results.length > 0;
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-background via-secondary/30 to-background" aria-label="Hero">
@@ -53,34 +103,20 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
       </div>
 
       <div className="container relative z-10 py-10 md:py-16 lg:py-20">
-        <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8">
+        <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex justify-center"
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="flex justify-center">
             <img src={logo} alt="DekhoCampus" className="h-12 md:h-16" />
           </motion.div>
 
           {/* AI Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20"
-          >
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20">
             <Brain className="w-4 h-4 text-accent" />
             <span className="text-xs font-semibold tracking-wide uppercase text-accent">AI-Powered Education Intelligence</span>
           </motion.div>
 
           {/* Rotating headline */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.15] tracking-tight">
               Discover Your Ideal
               <br />
@@ -92,7 +128,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -30, filter: "blur(8px)" }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="text-gradient bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"
+                    className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"
                   >
                     {rotatingWords[wordIndex]}
                   </motion.span>
@@ -100,30 +136,27 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
               </span>
             </h1>
             <p className="text-muted-foreground mt-3 text-sm md:text-base max-w-xl mx-auto">
-              Ask our AI counselor anything — colleges, courses, exams, scholarships & career paths
+              Search colleges, courses & exams — or ask our AI counselor anything
             </p>
           </motion.div>
 
-          {/* AI Search Bar — futuristic glass style */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="max-w-2xl mx-auto"
-          >
-            <form onSubmit={handleSearch}>
-              <div className="relative bg-card/80 backdrop-blur-xl rounded-2xl shadow-xl border border-border/60 p-1.5 ring-1 ring-primary/10">
-                <div className="flex items-center gap-2">
+          {/* Unified Search Bar */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="max-w-2xl mx-auto">
+            <form onSubmit={handleAskAI}>
+              <div className="relative">
+                <div className={`relative flex items-center bg-card/80 backdrop-blur-xl rounded-2xl shadow-xl border p-1.5 transition-all ${isFocused ? "border-primary/40 ring-2 ring-primary/10" : "border-border/60 ring-1 ring-primary/5"}`}>
                   <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center ml-1">
-                    <Sparkles className="w-5 h-5 text-white" />
+                    {searchQuery.trim() ? <Search className="w-5 h-5 text-white" /> : <Sparkles className="w-5 h-5 text-white" />}
                   </div>
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Ask AI about colleges, courses, exams..."
-                    className="flex-1 bg-transparent border-0 text-base md:text-lg placeholder:text-muted-foreground/50 focus:outline-none focus:ring-0 py-3 text-foreground"
-                    aria-label="Ask a question"
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+                    placeholder="Search Colleges, Courses, Exams or Ask AI..."
+                    className="flex-1 bg-transparent border-0 text-base md:text-lg placeholder:text-muted-foreground/50 focus:outline-none focus:ring-0 py-3 px-3 text-foreground"
+                    aria-label="Search or ask AI"
                   />
                   <Button
                     type="submit"
@@ -135,6 +168,58 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     <span className="hidden md:inline font-semibold">Ask AI</span>
                   </Button>
                 </div>
+
+                {/* Search Results Dropdown */}
+                {showDropdown && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50"
+                  >
+                    <div className="py-2">
+                      {results.map((item) => (
+                        <button
+                          key={item.name}
+                          onMouseDown={() => handleResultClick(item)}
+                          className="w-full flex items-center gap-3 px-5 py-3 hover:bg-muted/50 transition-colors text-left"
+                        >
+                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <item.icon className="w-5 h-5 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-foreground truncate">{item.name}</p>
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <span>{item.type}</span>
+                              {item.location && (
+                                <>
+                                  <span>•</span>
+                                  <MapPin className="w-3 h-3" />
+                                  <span>{item.location}</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                        </button>
+                      ))}
+                    </div>
+                    {/* Ask AI option at bottom */}
+                    <div className="border-t border-border px-5 py-3">
+                      <button
+                        onMouseDown={handleAskAI as any}
+                        className="w-full flex items-center gap-3 text-left hover:opacity-80 transition-opacity"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center">
+                          <Sparkles className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-accent text-sm">Ask AI Counselor</p>
+                          <p className="text-xs text-muted-foreground">Get personalized guidance for "{searchQuery}"</p>
+                        </div>
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </form>
 
@@ -154,23 +239,25 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
             </div>
           </motion.div>
 
-          {/* Stats ribbon */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.45 }}
-            className="flex items-center justify-center gap-6 md:gap-10 pt-2"
-          >
-            {[
-              { label: "Colleges", count: "13,000+" },
-              { label: "Courses", count: "840+" },
-              { label: "Exams", count: "219+" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-lg md:text-xl font-bold text-foreground">{stat.count}</p>
-                <p className="text-[11px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider">{stat.label}</p>
-              </div>
-            ))}
+          {/* Quick Category Cards */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="max-w-3xl mx-auto pt-2">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+              {quickCategories.map((cat, index) => (
+                <motion.a
+                  key={cat.label}
+                  href={cat.href}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + index * 0.04 }}
+                  className={`flex flex-col items-center gap-2 p-3 md:p-4 rounded-2xl ${cat.bgColor} border border-transparent transition-all hover:shadow-md hover:-translate-y-0.5 group`}
+                >
+                  <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl ${cat.iconBg} flex items-center justify-center transition-transform group-hover:scale-110`}>
+                    <cat.icon className="w-6 h-6 md:w-7 md:h-7 text-foreground/70" />
+                  </div>
+                  <span className="text-[10px] md:text-xs font-semibold text-foreground/80 text-center leading-tight">{cat.label}</span>
+                </motion.a>
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>
