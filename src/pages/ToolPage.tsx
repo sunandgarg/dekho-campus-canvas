@@ -1,0 +1,85 @@
+import { useParams, Link } from "react-router-dom";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { FloatingBot } from "@/components/FloatingBot";
+import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import { LeadCaptureForm } from "@/components/LeadCaptureForm";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
+import { BMICalculator } from "@/components/tools/BMICalculator";
+import { PercentageCalculator } from "@/components/tools/PercentageCalculator";
+import { AgeCalculator } from "@/components/tools/AgeCalculator";
+import { SIPCalculator } from "@/components/tools/SIPCalculator";
+import { WordCounter } from "@/components/tools/WordCounter";
+import { CGPAConverterTool } from "@/components/tools/CGPAConverterTool";
+import { EMICalculatorTool } from "@/components/tools/EMICalculatorTool";
+import { RankPredictorTool } from "@/components/tools/RankPredictorTool";
+import { EligibilityCheckerTool } from "@/components/tools/EligibilityCheckerTool";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+
+const toolRegistry: Record<string, { title: string; description: string; component: React.FC }> = {
+  "cgpa-converter": { title: "CGPA/SGPA to Percentage Converter", description: "Convert your CGPA or SGPA to percentage easily.", component: CGPAConverterTool },
+  "emi-calculator": { title: "Education Loan EMI Calculator", description: "Calculate your monthly EMI for education loans.", component: EMICalculatorTool },
+  "rank-predictor": { title: "Exam Rank Predictor", description: "Get an estimated rank based on your expected score.", component: RankPredictorTool },
+  "eligibility-checker": { title: "College Eligibility Checker", description: "Check which colleges you're eligible for.", component: EligibilityCheckerTool },
+  "bmi-calculator": { title: "BMI Calculator", description: "Calculate your Body Mass Index.", component: BMICalculator },
+  "percentage-calculator": { title: "Percentage Calculator", description: "Calculate percentages, increases, and decreases.", component: PercentageCalculator },
+  "age-calculator": { title: "Age Calculator", description: "Calculate your exact age from DOB.", component: AgeCalculator },
+  "sip-calculator": { title: "SIP Calculator", description: "Plan your investments with SIP.", component: SIPCalculator },
+  "word-counter": { title: "Word & Character Counter", description: "Count words, characters, and reading time.", component: WordCounter },
+};
+
+export default function ToolPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const tool = slug ? toolRegistry[slug] : null;
+
+  if (!tool) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container py-20 text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Tool Not Found</h1>
+          <Link to="/"><Button className="gradient-primary text-primary-foreground rounded-xl">Go Home</Button></Link>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const ToolComponent = tool.component;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page="tools" />
+      <main className="container py-4 md:py-6">
+        <PageBreadcrumb items={[{ label: "Tools", href: "/#tools-heading" }, { label: tool.title }]} />
+        <Link to="/#tools-heading" className="inline-flex items-center gap-1 text-sm text-primary hover:underline mb-4">
+          <ArrowLeft className="w-4 h-4" /> Back to All Tools
+        </Link>
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-card rounded-2xl border border-border p-5 md:p-8 mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{tool.title}</h1>
+              <p className="text-muted-foreground mb-6">{tool.description}</p>
+              <ToolComponent />
+            </div>
+            <DynamicAdBanner variant="horizontal" position="mid-page" page="tools" />
+            <div className="mt-6">
+              <LeadCaptureForm variant="inline" title="Need more help? Talk to our experts!" source={`tool_${slug}`} />
+            </div>
+          </div>
+          <aside className="space-y-6">
+            <LeadCaptureForm variant="sidebar" title="Get Expert Help" subtitle="Free career counseling" source={`tool_sidebar_${slug}`} />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="tools" />
+            <LeadCaptureForm variant="card" title="Education Updates" subtitle="Stay informed about admissions" source="tool_sidebar_card" />
+          </aside>
+        </div>
+      </main>
+      <Footer />
+      <FloatingBot />
+      <FixedCounsellingCTA />
+    </div>
+  );
+}
