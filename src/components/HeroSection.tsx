@@ -8,11 +8,11 @@ import logo from "@/assets/dekhocampus-logo.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
 const wordColors = [
-  "text-gradient",         // College - orange
-  "text-gradient-accent",  // Course - blue
-  "text-gradient",         // Career - orange
-  "text-gradient-accent",  // Exam - blue
-  "text-gradient-hero",    // Future - orange→blue gradient
+  "text-gradient",         // College - blue
+  "text-gradient-hero",    // Course - blue gradient
+  "text-gradient",         // Career - blue
+  "text-gradient-hero",    // Exam - blue gradient
+  "text-gradient",         // Future - blue
 ];
 
 const suggestedPrompts = [
@@ -183,7 +183,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
             <form onSubmit={handleAskAI}>
               <div className="relative">
                 <div className={`relative flex items-center bg-card/80 backdrop-blur-xl rounded-2xl shadow-xl border p-1.5 transition-all ${isFocused ? "border-primary/40 ring-2 ring-primary/10" : "border-border/60 ring-1 ring-primary/5"}`}>
-                  <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center ml-1">
+                  <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center ml-1">
                     {searchQuery.trim() ? <Search className="w-5 h-5 text-white" /> : <Sparkles className="w-5 h-5 text-white" />}
                   </div>
                   <input
@@ -199,7 +199,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                   <Button
                     type="submit"
                     size="lg"
-                    className="rounded-xl bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-5 md:px-6 shadow-lg"
+                    className="rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 text-white px-5 md:px-6 shadow-lg"
                     disabled={!searchQuery.trim()}
                   >
                     <Send className="w-5 h-5 md:mr-2" />
@@ -245,7 +245,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                         onMouseDown={handleAskAI as any}
                         className="w-full flex items-center gap-3 text-left hover:opacity-80 transition-opacity"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
                           <Sparkles className="w-5 h-5 text-white" />
                         </div>
                         <div>

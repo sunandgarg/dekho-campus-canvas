@@ -465,6 +465,7 @@ export type Database = {
           image: string
           important_dates: Json
           is_active: boolean
+          is_top_exam: boolean
           language: string
           level: string
           logo: string
@@ -517,6 +518,7 @@ export type Database = {
           image?: string
           important_dates?: Json
           is_active?: boolean
+          is_top_exam?: boolean
           language?: string
           level?: string
           logo?: string
@@ -569,6 +571,7 @@ export type Database = {
           image?: string
           important_dates?: Json
           is_active?: boolean
+          is_top_exam?: boolean
           language?: string
           level?: string
           logo?: string
@@ -815,6 +818,39 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      trusted_partners: {
+        Row: {
+          college_slug: string
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          logo_url: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          college_slug?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          logo_url?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          college_slug?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          logo_url?: string
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }

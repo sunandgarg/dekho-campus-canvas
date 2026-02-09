@@ -56,7 +56,7 @@ export function TopRankedColleges() {
               Featured Institutions
             </div>
             <h2 id="top-colleges-heading" className="text-headline font-bold text-foreground">
-              Top Colleges in India <span className="text-gradient">as per Reviews</span>
+              <span className="text-gradient">Featured</span> Colleges
             </h2>
             <p className="text-muted-foreground mt-1">Handpicked top institutions from across India</p>
           </div>
