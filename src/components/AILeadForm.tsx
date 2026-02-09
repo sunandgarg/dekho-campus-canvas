@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { X, Send, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SearchableSelect } from "@/components/SearchableSelect";
+import { indianStates, citiesByState, educationStatus } from "@/data/indianLocations";
 import { toast } from "sonner";
 
 const LEAD_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-lead`;
@@ -10,12 +12,6 @@ const LEAD_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-lead`;
 const courseOptions = [
   "B.Tech / B.E.", "MBBS / BDS", "B.Com / BBA / MBA", "B.Sc / M.Sc",
   "B.A / M.A", "Law (LLB)", "Design / Architecture", "Other",
-];
-
-const stateOptions = [
-  "Andhra Pradesh", "Bihar", "Delhi", "Gujarat", "Haryana", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Punjab", "Rajasthan",
-  "Tamil Nadu", "Telangana", "Uttar Pradesh", "West Bengal", "Other",
 ];
 
 interface AILeadFormProps {
@@ -26,11 +22,13 @@ interface AILeadFormProps {
 
 export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
   const [formData, setFormData] = useState({
-    name: "", email: "", phone: "", course: "", state: "", city: "",
+    name: "", email: "", phone: "", course: "", otherCourse: "", state: "", city: "", education: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const update = (field: string, value: string) => setFormData((prev) => ({ ...prev, [field]: value }));
+
+  const cities = formData.state ? (citiesByState[formData.state] || []) : [];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +37,7 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
       return;
     }
     setIsLoading(true);
+    const courseValue = formData.course === "Other" ? formData.otherCourse : formData.course;
     try {
       await fetch(LEAD_URL, {
         method: "POST",
@@ -49,10 +48,11 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
         body: JSON.stringify({
           name: formData.name, email: formData.email || null, phone: formData.phone,
           city: formData.city || null, state: formData.state || null,
-          current_situation: formData.course || null, source: "ai_chat_lead",
+          current_situation: `${formData.education ? formData.education + " | " : ""}${courseValue || ""}` || null,
+          source: "ai_chat_lead",
         }),
       });
-      onSubmit({ name: formData.name, course: formData.course, state: formData.state, city: formData.city });
+      onSubmit({ name: formData.name, course: courseValue, state: formData.state, city: formData.city });
     } catch (error) {
       console.error("Lead save error:", error);
       toast.error("Failed to save. Please try again.");
@@ -117,6 +117,18 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
               required
             />
           </div>
+
+          {/* Education status */}
+          <select
+            value={formData.education}
+            onChange={(e) => update("education", e.target.value)}
+            className="w-full h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Education Status</option>
+            {educationStatus.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+
+          {/* Course select */}
           <select
             value={formData.course}
             onChange={(e) => update("course", e.target.value)}
@@ -125,22 +137,33 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
             <option value="">Select Course Interest</option>
             {courseOptions.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
-          <div className="grid grid-cols-2 gap-2">
-            <select
-              value={formData.state}
-              onChange={(e) => update("state", e.target.value)}
-              className="h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-            >
-              <option value="">State</option>
-              {stateOptions.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>
+
+          {/* Other course text field */}
+          {formData.course === "Other" && (
             <Input
-              value={formData.city}
-              onChange={(e) => update("city", e.target.value)}
-              placeholder="City"
+              value={formData.otherCourse}
+              onChange={(e) => update("otherCourse", e.target.value)}
+              placeholder="Enter your course interest"
               className="rounded-xl h-10 text-sm"
             />
+          )}
+
+          {/* State & City with search */}
+          <div className="grid grid-cols-2 gap-2">
+            <SearchableSelect
+              options={indianStates}
+              value={formData.state}
+              onChange={(v) => { update("state", v); update("city", ""); }}
+              placeholder="State"
+            />
+            <SearchableSelect
+              options={cities}
+              value={formData.city}
+              onChange={(v) => update("city", v)}
+              placeholder={formData.state ? "City" : "Select state first"}
+            />
           </div>
+
           <Button type="submit" className="w-full gradient-primary rounded-xl h-11" disabled={isLoading}>
             {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
             {isLoading ? "Saving..." : "Start AI Chat"}

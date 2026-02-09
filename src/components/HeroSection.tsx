@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Sparkles, Brain, Zap, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/dekhocampus-logo.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
@@ -21,27 +22,6 @@ const suggestedPrompts = [
   "Top MBA colleges after graduation?",
 ];
 
-const searchableItems = [
-  { type: "College", name: "IIT Delhi", location: "New Delhi", slug: "iit-delhi", icon: GraduationCap },
-  { type: "College", name: "IIT Bombay", location: "Mumbai", slug: "iit-bombay", icon: GraduationCap },
-  { type: "College", name: "IIT Madras", location: "Chennai", slug: "iit-madras", icon: GraduationCap },
-  { type: "College", name: "AIIMS Delhi", location: "New Delhi", slug: "aiims-delhi", icon: GraduationCap },
-  { type: "College", name: "IIM Ahmedabad", location: "Ahmedabad", slug: "iim-ahmedabad", icon: GraduationCap },
-  { type: "College", name: "NIT Trichy", location: "Tiruchirappalli", slug: "nit-trichy", icon: GraduationCap },
-  { type: "College", name: "BITS Pilani", location: "Pilani", slug: "bits-pilani", icon: GraduationCap },
-  { type: "College", name: "Delhi University", location: "New Delhi", slug: "delhi-university", icon: GraduationCap },
-  { type: "Course", name: "B.Tech Computer Science", location: "", slug: "btech-computer-science", icon: BookOpen },
-  { type: "Course", name: "MBBS", location: "", slug: "mbbs", icon: BookOpen },
-  { type: "Course", name: "MBA", location: "", slug: "mba", icon: BookOpen },
-  { type: "Course", name: "B.Com Honours", location: "", slug: "bcom-honours", icon: BookOpen },
-  { type: "Course", name: "BA LLB", location: "", slug: "ba-llb", icon: BookOpen },
-  { type: "Exam", name: "JEE Main 2026", location: "", slug: "jee-main", icon: FileText },
-  { type: "Exam", name: "JEE Advanced 2026", location: "", slug: "jee-advanced", icon: FileText },
-  { type: "Exam", name: "NEET UG 2026", location: "", slug: "neet-ug", icon: FileText },
-  { type: "Exam", name: "CUET 2026", location: "", slug: "cuet", icon: FileText },
-  { type: "Exam", name: "CAT 2026", location: "", slug: "cat", icon: FileText },
-];
-
 const quickCategories = [
   { label: "13000+ Colleges", icon: GraduationCap, bgColor: "bg-rose-50", iconBg: "bg-rose-100", href: "/colleges" },
   { label: "840+ Courses", icon: BookOpen, bgColor: "bg-sky-50", iconBg: "bg-sky-100", href: "/courses" },
@@ -51,6 +31,15 @@ const quickCategories = [
   { label: "News", icon: Newspaper, bgColor: "bg-blue-50", iconBg: "bg-blue-100", href: "/articles" },
 ];
 
+interface SearchResult {
+  type: "College" | "Course" | "Exam";
+  name: string;
+  location: string;
+  slug: string;
+  logo?: string;
+  image?: string;
+}
+
 interface HeroSectionProps {
   onOpenChat?: (initialMessage?: string) => void;
 }
@@ -59,6 +48,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
+  const [dbResults, setDbResults] = useState<SearchResult[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,12 +58,29 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const results = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
-    return searchableItems
-      .filter(item => item.name.toLowerCase().includes(q) || item.type.toLowerCase().includes(q))
-      .slice(0, 6);
+  // Live search from database
+  useEffect(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q || q.length < 2) { setDbResults([]); return; }
+
+    const timeout = setTimeout(async () => {
+      try {
+        const [colleges, courses, exams] = await Promise.all([
+          supabase.from("colleges").select("name, slug, city, logo").eq("is_active", true).ilike("name", `%${q}%`).limit(4),
+          supabase.from("courses").select("name, slug").eq("is_active", true).ilike("name", `%${q}%`).limit(3),
+          supabase.from("exams").select("name, slug, image, logo").eq("is_active", true).ilike("name", `%${q}%`).limit(3),
+        ]);
+
+        const results: SearchResult[] = [
+          ...(colleges.data || []).map(c => ({ type: "College" as const, name: c.name, slug: c.slug, location: c.city || "", logo: c.logo || "" })),
+          ...(courses.data || []).map(c => ({ type: "Course" as const, name: c.name, slug: c.slug, location: "" })),
+          ...(exams.data || []).map(e => ({ type: "Exam" as const, name: e.name, slug: e.slug, location: "", image: e.image || "", logo: e.logo || "" })),
+        ];
+        setDbResults(results);
+      } catch { /* skip */ }
+    }, 250);
+
+    return () => clearTimeout(timeout);
   }, [searchQuery]);
 
   const handleAskAI = (e: React.FormEvent) => {
@@ -84,7 +91,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
     }
   };
 
-  const handleResultClick = (item: typeof searchableItems[0]) => {
+  const handleResultClick = (item: SearchResult) => {
     setSearchQuery("");
     setIsFocused(false);
     const typeRoute = item.type === "College" ? "colleges" : item.type === "Course" ? "courses" : "exams";
@@ -95,7 +102,31 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
     if (onOpenChat) onOpenChat(prompt);
   };
 
-  const showDropdown = isFocused && searchQuery.trim() && results.length > 0;
+  const showDropdown = isFocused && searchQuery.trim().length >= 2 && dbResults.length > 0;
+
+  const getIcon = (item: SearchResult) => {
+    if (item.type === "College") return GraduationCap;
+    if (item.type === "Course") return BookOpen;
+    return FileText;
+  };
+
+  const getThumb = (item: SearchResult) => {
+    // College: show logo if available
+    if (item.type === "College" && item.logo) {
+      return <img src={item.logo} alt="" className="w-10 h-10 rounded-xl object-cover" />;
+    }
+    // Exam: show image if available
+    if (item.type === "Exam" && (item.image || item.logo)) {
+      return <img src={item.logo || item.image!} alt="" className="w-10 h-10 rounded-xl object-cover" />;
+    }
+    // Fallback icon
+    const Icon = getIcon(item);
+    return (
+      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+        <Icon className="w-5 h-5 text-primary" />
+      </div>
+    );
+  };
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-background via-secondary/30 to-background" aria-label="Hero">
@@ -184,15 +215,13 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50"
                   >
                     <div className="py-2">
-                      {results.map((item) => (
+                      {dbResults.map((item) => (
                         <button
-                          key={item.name}
+                          key={`${item.type}-${item.slug}`}
                           onMouseDown={() => handleResultClick(item)}
                           className="w-full flex items-center gap-3 px-5 py-3 hover:bg-muted/50 transition-colors text-left"
                         >
-                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <item.icon className="w-5 h-5 text-primary" />
-                          </div>
+                          {getThumb(item)}
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-foreground truncate">{item.name}</p>
                             <div className="flex items-center gap-1 text-xs text-muted-foreground">

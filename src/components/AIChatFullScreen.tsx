@@ -60,10 +60,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
         : "Hi! 👋 I'm your **DekhoCampus AI Counselor**. Ask me about colleges, courses, exams, or career paths!";
       setMessages([{ role: "assistant", content: greeting }]);
 
-      if (initialMessage) {
-        // Auto-send the initial message
-        setTimeout(() => streamChat(initialMessage, [{ role: "assistant", content: greeting }]), 500);
-      }
+      // Don't auto-send initial message; just show greeting and let user type
     }
   }, [isOpen]);
 
