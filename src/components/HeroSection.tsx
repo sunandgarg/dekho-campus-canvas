@@ -2,8 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, MessageCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-abstract.jpg";
-import campusImg from "@/assets/campus-building.png";
+import campusImg from "@/assets/campus-hero-new.png";
 import logo from "@/assets/dekhocampus-logo.png";
 
 const suggestedPrompts = [
@@ -34,19 +33,18 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
 
   return (
     <section className="relative overflow-hidden" aria-label="Hero">
-      {/* Background */}
-      <img src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
-      <div className="absolute inset-0 bg-foreground/50" />
+      {/* Gradient background instead of image */}
+      <div className="absolute inset-0 bg-gradient-to-br from-foreground via-foreground/95 to-foreground/85" />
 
-      <div className="container relative z-10 py-8 md:py-12">
-        <div className="max-w-3xl mx-auto text-center space-y-4 md:space-y-6">
+      <div className="container relative z-10 py-10 md:py-14">
+        <div className="max-w-3xl mx-auto text-center space-y-5 md:space-y-6">
           {/* Logo */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="flex justify-center">
             <img src={logo} alt="DekhoCampus" className="h-14 md:h-20" />
           </motion.div>
 
           {/* Tagline badge */}
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/20 backdrop-blur-md border border-card/30">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/15 backdrop-blur-md border border-card/20">
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-sm font-semibold text-card">India's #1 AI Education Counselor</span>
           </motion.div>
@@ -97,7 +95,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
         <img
           src={campusImg}
           alt="Indian campus building"
-          className="w-full h-28 sm:h-36 md:h-44 object-cover object-center"
+          className="w-full h-32 sm:h-40 md:h-52 object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
