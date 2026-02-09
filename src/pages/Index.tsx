@@ -2,8 +2,9 @@ import { useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { UniversalSearch } from "@/components/UniversalSearch";
-import { CitySearch } from "@/components/CitySearch";
+import { TopRankedColleges } from "@/components/TopRankedColleges";
 import { CategorySection } from "@/components/CategorySection";
+import { CitySearch } from "@/components/CitySearch";
 import { OnlineEducationSection } from "@/components/OnlineEducationSection";
 import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
@@ -52,8 +53,10 @@ const Index = () => {
       <main id="main-content">
         <HeroSection onOpenChat={handleOpenChat} />
         <UniversalSearch />
-        <CitySearch />
+        <TopRankedColleges />
         <CategorySection />
+        <CitySearch />
+        <StudyAbroadSection />
         <OnlineEducationSection />
         <UpcomingExams />
         <ToolsSection />
@@ -73,7 +76,6 @@ const Index = () => {
         <NewsSection />
         <FeaturesSection />
         <FAQSection page="homepage" title="Frequently Asked Questions" />
-        <StudyAbroadSection />
         <TrustedBySection />
       </main>
       <Footer />

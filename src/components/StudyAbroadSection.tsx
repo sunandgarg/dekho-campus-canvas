@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Globe, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 
 const countries = [
   { name: "Germany", flag: "🇩🇪", colleges: "400+" },
@@ -14,26 +13,21 @@ const countries = [
 
 export function StudyAbroadSection() {
   return (
-    <section className="py-12 md:py-16" aria-labelledby="abroad-heading">
+    <section className="py-10 md:py-14" aria-labelledby="abroad-heading">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-card rounded-3xl border border-border p-8 md:p-12 text-center shadow-sm"
+          className="bg-card rounded-2xl border border-border p-6 md:p-10 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3">
-            <Globe className="w-4 h-4" />
-            Study Abroad
-          </div>
-          <h2 id="abroad-heading" className="text-headline font-bold text-foreground mb-2">
-            Want to study abroad? <span className="text-gradient">We have that too</span>
+          <span className="text-primary text-sm font-semibold">Want to study abroad?</span>
+          <h2 id="abroad-heading" className="text-headline font-bold text-foreground mt-1 mb-6">
+            We have that too
           </h2>
-          <p className="text-muted-foreground text-sm md:text-base max-w-xl mx-auto mb-8">
-            Explore top universities across the globe with expert guidance on admissions, visas, and scholarships.
-          </p>
 
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 md:gap-6 max-w-3xl mx-auto mb-8">
+          {/* Single-line horizontal scroll of country flags */}
+          <div className="flex gap-6 md:gap-10 overflow-x-auto pb-2 scrollbar-hide justify-center">
             {countries.map((country, i) => (
               <motion.div
                 key={country.name}
@@ -41,20 +35,21 @@ export function StudyAbroadSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="flex flex-col items-center gap-2 group cursor-pointer"
+                className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer group"
               >
                 <div className="text-5xl md:text-6xl group-hover:scale-110 transition-transform">
                   {country.flag}
                 </div>
-                <span className="text-xs md:text-sm font-medium text-foreground">{country.name}</span>
-                <span className="text-[10px] text-muted-foreground">{country.colleges} colleges</span>
+                <span className="text-xs md:text-sm font-medium text-foreground whitespace-nowrap">{country.name}</span>
               </motion.div>
             ))}
           </div>
 
-          <Button size="lg" className="gradient-primary btn-glow rounded-xl">
-            Explore Study Abroad <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <div className="mt-6">
+            <Button size="lg" className="gradient-primary btn-glow rounded-xl">
+              Explore Study Abroad <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
         </motion.div>
       </div>
     </section>

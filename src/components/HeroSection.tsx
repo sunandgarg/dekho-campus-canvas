@@ -33,10 +33,11 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
 
   return (
     <section className="relative overflow-hidden" aria-label="Hero">
-      {/* Gradient background instead of image */}
-      <div className="absolute inset-0 bg-gradient-to-br from-foreground via-foreground/95 to-foreground/85" />
+      {/* Full campus image as background */}
+      <img src={campusImg} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+      <div className="absolute inset-0 bg-foreground/60" />
 
-      <div className="container relative z-10 py-10 md:py-14">
+      <div className="container relative z-10 py-12 md:py-20">
         <div className="max-w-3xl mx-auto text-center space-y-5 md:space-y-6">
           {/* Logo */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="flex justify-center">
@@ -88,16 +89,6 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
             </div>
           </motion.div>
         </div>
-      </div>
-
-      {/* Campus building image strip below hero */}
-      <div className="relative z-10">
-        <img
-          src={campusImg}
-          alt="Indian campus building"
-          className="w-full h-32 sm:h-40 md:h-52 object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
     </section>
   );
