@@ -12,7 +12,6 @@ import { ToolsSection } from "@/components/ToolsSection";
 import { TrustedBySection } from "@/components/TrustedBySection";
 import { UpcomingExams } from "@/components/UpcomingExams";
 import { FAQSection } from "@/components/FAQSection";
-import { StudyAbroadSection } from "@/components/StudyAbroadSection";
 import { Footer } from "@/components/Footer";
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 import { FloatingBot } from "@/components/FloatingBot";
@@ -55,12 +54,11 @@ const Index = () => {
         <UniversalSearch />
         <TopRankedColleges />
         <CategorySection />
-        <CitySearch />
-        <StudyAbroadSection />
-        <OnlineEducationSection />
         <UpcomingExams />
+        <CitySearch />
+        <OnlineEducationSection />
         <ToolsSection />
-        
+
         {/* Mid-page lead capture */}
         <section className="py-8 md:py-10">
           <div className="container max-w-4xl">
