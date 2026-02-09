@@ -39,7 +39,7 @@ export default function AllColleges() {
       const matchState = state === "All" || c.state === state;
       const matchType = type === "All" || c.type === type;
       const matchApproval = approval === "All" || c.approvals.includes(approval);
-      const matchNaac = naacGrade === "All" || c.naacGrade === naacGrade;
+      const matchNaac = naacGrade === "All" || c.naac_grade === naacGrade;
       return matchSearch && matchCategory && matchState && matchType && matchApproval && matchNaac;
     });
 

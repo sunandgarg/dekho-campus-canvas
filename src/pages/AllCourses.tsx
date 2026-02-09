@@ -9,7 +9,12 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CourseCard } from "@/components/CourseCard";
-import { courses, courseCategories, courseLevels, courseModes, courseDurations } from "@/data/courses";
+import { useDbCourses } from "@/hooks/useCoursesData";
+
+const courseCategories = ["All", "Engineering", "Medical", "Management", "Law", "Design", "Science", "Commerce", "Arts"] as const;
+const courseLevels = ["All", "Undergraduate", "Postgraduate", "Diploma", "Doctoral"] as const;
+const courseModes = ["All", "Full-Time", "Part-Time", "Online", "Distance"] as const;
+const courseDurations = ["All", "1-2 Years", "3 Years", "4 Years", "5+ Years"] as const;
 
 export default function AllCourses() {
   const [search, setSearch] = useState("");
@@ -18,19 +23,21 @@ export default function AllCourses() {
   const [mode, setMode] = useState("All");
   const [duration, setDuration] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const { data: dbCourses } = useDbCourses();
+  const courses = dbCourses ?? [];
 
   const activeFilters = [category, level, mode, duration].filter((f) => f !== "All").length;
 
   const filtered = useMemo(() => {
     return courses.filter((c) => {
-      const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.fullName.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.full_name.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === "All" || c.category === category;
       const matchLevel = level === "All" || c.level === level;
       const matchMode = mode === "All" || c.mode === mode;
       const matchDuration = duration === "All" || matchesDuration(c.duration, duration);
       return matchSearch && matchCategory && matchLevel && matchMode && matchDuration;
     });
-  }, [search, category, level, mode, duration]);
+  }, [search, category, level, mode, duration, courses]);
 
   const clearAll = () => { setCategory("All"); setLevel("All"); setMode("All"); setDuration("All"); };
 
