@@ -9,6 +9,8 @@ import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ToolsSection } from "@/components/ToolsSection";
 import { TrustedBySection } from "@/components/TrustedBySection";
+import { PopularPlaces } from "@/components/PopularPlaces";
+import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 import { FloatingBot } from "@/components/FloatingBot";
@@ -44,9 +46,11 @@ const Index = () => {
         
         <CategorySection />
         <FeaturedColleges />
+        <PopularPlaces />
         <NewsSection />
         <ToolsSection />
         <FeaturesSection />
+        <FAQSection page="homepage" title="Frequently Asked Questions" />
         <TrustedBySection />
       </main>
 
