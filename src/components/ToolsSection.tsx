@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Calculator, GraduationCap, Search, ArrowRight, Percent, IndianRupee, BarChart3, FileCheck } from "lucide-react";
+import { Building2, Calculator, GraduationCap, Search, ArrowRight, Percent, IndianRupee, BarChart3, FileCheck, Heart, CalendarDays, Wallet, AlignLeft } from "lucide-react";
+import { BMICalculator } from "@/components/tools/BMICalculator";
+import { PercentageCalculator } from "@/components/tools/PercentageCalculator";
+import { AgeCalculator } from "@/components/tools/AgeCalculator";
+import { SIPCalculator } from "@/components/tools/SIPCalculator";
+import { WordCounter } from "@/components/tools/WordCounter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -11,6 +16,11 @@ const tools = [
   { id: "emi", title: "EMI Calculator", desc: "Education loan EMI planner", icon: IndianRupee },
   { id: "rank", title: "Rank Predictor", desc: "Predict your rank from score", icon: BarChart3 },
   { id: "eligibility", title: "Eligibility Checker", desc: "Check college eligibility", icon: FileCheck },
+  { id: "bmi", title: "BMI Calculator", desc: "Check your body mass index", icon: Heart },
+  { id: "percentage", title: "Percentage Calc", desc: "Calculate any percentage", icon: Calculator },
+  { id: "age", title: "Age Calculator", desc: "Calculate exact age from DOB", icon: CalendarDays },
+  { id: "sip", title: "SIP Calculator", desc: "Plan your investments", icon: Wallet },
+  { id: "wordcount", title: "Word Counter", desc: "Count words & characters", icon: AlignLeft },
 ];
 
 // College compare data
@@ -122,7 +132,7 @@ export function ToolsSection() {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium mb-3">
             <Calculator className="w-4 h-4" />
-            Student Toolkit
+            Smart Toolkit
           </div>
           <h2 id="tools-heading" className="text-headline font-bold text-foreground">
             Helpful <span className="text-gradient-accent">Tools</span> for You
@@ -297,6 +307,12 @@ export function ToolsSection() {
               )}
             </div>
           )}
+
+          {activeTool === "bmi" && <BMICalculator />}
+          {activeTool === "percentage" && <PercentageCalculator />}
+          {activeTool === "age" && <AgeCalculator />}
+          {activeTool === "sip" && <SIPCalculator />}
+          {activeTool === "wordcount" && <WordCounter />}
         </motion.div>
       </div>
     </section>

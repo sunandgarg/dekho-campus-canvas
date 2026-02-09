@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
+import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 
 interface ListingPageLayoutProps {
@@ -25,6 +26,7 @@ export function ListingPageLayout({ children, title, description, page }: Listin
       </main>
       <Footer />
       <FloatingBot />
+      <FixedCounsellingCTA />
     </div>
   );
 }

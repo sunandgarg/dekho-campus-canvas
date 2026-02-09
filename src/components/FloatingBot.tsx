@@ -141,8 +141,7 @@ export function FloatingBot() {
               });
             }
           } catch {
-            textBuffer = line + "\n" + textBuffer;
-            break;
+            // Skip malformed SSE chunks gracefully
           }
         }
       }

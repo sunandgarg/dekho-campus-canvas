@@ -6,6 +6,13 @@ import { useNavigate } from "react-router-dom";
 import logo from "@/assets/dekhocampus-logo.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
+const wordColors = [
+  "text-gradient",         // College - orange
+  "text-gradient-accent",  // Course - blue
+  "text-gradient",         // Career - orange
+  "text-gradient-accent",  // Exam - blue
+  "text-gradient-hero",    // Future - orange→blue gradient
+];
 
 const suggestedPrompts = [
   "Best colleges for B.Tech CSE?",
@@ -128,7 +135,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -30, filter: "blur(8px)" }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"
+                    className={wordColors[wordIndex]}
                   >
                     {rotatingWords[wordIndex]}
                   </motion.span>

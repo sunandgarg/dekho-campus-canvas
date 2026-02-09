@@ -141,8 +141,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
               });
             }
           } catch {
-            textBuffer = line + "\n" + textBuffer;
-            break;
+            // Skip malformed SSE chunks gracefully
           }
         }
       }

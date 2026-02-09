@@ -1,7 +1,7 @@
 import { AdminLayout } from "@/components/AdminLayout";
 import { useAllAds } from "@/hooks/useAds";
 import { useAllFeaturedColleges } from "@/hooks/useFeaturedColleges";
-import { Megaphone, Star, Users, TrendingUp, HelpCircle } from "lucide-react";
+import { Megaphone, Star, Users, TrendingUp, HelpCircle, Lightbulb } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -101,6 +101,13 @@ export default function AdminDashboard() {
               <div>
                 <div className="text-sm font-medium text-foreground">FAQs & Places</div>
                 <div className="text-xs text-muted-foreground">Manage homepage content</div>
+              </div>
+            </Link>
+            <Link to="/admin/docs" className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors">
+              <Lightbulb className="w-5 h-5 text-violet-500" />
+              <div>
+                <div className="text-sm font-medium text-foreground">Project Docs</div>
+                <div className="text-xs text-muted-foreground">Technical & admin guide</div>
               </div>
             </Link>
           </div>
