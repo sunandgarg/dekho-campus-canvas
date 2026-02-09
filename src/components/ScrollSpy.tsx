@@ -40,7 +40,7 @@ export function ScrollSpy({ sections, className }: ScrollSpyProps) {
   const scrollTo = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 120;
+      const y = el.getBoundingClientRect().top + window.scrollY - 100;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, []);
@@ -58,7 +58,7 @@ export function ScrollSpy({ sections, className }: ScrollSpyProps) {
     <div
       ref={navRef}
       className={cn(
-        "sticky top-16 z-30 bg-background/95 backdrop-blur-md border-b border-border",
+        "sticky top-14 md:top-16 z-30 bg-background/95 backdrop-blur-md border-b border-border",
         "flex overflow-x-auto scrollbar-hide gap-0.5 px-1 py-1.5",
         className
       )}
