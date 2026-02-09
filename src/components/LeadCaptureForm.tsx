@@ -10,6 +10,9 @@ interface LeadCaptureFormProps {
   title?: string;
   subtitle?: string;
   source?: string;
+  interestedCollegeSlug?: string;
+  interestedCourseSlug?: string;
+  interestedExamSlug?: string;
 }
 
 const LEAD_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-lead`;
@@ -35,7 +38,10 @@ export function LeadCaptureForm({
   variant = "card", 
   title = "Get Free Counseling",
   subtitle = "Talk to our expert counselors for personalized college recommendations",
-  source = "website_form"
+  source = "website_form",
+  interestedCollegeSlug,
+  interestedCourseSlug,
+  interestedExamSlug,
 }: LeadCaptureFormProps) {
   const [formData, setFormData] = useState({
     name: "",
@@ -73,6 +79,9 @@ export function LeadCaptureForm({
           state: formData.state || null,
           current_situation: formData.course || null,
           source,
+          interested_college_slug: interestedCollegeSlug || null,
+          interested_course_slug: interestedCourseSlug || null,
+          interested_exam_slug: interestedExamSlug || null,
         }),
       });
 

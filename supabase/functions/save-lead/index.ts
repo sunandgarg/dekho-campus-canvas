@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { name, email, phone, current_situation, city, state, initial_query, source } = await req.json();
+    const { name, email, phone, current_situation, city, state, initial_query, source, interested_college_slug, interested_course_slug, interested_exam_slug } = await req.json();
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -27,6 +27,9 @@ Deno.serve(async (req) => {
       state,
       initial_query,
       source: source || "chatbot",
+      interested_college_slug: interested_college_slug || null,
+      interested_course_slug: interested_course_slug || null,
+      interested_exam_slug: interested_exam_slug || null,
     }).select().single();
 
     if (error) {

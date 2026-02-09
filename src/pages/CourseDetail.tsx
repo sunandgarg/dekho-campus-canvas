@@ -11,7 +11,7 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ScrollSpy, type ScrollSection } from "@/components/ScrollSpy";
 import { FAQSection } from "@/components/FAQSection";
-import { courses } from "@/data/courses";
+import { useDbCourse } from "@/hooks/useCoursesData";
 
 const COURSE_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
@@ -28,7 +28,19 @@ const COURSE_SECTIONS: ScrollSection[] = [
 
 export default function CourseDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const course = courses.find((c) => c.slug === slug);
+  const { data: course, isLoading } = useDbCourse(slug);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container py-20 text-center">
+          <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!course) {
     return (
@@ -44,10 +56,6 @@ export default function CourseDetail() {
       </div>
     );
   }
-
-  const similarCourses = courses
-    .filter((c) => c.slug !== course.slug && c.category === course.category)
-    .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,7 +75,7 @@ export default function CourseDetail() {
               <Badge className="bg-accent/90 text-accent-foreground text-xs">{course.level}</Badge>
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-background mb-1">{course.name}</h1>
-            <p className="text-background/80 text-sm">{course.fullName}</p>
+            <p className="text-background/80 text-sm">{course.full_name}</p>
           </div>
         </motion.div>
 
@@ -79,9 +87,9 @@ export default function CourseDetail() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { icon: Clock, label: "Duration", value: course.duration, color: "text-primary" },
-                { icon: Building, label: "Colleges", value: `${course.colleges}+`, color: "text-accent" },
+                { icon: Building, label: "Colleges", value: `${course.colleges_count}+`, color: "text-accent" },
                 { icon: TrendingUp, label: "Growth", value: course.growth, color: "text-success" },
-                { icon: Briefcase, label: "Avg Salary", value: course.avgSalary, color: "text-golden" },
+                { icon: Briefcase, label: "Avg Salary", value: course.avg_salary, color: "text-golden" },
               ].map((stat) => (
                 <div key={stat.label} className="bg-card rounded-xl border border-border p-3 text-center">
                   <stat.icon className={`w-5 h-5 mx-auto mb-1 ${stat.color}`} />
@@ -105,7 +113,7 @@ export default function CourseDetail() {
             <section id="scope" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Scope of {course.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                With a {course.growth} growth rate, {course.name} graduates are in high demand across industries. The average starting salary is {course.avgSalary} with top performers earning significantly more.
+                With a {course.growth} growth rate, {course.name} graduates are in high demand across industries. The average starting salary is {course.avg_salary} with top performers earning significantly more.
               </p>
               <div className="grid sm:grid-cols-2 gap-2">
                 {course.careers.map((c) => (
@@ -134,7 +142,7 @@ export default function CourseDetail() {
               <h2 className="text-lg font-bold text-foreground mb-3">Placements</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                 <div className="bg-muted rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-foreground">{course.avgSalary}</p>
+                  <p className="text-lg font-bold text-foreground">{course.avg_salary}</p>
                   <p className="text-xs text-muted-foreground">Average Package</p>
                 </div>
                 <div className="bg-muted rounded-xl p-3 text-center">
@@ -142,12 +150,12 @@ export default function CourseDetail() {
                   <p className="text-xs text-muted-foreground">Industry Growth</p>
                 </div>
                 <div className="bg-muted rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-foreground">{course.colleges}+</p>
+                  <p className="text-lg font-bold text-foreground">{course.colleges_count}+</p>
                   <p className="text-xs text-muted-foreground">Colleges Offering</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                {course.name} graduates are recruited by leading companies in India and abroad. Top colleges offering this course report 90%+ placement rates with packages ranging from {course.avgFees} to top salaries.
+                {course.name} graduates are recruited by leading companies. Top colleges offering this course report 90%+ placement rates.
               </p>
             </section>
 
@@ -157,7 +165,7 @@ export default function CourseDetail() {
               <div className="space-y-3 mb-4">
                 {[
                   { step: "1", text: `Meet eligibility: ${course.eligibility}` },
-                  { step: "2", text: `Clear entrance exam: ${course.topExams.join(", ")}` },
+                  { step: "2", text: `Clear entrance exam: ${course.top_exams.join(", ")}` },
                   { step: "3", text: "Participate in counseling/admission rounds" },
                   { step: "4", text: "Complete document verification and fee payment" },
                 ].map((s) => (
@@ -169,7 +177,7 @@ export default function CourseDetail() {
               </div>
               <h3 className="text-sm font-semibold text-foreground mb-2">Entrance Exams</h3>
               <div className="flex flex-wrap gap-2">
-                {course.topExams.map((exam) => (
+                {course.top_exams.map((exam) => (
                   <div key={exam} className="flex items-center gap-2 bg-muted rounded-xl px-3 py-2">
                     <FileText className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">{exam}</span>
@@ -184,7 +192,7 @@ export default function CourseDetail() {
               <div className="flex items-center gap-3 mb-3">
                 <IndianRupee className="w-8 h-8 text-golden" />
                 <div>
-                  <p className="text-xl font-bold text-foreground">{course.avgFees}</p>
+                  <p className="text-xl font-bold text-foreground">{course.avg_fees}</p>
                   <p className="text-xs text-muted-foreground">Average annual fees (varies by college and category)</p>
                 </div>
               </div>
@@ -210,7 +218,7 @@ export default function CourseDetail() {
             <section id="cutoff" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Cut Off</h2>
               <p className="text-sm text-muted-foreground mb-3">
-                Cut-off scores vary by college and category. Here are typical ranges for top colleges:
+                Cut-off scores vary by college and category. Here are typical ranges:
               </p>
               <div className="space-y-2">
                 {[
@@ -244,18 +252,18 @@ export default function CourseDetail() {
               <FAQSection page="courses" itemSlug={slug} title={`FAQs about ${course.name}`} />
             </section>
 
-            <LeadCaptureForm variant="inline" title={`Get admission details for ${course.name}`} source={`course_detail_${course.slug}`} />
+            <LeadCaptureForm variant="inline" title={`Get admission details for ${course.name}`} source={`course_detail_${course.slug}`} interestedCourseSlug={course.slug} />
           </div>
 
           <aside className="space-y-6">
-            <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} />
+            <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} interestedCourseSlug={course.slug} />
             <DynamicAdBanner variant="vertical" position="sidebar" page="courses" itemSlug={slug} />
             <LeadCaptureForm variant="sidebar" title="Compare Courses" subtitle="Compare with similar courses" source="course_compare_sidebar" />
           </aside>
         </div>
 
         <div className="mt-10">
-          <LeadCaptureForm variant="banner" title={`🎯 Want to study ${course.name}? Get free expert guidance!`} subtitle="Our counselors help you pick the best college for this course" source={`course_detail_bottom_${course.slug}`} />
+          <LeadCaptureForm variant="banner" title={`🎯 Want to study ${course.name}? Get free expert guidance!`} subtitle="Our counselors help you pick the best college for this course" source={`course_detail_bottom_${course.slug}`} interestedCourseSlug={course.slug} />
         </div>
       </main>
 

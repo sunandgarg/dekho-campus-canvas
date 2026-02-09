@@ -80,6 +80,255 @@ export type Database = {
         }
         Relationships: []
       }
+      colleges: {
+        Row: {
+          approvals: string[]
+          category: string
+          city: string
+          courses_count: number
+          created_at: string
+          description: string
+          established: number
+          facilities: string[]
+          fees: string
+          highlights: string[]
+          id: string
+          image: string
+          is_active: boolean
+          location: string
+          naac_grade: string
+          name: string
+          placement: string
+          ranking: string
+          rating: number
+          reviews: number
+          short_name: string
+          slug: string
+          state: string
+          tags: string[]
+          top_recruiters: string[]
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          approvals?: string[]
+          category?: string
+          city?: string
+          courses_count?: number
+          created_at?: string
+          description?: string
+          established?: number
+          facilities?: string[]
+          fees?: string
+          highlights?: string[]
+          id?: string
+          image?: string
+          is_active?: boolean
+          location?: string
+          naac_grade?: string
+          name: string
+          placement?: string
+          ranking?: string
+          rating?: number
+          reviews?: number
+          short_name?: string
+          slug: string
+          state?: string
+          tags?: string[]
+          top_recruiters?: string[]
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          approvals?: string[]
+          category?: string
+          city?: string
+          courses_count?: number
+          created_at?: string
+          description?: string
+          established?: number
+          facilities?: string[]
+          fees?: string
+          highlights?: string[]
+          id?: string
+          image?: string
+          is_active?: boolean
+          location?: string
+          naac_grade?: string
+          name?: string
+          placement?: string
+          ranking?: string
+          rating?: number
+          reviews?: number
+          short_name?: string
+          slug?: string
+          state?: string
+          tags?: string[]
+          top_recruiters?: string[]
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          avg_fees: string
+          avg_salary: string
+          careers: string[]
+          category: string
+          colleges_count: number
+          created_at: string
+          description: string
+          duration: string
+          eligibility: string
+          full_name: string
+          growth: string
+          id: string
+          image: string
+          is_active: boolean
+          level: string
+          mode: string
+          name: string
+          slug: string
+          specializations: string[]
+          subjects: string[]
+          top_exams: string[]
+          updated_at: string
+        }
+        Insert: {
+          avg_fees?: string
+          avg_salary?: string
+          careers?: string[]
+          category?: string
+          colleges_count?: number
+          created_at?: string
+          description?: string
+          duration?: string
+          eligibility?: string
+          full_name?: string
+          growth?: string
+          id?: string
+          image?: string
+          is_active?: boolean
+          level?: string
+          mode?: string
+          name: string
+          slug: string
+          specializations?: string[]
+          subjects?: string[]
+          top_exams?: string[]
+          updated_at?: string
+        }
+        Update: {
+          avg_fees?: string
+          avg_salary?: string
+          careers?: string[]
+          category?: string
+          colleges_count?: number
+          created_at?: string
+          description?: string
+          duration?: string
+          eligibility?: string
+          full_name?: string
+          growth?: string
+          id?: string
+          image?: string
+          is_active?: boolean
+          level?: string
+          mode?: string
+          name?: string
+          slug?: string
+          specializations?: string[]
+          subjects?: string[]
+          top_exams?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      exams: {
+        Row: {
+          applicants: string
+          application_mode: string
+          category: string
+          created_at: string
+          description: string
+          duration: string
+          eligibility: string
+          exam_date: string
+          exam_type: string
+          frequency: string
+          full_name: string
+          id: string
+          image: string
+          important_dates: Json
+          is_active: boolean
+          language: string
+          level: string
+          mode: string
+          name: string
+          registration_url: string
+          slug: string
+          status: string
+          syllabus: string[]
+          top_colleges: string[]
+          updated_at: string
+        }
+        Insert: {
+          applicants?: string
+          application_mode?: string
+          category?: string
+          created_at?: string
+          description?: string
+          duration?: string
+          eligibility?: string
+          exam_date?: string
+          exam_type?: string
+          frequency?: string
+          full_name?: string
+          id?: string
+          image?: string
+          important_dates?: Json
+          is_active?: boolean
+          language?: string
+          level?: string
+          mode?: string
+          name: string
+          registration_url?: string
+          slug: string
+          status?: string
+          syllabus?: string[]
+          top_colleges?: string[]
+          updated_at?: string
+        }
+        Update: {
+          applicants?: string
+          application_mode?: string
+          category?: string
+          created_at?: string
+          description?: string
+          duration?: string
+          eligibility?: string
+          exam_date?: string
+          exam_type?: string
+          frequency?: string
+          full_name?: string
+          id?: string
+          image?: string
+          important_dates?: Json
+          is_active?: boolean
+          language?: string
+          level?: string
+          mode?: string
+          name?: string
+          registration_url?: string
+          slug?: string
+          status?: string
+          syllabus?: string[]
+          top_colleges?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
@@ -157,6 +406,9 @@ export type Database = {
           email: string | null
           id: string
           initial_query: string | null
+          interested_college_slug: string | null
+          interested_course_slug: string | null
+          interested_exam_slug: string | null
           name: string | null
           phone: string | null
           source: string | null
@@ -170,6 +422,9 @@ export type Database = {
           email?: string | null
           id?: string
           initial_query?: string | null
+          interested_college_slug?: string | null
+          interested_course_slug?: string | null
+          interested_exam_slug?: string | null
           name?: string | null
           phone?: string | null
           source?: string | null
@@ -183,6 +438,9 @@ export type Database = {
           email?: string | null
           id?: string
           initial_query?: string | null
+          interested_college_slug?: string | null
+          interested_course_slug?: string | null
+          interested_exam_slug?: string | null
           name?: string | null
           phone?: string | null
           source?: string | null
