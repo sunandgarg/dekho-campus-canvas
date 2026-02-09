@@ -30,6 +30,26 @@ export type DbCollege = {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  // New fields
+  status: string;
+  logo: string;
+  carousel_images: string[];
+  brochure_url: string;
+  eligibility_criteria: string;
+  admission_process: string;
+  scholarship_details: string;
+  hostel_life: string;
+  gallery_images: string[];
+  cutoff: string;
+  course_fee_content: string;
+  placement_content: string;
+  rankings_content: string;
+  facilities_content: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
+  banner_ad_image: string;
+  square_ad_image: string;
 };
 
 export function useDbColleges() {

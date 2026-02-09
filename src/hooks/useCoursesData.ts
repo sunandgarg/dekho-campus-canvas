@@ -25,6 +25,31 @@ export type DbCourse = {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  // New fields
+  status: string;
+  short_description: string;
+  domain: string;
+  duration_type: string;
+  study_type: string;
+  rating: number;
+  fee_type: string;
+  fee: number;
+  low_fee: number;
+  high_fee: number;
+  syllabus_pdf_url: string;
+  about_content: string;
+  scope_content: string;
+  subjects_content: string;
+  placements_content: string;
+  admission_process: string;
+  fees_content: string;
+  cutoff_content: string;
+  specialization_content: string;
+  recruiters_content: string;
+  syllabus_content: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
 };
 
 export function useDbCourses() {
