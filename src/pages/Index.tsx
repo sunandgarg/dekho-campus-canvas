@@ -2,27 +2,38 @@ import { useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { UniversalSearch } from "@/components/UniversalSearch";
-
+import { TopRankedColleges } from "@/components/TopRankedColleges";
+import { CitySearch } from "@/components/CitySearch";
 import { CategorySection } from "@/components/CategorySection";
 import { FeaturedColleges } from "@/components/FeaturedColleges";
 import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ToolsSection } from "@/components/ToolsSection";
 import { TrustedBySection } from "@/components/TrustedBySection";
-import { PopularPlaces } from "@/components/PopularPlaces";
+import { UpcomingExams } from "@/components/UpcomingExams";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 import { FloatingBot } from "@/components/FloatingBot";
+import { AILeadForm } from "@/components/AILeadForm";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [initialChatMessage, setInitialChatMessage] = useState<string | undefined>();
+  const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
+  const [pendingChatMessage, setPendingChatMessage] = useState<string | undefined>();
 
   const handleOpenChat = useCallback((message?: string) => {
-    setInitialChatMessage(message);
-    setIsChatOpen(true);
+    // Show lead form first before opening chat
+    setPendingChatMessage(message);
+    setIsLeadFormOpen(true);
   }, []);
+
+  const handleLeadSubmit = useCallback((data: { name: string; course: string; state: string; city: string }) => {
+    setIsLeadFormOpen(false);
+    setInitialChatMessage(pendingChatMessage);
+    setIsChatOpen(true);
+  }, [pendingChatMessage]);
 
   const handleCloseChat = useCallback(() => {
     setIsChatOpen(false);
@@ -43,10 +54,11 @@ const Index = () => {
       <main id="main-content">
         <HeroSection onOpenChat={handleOpenChat} />
         <UniversalSearch />
-        
+        <TopRankedColleges />
+        <CitySearch />
         <CategorySection />
         <FeaturedColleges />
-        <PopularPlaces />
+        <UpcomingExams />
         <NewsSection />
         <ToolsSection />
         <FeaturesSection />
@@ -55,6 +67,12 @@ const Index = () => {
       </main>
 
       <Footer />
+
+      <AILeadForm
+        isOpen={isLeadFormOpen}
+        onClose={() => setIsLeadFormOpen(false)}
+        onSubmit={handleLeadSubmit}
+      />
 
       <AIChatFullScreen
         isOpen={isChatOpen}
