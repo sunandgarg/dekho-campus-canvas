@@ -225,15 +225,15 @@ export function CategorySection() {
         </div>
 
         {/* Sub-tabs: Colleges / Courses / Exams */}
-        <div className="flex gap-1 mb-6 bg-muted/50 rounded-xl p-1 w-fit">
+        <div className="flex gap-1 mb-6 bg-accent/10 rounded-xl p-1 w-fit border border-accent/20">
           {subTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                 activeSubTab === tab.id
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "gradient-accent text-accent-foreground shadow-md"
+                  : "text-foreground/70 hover:text-foreground hover:bg-card"
               }`}
             >
               <tab.icon className="w-4 h-4" />
@@ -294,7 +294,7 @@ export function CategorySection() {
                       <span className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><Users className="w-3 h-3" />{course.colleges}+ colleges</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs"><TrendingUp className="w-3 h-3 mr-1" />{course.growth}</Badge>
+                      <Badge className="bg-success/15 text-success hover:bg-success/15 text-xs"><TrendingUp className="w-3 h-3 mr-1" />{course.growth}</Badge>
                       <Badge className="bg-primary/10 text-primary hover:bg-primary/10 text-xs">{course.avgSalary}</Badge>
                     </div>
                   </Link>

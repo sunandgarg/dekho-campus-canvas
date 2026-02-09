@@ -4,16 +4,20 @@ import { HeroSection } from "@/components/HeroSection";
 import { UniversalSearch } from "@/components/UniversalSearch";
 import { CitySearch } from "@/components/CitySearch";
 import { CategorySection } from "@/components/CategorySection";
+import { OnlineEducationSection } from "@/components/OnlineEducationSection";
 import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ToolsSection } from "@/components/ToolsSection";
 import { TrustedBySection } from "@/components/TrustedBySection";
 import { UpcomingExams } from "@/components/UpcomingExams";
 import { FAQSection } from "@/components/FAQSection";
+import { StudyAbroadSection } from "@/components/StudyAbroadSection";
 import { Footer } from "@/components/Footer";
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 import { FloatingBot } from "@/components/FloatingBot";
 import { AILeadForm } from "@/components/AILeadForm";
+import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
+import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -50,17 +54,33 @@ const Index = () => {
         <UniversalSearch />
         <CitySearch />
         <CategorySection />
+        <OnlineEducationSection />
         <UpcomingExams />
         <ToolsSection />
+        
+        {/* Mid-page lead capture */}
+        <section className="py-8 md:py-10">
+          <div className="container max-w-4xl">
+            <LeadCaptureForm
+              variant="banner"
+              title="🎯 Get Personalized College Recommendations"
+              subtitle="Talk to our expert counselors — it's completely free!"
+              source="homepage_mid"
+            />
+          </div>
+        </section>
+
         <NewsSection />
         <FeaturesSection />
         <FAQSection page="homepage" title="Frequently Asked Questions" />
+        <StudyAbroadSection />
         <TrustedBySection />
       </main>
       <Footer />
       <AILeadForm isOpen={isLeadFormOpen} onClose={() => setIsLeadFormOpen(false)} onSubmit={handleLeadSubmit} />
       <AIChatFullScreen isOpen={isChatOpen} onClose={handleCloseChat} initialMessage={initialChatMessage} leadData={leadInfo} />
       <FloatingBot />
+      <FixedCounsellingCTA />
     </div>
   );
 };
