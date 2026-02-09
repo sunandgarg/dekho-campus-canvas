@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Send, MessageCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-abstract.jpg";
+import campusImg from "@/assets/campus-building.png";
 import logo from "@/assets/dekhocampus-logo.png";
 
 const suggestedPrompts = [
@@ -32,49 +33,26 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-center overflow-hidden" aria-label="Hero">
-      {/* Campus background image */}
-      <img
-        src={heroBg}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-        aria-hidden="true"
-      />
-      {/* Dark overlay for readability */}
+    <section className="relative overflow-hidden" aria-label="Hero">
+      {/* Background */}
+      <img src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
       <div className="absolute inset-0 bg-foreground/50" />
 
       <div className="container relative z-10 py-8 md:py-12">
         <div className="max-w-3xl mx-auto text-center space-y-4 md:space-y-6">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="flex justify-center"
-          >
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="flex justify-center">
             <img src={logo} alt="DekhoCampus" className="h-14 md:h-20" />
           </motion.div>
 
           {/* Tagline badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/20 backdrop-blur-md border border-card/30"
-          >
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/20 backdrop-blur-md border border-card/30">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-semibold text-card">
-              India's #1 AI Education Counselor
-            </span>
+            <span className="text-sm font-semibold text-card">India's #1 AI Education Counselor</span>
           </motion.div>
 
           {/* AI Search Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="max-w-2xl mx-auto"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="max-w-2xl mx-auto">
             <form onSubmit={handleSearch}>
               <div className="relative bg-card rounded-2xl shadow-elevated p-2">
                 <div className="flex items-center gap-3">
@@ -89,12 +67,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     className="flex-1 bg-transparent border-0 text-base md:text-lg placeholder:text-muted-foreground/60 focus:outline-none focus:ring-0 py-3"
                     aria-label="Ask a question"
                   />
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="rounded-xl gradient-primary btn-glow px-6"
-                    disabled={!searchQuery.trim()}
-                  >
+                  <Button type="submit" size="lg" className="rounded-xl gradient-primary btn-glow px-6" disabled={!searchQuery.trim()}>
                     <Send className="w-5 h-5 md:mr-2" />
                     <span className="hidden md:inline">Ask AI</span>
                   </Button>
@@ -117,6 +90,16 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
             </div>
           </motion.div>
         </div>
+      </div>
+
+      {/* Campus building image strip below hero */}
+      <div className="relative z-10">
+        <img
+          src={campusImg}
+          alt="Indian campus building"
+          className="w-full h-28 sm:h-36 md:h-44 object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
     </section>
   );

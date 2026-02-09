@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Star, MapPin, ArrowRight, Clock, Users, Bookmark, TrendingUp } from "lucide-react";
+import { Star, MapPin, ArrowRight, Clock, Users, Bookmark, TrendingUp, GraduationCap, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -14,6 +14,12 @@ const categories = [
   { id: "science", label: "Science", emoji: "🔬" },
   { id: "arts", label: "Arts", emoji: "🎭" },
   { id: "commerce", label: "Commerce", emoji: "💼" },
+];
+
+const subTabs = [
+  { id: "colleges", label: "Colleges", icon: GraduationCap },
+  { id: "courses", label: "Courses", icon: BookOpen },
+  { id: "exams", label: "Exams", icon: FileText },
 ];
 
 // Sample data for each category
@@ -182,18 +188,14 @@ const categoryData: Record<string, { colleges: any[]; courses: any[]; exams: any
 
 export function CategorySection() {
   const [activeCategory, setActiveCategory] = useState("engineering");
+  const [activeSubTab, setActiveSubTab] = useState("colleges");
   const data = categoryData[activeCategory];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-amber-50/30 to-white" aria-labelledby="explore-heading">
+    <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background" aria-labelledby="explore-heading">
       <div className="container">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-10"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
           <h2 id="explore-heading" className="text-headline font-bold text-foreground">
             Explore by <span className="text-gradient-accent">Category</span>
           </h2>
@@ -203,24 +205,15 @@ export function CategorySection() {
         </motion.div>
 
         {/* Category Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex gap-2 overflow-x-auto pb-4 mb-8 scrollbar-hide"
-          role="tablist"
-          aria-label="Education categories"
-        >
+        <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide" role="tablist">
           {categories.map((cat) => (
             <Button
               key={cat.id}
               variant={activeCategory === cat.id ? "default" : "outline"}
               size="sm"
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={() => { setActiveCategory(cat.id); setActiveSubTab("colleges"); }}
               className={`whitespace-nowrap flex-shrink-0 rounded-xl gap-2 ${
-                activeCategory === cat.id 
-                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0" 
-                  : "border-amber-200 hover:bg-amber-50"
+                activeCategory === cat.id ? "gradient-primary text-primary-foreground border-0" : "border-border hover:bg-primary/5"
               }`}
               role="tab"
               aria-selected={activeCategory === cat.id}
@@ -229,169 +222,109 @@ export function CategorySection() {
               {cat.label}
             </Button>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Top Colleges */}
-          <motion.article
-            key={`colleges-${activeCategory}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl border border-amber-100 p-6 shadow-sm"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-bold text-foreground">Top Colleges</h3>
-                <p className="text-sm text-muted-foreground">Based on NIRF rankings</p>
-              </div>
-              <Link to={`/colleges?category=${activeCategory}`}>
-                <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
-                  View All <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </Link>
-            </div>
-            <div className="space-y-4">
-              {data.colleges.map((college) => (
-                <Link
-                  key={college.rank}
-                  to={`/colleges`}
-                  className="group flex items-center gap-4 p-3 rounded-xl hover:bg-amber-50/50 transition-colors cursor-pointer"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-sm font-bold text-white">
-                    #{college.rank}
-                  </div>
-                  <img
-                    src={college.image}
-                    alt={college.name}
-                    className="w-14 h-14 rounded-xl object-cover"
-                    loading="lazy"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-foreground group-hover:text-amber-600 transition-colors truncate">
-                      {college.name}
-                    </h4>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MapPin className="w-3 h-3" />
-                      <span>{college.location}</span>
-                      <span>•</span>
-                      <span>{college.courses}</span>
-                    </div>
-                  </div>
-                  <div className="text-right hidden sm:block">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                      <span className="font-semibold text-foreground">{college.rating}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{college.placement}</span>
-                  </div>
+        {/* Sub-tabs: Colleges / Courses / Exams */}
+        <div className="flex gap-1 mb-6 bg-muted/50 rounded-xl p-1 w-fit">
+          {subTabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveSubTab(tab.id)}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                activeSubTab === tab.id
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <motion.div key={`${activeCategory}-${activeSubTab}`} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+          {activeSubTab === "colleges" && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-muted-foreground">Top {categories.find(c => c.id === activeCategory)?.label} colleges by NIRF ranking</p>
+                <Link to={`/colleges?category=${activeCategory}`}>
+                  <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">View All <ArrowRight className="w-4 h-4 ml-1" /></Button>
                 </Link>
-              ))}
-            </div>
-          </motion.article>
-
-          {/* Popular Courses */}
-          <motion.article
-            key={`courses-${activeCategory}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl border border-amber-100 p-6 shadow-sm"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-bold text-foreground">Trending Courses</h3>
-                <p className="text-sm text-muted-foreground">High demand programs</p>
               </div>
-              <Link to="/courses">
-                <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
-                  View All <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </Link>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {data.colleges.map((college) => (
+                  <Link key={college.rank} to="/colleges" className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-md transition-all">
+                    <div className="relative h-36 overflow-hidden">
+                      <img src={college.image} alt={college.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      <div className="absolute top-2 left-2 flex gap-1">
+                        {college.tags.map((t: string) => (
+                          <Badge key={t} className="bg-foreground/70 text-background border-0 text-[10px]">{t}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="p-3 space-y-2">
+                      <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{college.name}</h4>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{college.location}</span>
+                        <span className="flex items-center gap-1"><Star className="w-3 h-3 fill-primary text-primary" />{college.rating}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">{college.fees}</span>
+                        <span className="font-medium text-accent">{college.placement}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="space-y-4">
-              {data.courses.map((course) => (
-                <Link
-                  key={course.name}
-                  to="/courses"
-                  className="block group p-4 rounded-xl border border-amber-100 hover:border-amber-300 hover:bg-amber-50/50 transition-all cursor-pointer"
-                >
-                  <h4 className="font-semibold text-foreground group-hover:text-amber-600 transition-colors">
-                    {course.name}
-                  </h4>
-                  <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {course.colleges}+ colleges
-                      </span>
+          )}
+
+          {activeSubTab === "courses" && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-muted-foreground">Trending {categories.find(c => c.id === activeCategory)?.label} courses</p>
+                <Link to="/courses"><Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">View All <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {data.courses.map((course) => (
+                  <Link key={course.name} to="/courses" className="group flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:border-primary/30 transition-all">
+                    <div>
+                      <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{course.name}</h4>
+                      <span className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><Users className="w-3 h-3" />{course.colleges}+ colleges</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                        {course.growth}
-                      </Badge>
-                      <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
-                        {course.avgSalary}
-                      </Badge>
+                      <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs"><TrendingUp className="w-3 h-3 mr-1" />{course.growth}</Badge>
+                      <Badge className="bg-primary/10 text-primary hover:bg-primary/10 text-xs">{course.avgSalary}</Badge>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </motion.article>
-
-          {/* Upcoming Exams */}
-          <motion.article
-            key={`exams-${activeCategory}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-2xl border border-amber-100 p-6 shadow-sm"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-bold text-foreground">Upcoming Exams</h3>
-                <p className="text-sm text-muted-foreground">Don't miss deadlines!</p>
+                  </Link>
+                ))}
               </div>
-              <Link to="/exams">
-              <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-700 hover:bg-amber-50">
-                View All <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-              </Link>
             </div>
-            <div className="space-y-4">
-              {data.exams.map((exam) => (
-                <Link
-                  key={exam.name}
-                  to="/exams"
-                  className="group flex items-center justify-between p-4 rounded-xl border border-amber-100 hover:border-amber-300 hover:bg-amber-50/50 transition-all cursor-pointer"
-                >
-                  <div>
-                    <h4 className="font-semibold text-foreground group-hover:text-amber-600 transition-colors">
-                      {exam.name}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                      <Clock className="w-3 h-3" />
-                      <span>{exam.date}</span>
-                      <span>•</span>
-                      <span>{exam.applicants} applicants</span>
+          )}
+
+          {activeSubTab === "exams" && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-muted-foreground">Upcoming {categories.find(c => c.id === activeCategory)?.label} exams</p>
+                <Link to="/exams"><Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">View All <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {data.exams.map((exam) => (
+                  <Link key={exam.name} to="/exams" className="group flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:border-primary/30 transition-all">
+                    <div>
+                      <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{exam.name}</h4>
+                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" /><span>{exam.date}</span><span>•</span><span>{exam.applicants} applicants</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="border-amber-300 text-amber-700">
-                      {exam.type}
-                    </Badge>
-                    <Button size="icon" variant="ghost" className="w-8 h-8 hover:bg-amber-100">
-                      <Bookmark className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </Link>
-              ))}
+                    <Badge variant="outline" className="border-primary/30 text-primary text-xs">{exam.type}</Badge>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </motion.article>
-        </div>
+          )}
+        </motion.div>
       </div>
     </section>
   );
