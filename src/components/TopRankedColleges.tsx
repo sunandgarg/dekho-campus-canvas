@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, MapPin, ArrowRight, Trophy } from "lucide-react";
+import { Star, MapPin, ArrowRight, GraduationCap, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useDbColleges } from "@/hooks/useCollegesData";
 import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
+import { useRef, useState } from "react";
 
 export function TopRankedColleges() {
   const { data: featuredSlugs } = useFeaturedColleges();
   const { data: allColleges } = useDbColleges();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // If we have featured slugs from backend, use those; otherwise fallback to top-rated
   const colleges = (() => {
     if (!allColleges?.length) return [];
     if (featuredSlugs?.length) {
@@ -24,6 +27,20 @@ export function TopRankedColleges() {
 
   if (!colleges.length) return null;
 
+  const updateScrollState = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+  };
+
+  const scroll = (dir: "left" | "right") => {
+    if (!scrollRef.current) return;
+    const amount = scrollRef.current.clientWidth * 0.6;
+    scrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+    setTimeout(updateScrollState, 350);
+  };
+
   return (
     <section className="py-10 md:py-14 bg-background" aria-labelledby="top-colleges-heading">
       <div className="container">
@@ -35,33 +52,47 @@ export function TopRankedColleges() {
         >
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3">
-              <Trophy className="w-4 h-4" />
-              Top Ranked
+              <GraduationCap className="w-4 h-4" />
+              Featured Institutions
             </div>
             <h2 id="top-colleges-heading" className="text-headline font-bold text-foreground">
-              Top Ranked <span className="text-gradient">Colleges</span>
+              Top Colleges in India <span className="text-gradient">as per Reviews</span>
             </h2>
             <p className="text-muted-foreground mt-1">Handpicked top institutions from across India</p>
           </div>
-          <Link to="/colleges">
-            <Button variant="outline" className="rounded-xl border-primary/20 hover:bg-primary/5">
-              View All <ArrowRight className="w-4 h-4 ml-2" />
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("left")} disabled={!canScrollLeft}>
+              <ChevronLeft className="w-4 h-4" />
             </Button>
-          </Link>
+            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("right")} disabled={!canScrollRight}>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+            <Link to="/colleges">
+              <Button variant="outline" className="rounded-xl border-primary/20 hover:bg-primary/5">
+                View All <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          ref={scrollRef}
+          onScroll={updateScrollState}
+          className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2"
+          style={{ scrollSnapType: "x mandatory" }}
+        >
           {colleges.map((college: any, index: number) => (
             <motion.div
               key={college.slug}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
+              transition={{ delay: index * 0.04 }}
+              className="snap-start flex-shrink-0 w-[260px] sm:w-[280px]"
             >
               <Link
                 to={`/colleges/${college.slug}`}
-                className="group block bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-all"
+                className="group block bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-all h-full"
               >
                 <div className="relative h-36 overflow-hidden">
                   <img

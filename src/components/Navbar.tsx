@@ -10,7 +10,9 @@ const navItems = [
   { label: "Colleges", href: "/colleges" },
   { label: "Courses", href: "/courses" },
   { label: "Exams", href: "/exams" },
-  { label: "Articles", href: "/articles" },
+  { label: "Application Form", href: "/articles" },
+  { label: "Reviews", href: "/articles" },
+  { label: "News", href: "/articles" },
   { label: "AI Guide", href: "#", isNew: true },
 ];
 
