@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, MessageCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import campusBg from "@/assets/campus-hero-bg.jpg";
+import heroBg from "@/assets/hero-abstract.jpg";
 import logo from "@/assets/dekhocampus-logo.png";
 
 const suggestedPrompts = [
@@ -35,7 +35,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
     <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-center overflow-hidden" aria-label="Hero">
       {/* Campus background image */}
       <img
-        src={campusBg}
+        src={heroBg}
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"

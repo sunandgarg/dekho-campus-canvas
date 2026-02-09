@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, Send, User, Mail, Phone, BookOpen, MapPin, Loader2, Sparkles } from "lucide-react";
+import { X, Send, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -63,72 +63,89 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
 
   if (!isOpen) return null;
 
-  const selectCls = "w-full px-3 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none";
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] bg-foreground/50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] bg-foreground/40 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-card rounded-2xl shadow-elevated p-6 w-full max-w-md"
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+        className="bg-card rounded-2xl shadow-elevated w-full max-w-sm overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-5">
+        {/* Header */}
+        <div className="gradient-primary px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <Sparkles className="w-5 h-5 text-primary-foreground" />
             <div>
-              <h3 className="font-bold text-foreground">Before we start</h3>
-              <p className="text-xs text-muted-foreground">Help us give you better recommendations</p>
+              <h3 className="font-bold text-primary-foreground text-sm">Quick Details</h3>
+              <p className="text-[11px] text-primary-foreground/80">Get personalized AI guidance</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+          <button onClick={onClose} className="text-primary-foreground/80 hover:text-primary-foreground">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input value={formData.name} onChange={(e) => update("name", e.target.value)} placeholder="Your Name *" className="pl-10 rounded-xl" required />
-          </div>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input value={formData.email} onChange={(e) => update("email", e.target.value)} placeholder="Email" type="email" className="pl-10 rounded-xl" />
-          </div>
-          <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input value={formData.phone} onChange={(e) => update("phone", e.target.value)} placeholder="Phone Number *" type="tel" className="pl-10 rounded-xl" required />
-          </div>
-          <div className="relative">
-            <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <select value={formData.course} onChange={(e) => update("course", e.target.value)} className={`${selectCls} pl-10`}>
-              <option value="">Select Course</option>
-              {courseOptions.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
+        <form onSubmit={handleSubmit} className="p-5 space-y-3">
+          <Input
+            value={formData.name}
+            onChange={(e) => update("name", e.target.value)}
+            placeholder="Your Name *"
+            className="rounded-xl h-10 text-sm"
+            required
+          />
           <div className="grid grid-cols-2 gap-2">
-            <select value={formData.state} onChange={(e) => update("state", e.target.value)} className={selectCls}>
+            <Input
+              value={formData.email}
+              onChange={(e) => update("email", e.target.value)}
+              placeholder="Email"
+              type="email"
+              className="rounded-xl h-10 text-sm"
+            />
+            <Input
+              value={formData.phone}
+              onChange={(e) => update("phone", e.target.value)}
+              placeholder="Phone *"
+              type="tel"
+              className="rounded-xl h-10 text-sm"
+              required
+            />
+          </div>
+          <select
+            value={formData.course}
+            onChange={(e) => update("course", e.target.value)}
+            className="w-full h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Select Course Interest</option>
+            {courseOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <div className="grid grid-cols-2 gap-2">
+            <select
+              value={formData.state}
+              onChange={(e) => update("state", e.target.value)}
+              className="h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+            >
               <option value="">State</option>
               {stateOptions.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-              <Input value={formData.city} onChange={(e) => update("city", e.target.value)} placeholder="City" className="pl-10 rounded-xl" />
-            </div>
+            <Input
+              value={formData.city}
+              onChange={(e) => update("city", e.target.value)}
+              placeholder="City"
+              className="rounded-xl h-10 text-sm"
+            />
           </div>
-          <Button type="submit" className="w-full gradient-primary btn-glow rounded-xl" disabled={isLoading}>
-            {isLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</> : <>Start AI Chat <Send className="w-4 h-4 ml-2" /></>}
+          <Button type="submit" className="w-full gradient-primary rounded-xl h-11" disabled={isLoading}>
+            {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
+            {isLoading ? "Saving..." : "Start AI Chat"}
           </Button>
-          <p className="text-[11px] text-center text-muted-foreground">
+          <p className="text-[10px] text-center text-muted-foreground">
             By submitting, you agree to receive guidance from our counselors
           </p>
         </form>

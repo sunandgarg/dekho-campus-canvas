@@ -12,13 +12,13 @@ export function UpcomingExams() {
   const upcomingExams = (() => {
     if (!allExams?.length) return [];
     const now = new Date();
-    const twoWeeksLater = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+    const twoMonthsLater = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000);
 
     return allExams
       .filter((exam) => {
         if (!exam.exam_date) return false;
         const examDate = new Date(exam.exam_date);
-        return !isNaN(examDate.getTime()) && examDate >= now && examDate <= twoWeeksLater;
+        return !isNaN(examDate.getTime()) && examDate >= now && examDate <= twoMonthsLater;
       })
       .sort((a, b) => new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime())
       .slice(0, 6);
