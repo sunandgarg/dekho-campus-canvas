@@ -23,7 +23,6 @@ export function useFeaturedColleges(category?: string, state?: string) {
       return (data ?? []) as FeaturedCollege[];
     },
     select: (all) => {
-      // Filter by category or state
       if (category && category !== "All") {
         const catFiltered = all.filter((f) => f.category === category);
         if (catFiltered.length > 0) return catFiltered.map((f) => f.college_slug);
@@ -32,7 +31,8 @@ export function useFeaturedColleges(category?: string, state?: string) {
         const stateFiltered = all.filter((f) => f.state === state);
         if (stateFiltered.length > 0) return stateFiltered.map((f) => f.college_slug);
       }
-      return [];
+      // Return all featured slugs when no filter
+      return all.map((f) => f.college_slug);
     },
     staleTime: 60_000,
   });

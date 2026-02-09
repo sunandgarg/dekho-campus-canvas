@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, User, Sparkles, Shield, LogOut } from "lucide-react";
+import logo from "@/assets/dekhocampus-logo.png";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -23,14 +24,8 @@ export function Navbar() {
       <nav className="glass border-b border-border">
         <div className="container flex items-center justify-between h-14 md:h-16 lg:h-18">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2" aria-label="DekhoCampus Home">
-            <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold">
-              <span className="text-gradient">Dekho</span>
-              <span className="text-foreground">Campus</span>
-            </span>
+          <Link to="/" className="flex items-center" aria-label="DekhoCampus Home">
+            <img src={logo} alt="DekhoCampus" className="h-9 md:h-10" />
           </Link>
 
           {/* Desktop Navigation */}
