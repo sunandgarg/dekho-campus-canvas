@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
-import { UniversalSearch } from "@/components/UniversalSearch";
+
 import { TopRankedColleges } from "@/components/TopRankedColleges";
 import { CategorySection } from "@/components/CategorySection";
 import { CitySearch } from "@/components/CitySearch";
@@ -51,7 +51,7 @@ const Index = () => {
       <Navbar />
       <main id="main-content">
         <HeroSection onOpenChat={handleOpenChat} />
-        <UniversalSearch />
+        {/* Universal search merged into hero */}
         <TopRankedColleges />
         <CategorySection />
         <UpcomingExams />
