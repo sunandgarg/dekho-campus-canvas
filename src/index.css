@@ -11,8 +11,8 @@
 
 @layer base {
   :root {
-    /* Core Brand */
-    --background: 30 20% 99%;
+    /* Core Brand - Clean & Professional */
+    --background: 220 14% 99%;
     --foreground: 220 25% 10%;
 
     --card: 0 0% 100%;
@@ -21,20 +21,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 25% 10%;
 
-    /* Primary - DekhoCampus Orange (lighter, matching logo) */
-    --primary: 25 90% 68%;
+    /* Primary - Confident Blue */
+    --primary: 224 64% 51%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Soft warm tone */
-    --secondary: 30 60% 96%;
-    --secondary-foreground: 24 60% 35%;
+    /* Secondary - Soft cool tone */
+    --secondary: 220 30% 96%;
+    --secondary-foreground: 220 40% 35%;
 
     /* Muted */
-    --muted: 30 15% 95%;
+    --muted: 220 15% 95%;
     --muted-foreground: 220 10% 45%;
 
-    /* Accent / Contrast - Blue #3257d2 → HSL(224, 64%, 51%) */
-    --accent: 224 64% 51%;
+    /* Accent - Warm accent (used sparingly) */
+    --accent: 25 85% 62%;
     --accent-foreground: 0 0% 100%;
 
     /* Success */
@@ -50,9 +50,9 @@
     --destructive-foreground: 0 0% 100%;
 
     /* Borders */
-    --border: 30 15% 90%;
-    --input: 30 15% 90%;
-    --ring: 25 90% 68%;
+    --border: 220 15% 91%;
+    --input: 220 15% 91%;
+    --ring: 224 64% 51%;
 
     --radius: 1rem;
 
@@ -67,12 +67,12 @@
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 220 25% 10%;
-    --sidebar-primary: 25 90% 68%;
+    --sidebar-primary: 224 64% 51%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 60% 96%;
-    --sidebar-accent-foreground: 25 60% 35%;
-    --sidebar-border: 30 15% 90%;
-    --sidebar-ring: 25 90% 68%;
+    --sidebar-accent: 220 30% 96%;
+    --sidebar-accent-foreground: 220 40% 35%;
+    --sidebar-border: 220 15% 91%;
+    --sidebar-ring: 224 64% 51%;
   }
 
   .dark {
@@ -82,27 +82,27 @@
     --card-foreground: 210 40% 98%;
     --popover: 220 25% 8%;
     --popover-foreground: 210 40% 98%;
-    --primary: 25 90% 68%;
+    --primary: 224 64% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 30 20% 15%;
-    --secondary-foreground: 30 60% 90%;
+    --secondary: 220 20% 15%;
+    --secondary-foreground: 220 30% 90%;
     --muted: 220 20% 12%;
     --muted-foreground: 210 15% 65%;
-    --accent: 224 64% 55%;
+    --accent: 25 85% 60%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 20% 15%;
     --input: 220 20% 15%;
-    --ring: 25 90% 68%;
+    --ring: 224 64% 55%;
     --sidebar-background: 220 25% 6%;
     --sidebar-foreground: 210 40% 95%;
-    --sidebar-primary: 25 90% 68%;
+    --sidebar-primary: 224 64% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 20% 15%;
-    --sidebar-accent-foreground: 30 60% 90%;
+    --sidebar-accent: 220 20% 15%;
+    --sidebar-accent-foreground: 220 30% 90%;
     --sidebar-border: 220 20% 15%;
-    --sidebar-ring: 25 90% 68%;
+    --sidebar-ring: 224 64% 55%;
   }
 }
 
@@ -129,23 +129,23 @@
 @layer components {
   /* Gradient backgrounds */
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(25 90% 68%) 0%, hsl(20 88% 60%) 100%);
+    background: linear-gradient(135deg, hsl(224 64% 51%) 0%, hsl(230 60% 58%) 100%);
   }
 
   .gradient-accent {
-    background: linear-gradient(135deg, hsl(224 64% 51%) 0%, hsl(240 60% 58%) 100%);
+    background: linear-gradient(135deg, hsl(25 85% 62%) 0%, hsl(20 80% 55%) 100%);
   }
 
   .gradient-hero {
-    background: linear-gradient(135deg, hsl(25 90% 68%) 0%, hsl(20 88% 60%) 50%, hsl(224 64% 51%) 100%);
+    background: linear-gradient(135deg, hsl(224 64% 51%) 0%, hsl(230 60% 55%) 50%, hsl(240 55% 58%) 100%);
   }
 
   .gradient-mesh {
     background: 
-      radial-gradient(at 40% 20%, hsl(25 90% 68% / 0.15) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsl(224 64% 51% / 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsl(25 90% 68% / 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsl(165 70% 50% / 0.08) 0px, transparent 50%),
+      radial-gradient(at 40% 20%, hsl(224 64% 51% / 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsl(240 55% 58% / 0.08) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsl(224 64% 51% / 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsl(165 70% 50% / 0.06) 0px, transparent 50%),
       hsl(var(--background));
   }
 
@@ -227,7 +227,7 @@
 
   /* Badge styles */
   .badge-gradient {
-    background: linear-gradient(135deg, hsl(25 90% 68%), hsl(20 88% 60%));
+    background: linear-gradient(135deg, hsl(224 64% 51%), hsl(230 60% 58%));
     color: white;
   }
 
@@ -244,7 +244,7 @@
   }
 
   .user-bubble {
-    background: linear-gradient(135deg, hsl(25 90% 68%), hsl(20 88% 60%));
+    background: linear-gradient(135deg, hsl(224 64% 51%), hsl(230 60% 58%));
     color: white;
   }
 
@@ -338,21 +338,21 @@
 
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, hsl(25 90% 68%), hsl(20 88% 60%));
+    background: linear-gradient(135deg, hsl(224 64% 51%), hsl(230 60% 58%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-accent {
-    background: linear-gradient(135deg, hsl(224 64% 51%), hsl(240 60% 58%));
+    background: linear-gradient(135deg, hsl(25 85% 62%), hsl(20 80% 55%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-hero {
-    background: linear-gradient(135deg, hsl(25 90% 68%), hsl(224 64% 51%));
+    background: linear-gradient(135deg, hsl(224 64% 51%), hsl(240 55% 58%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

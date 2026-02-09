@@ -54,8 +54,8 @@ const Index = () => {
         <HeroSection onOpenChat={handleOpenChat} />
         <HeroBannerCarousel />
         <TopRankedColleges />
-        <CategorySection />
         <UpcomingExams />
+        <CategorySection />
         <CitySearch />
         <OnlineEducationSection />
         <ToolsSection />

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Megaphone, Star, Users, ChevronLeft, GraduationCap, BookOpen, FileText, HelpCircle, Newspaper, Lightbulb, Image } from "lucide-react";
+import { LayoutDashboard, Megaphone, Star, Users, ChevronLeft, GraduationCap, BookOpen, FileText, HelpCircle, Newspaper, Lightbulb, Image, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { label: "Leads", href: "/admin/leads", icon: Users },
   { label: "Content", href: "/admin/content", icon: HelpCircle },
   { label: "Banners", href: "/admin/banners", icon: Image },
+  { label: "Partners", href: "/admin/partners", icon: Handshake },
   { label: "Project Docs", href: "/admin/docs", icon: Lightbulb },
 ];
 
