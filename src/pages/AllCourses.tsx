@@ -78,10 +78,36 @@ export default function AllCourses() {
 
       <div className="grid lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3">
-          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filtered.map((course, i) => (
-              <CourseCard key={course.slug} course={course} index={i} />
-            ))}
+          <div className="space-y-4">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filtered.slice(0, 6).map((course, i) => (
+                <CourseCard key={course.slug} course={course} index={i} />
+              ))}
+            </div>
+
+            {filtered.length > 6 && (
+              <DynamicAdBanner variant="leaderboard" position="inline" page="courses" />
+            )}
+
+            {filtered.length > 6 && (
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filtered.slice(6, 12).map((course, i) => (
+                  <CourseCard key={course.slug} course={course} index={i + 6} />
+                ))}
+              </div>
+            )}
+
+            {filtered.length > 12 && (
+              <LeadCaptureForm variant="inline" title="Need Course Guidance?" source="courses_inline" />
+            )}
+
+            {filtered.length > 12 && (
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filtered.slice(12).map((course, i) => (
+                  <CourseCard key={course.slug} course={course} index={i + 12} />
+                ))}
+              </div>
+            )}
           </div>
 
           {filtered.length === 0 && (

@@ -78,10 +78,36 @@ export default function AllExams() {
 
       <div className="grid lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3">
-          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filtered.map((exam, i) => (
-              <ExamCard key={exam.slug} exam={exam} index={i} />
-            ))}
+          <div className="space-y-4">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filtered.slice(0, 6).map((exam, i) => (
+                <ExamCard key={exam.slug} exam={exam} index={i} />
+              ))}
+            </div>
+
+            {filtered.length > 6 && (
+              <DynamicAdBanner variant="leaderboard" position="inline" page="exams" />
+            )}
+
+            {filtered.length > 6 && (
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filtered.slice(6, 12).map((exam, i) => (
+                  <ExamCard key={exam.slug} exam={exam} index={i + 6} />
+                ))}
+              </div>
+            )}
+
+            {filtered.length > 12 && (
+              <LeadCaptureForm variant="inline" title="Need Exam Guidance?" source="exams_inline" />
+            )}
+
+            {filtered.length > 12 && (
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filtered.slice(12).map((exam, i) => (
+                  <ExamCard key={exam.slug} exam={exam} index={i + 12} />
+                ))}
+              </div>
+            )}
           </div>
 
           {filtered.length === 0 && (

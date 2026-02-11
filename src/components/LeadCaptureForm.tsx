@@ -53,6 +53,7 @@ export function LeadCaptureForm({
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [authorized, setAuthorized] = useState(true);
 
   const update = (field: string, value: string) => setFormData(prev => ({ ...prev, [field]: value }));
 
@@ -153,9 +154,9 @@ export function LeadCaptureForm({
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Your Name *" className="pl-10 rounded-xl h-10 text-sm" required />
           </div>
-          <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Phone Number *" type="tel" className="pl-10 rounded-xl h-10 text-sm" required />
+          <div className="relative flex items-center gap-0">
+            <span className="flex-shrink-0 px-3 py-2.5 bg-muted rounded-l-xl border border-r-0 border-border text-sm text-muted-foreground font-medium">+91</span>
+            <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Mobile Number *" type="tel" className="rounded-l-none rounded-r-xl h-10 text-sm" required />
           </div>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -183,16 +184,20 @@ export function LeadCaptureForm({
             </div>
           </div>
 
-          <Button type="submit" className="w-full gradient-accent btn-accent-glow rounded-xl h-10 text-sm" disabled={isLoading}>
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" checked={authorized} onChange={e => setAuthorized(e.target.checked)} className="mt-0.5 w-4 h-4 rounded border-border text-primary accent-primary" />
+            <span className="text-[11px] text-muted-foreground leading-tight">
+              I authorize to contact me with updates & notifications via Email, SMS, WhatsApp & Call. <a href="/terms" className="text-primary underline">Terms & Conditions</a>
+            </span>
+          </label>
+
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 rounded-xl h-10 text-sm text-primary-foreground" disabled={isLoading || !authorized}>
             {isLoading ? (
               <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting...</>
             ) : (
-              <>Get Free Counseling <Send className="w-4 h-4 ml-2" /></>
+              <>Register <Send className="w-4 h-4 ml-2" /></>
             )}
           </Button>
-          <p className="text-[11px] text-center text-muted-foreground">
-            By submitting, you agree to receive calls from our counselors
-          </p>
         </form>
       </motion.div>
     );

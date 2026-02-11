@@ -21,19 +21,19 @@ export function FeaturedColleges() {
           className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10"
         >
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-medium mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3">
               <GraduationCap className="w-4 h-4" />
               Featured Institutions
             </div>
             <h2 id="featured-heading" className="text-headline font-bold text-foreground">
-              Top Ranked <span className="text-gradient-accent">Colleges</span>
+              Featured <span className="text-gradient">Colleges</span>
             </h2>
             <p className="text-muted-foreground mt-2 max-w-lg">
               Explore India's most prestigious institutions with world-class placements
             </p>
           </div>
           <Link to="/colleges">
-            <Button variant="outline" className="self-start md:self-auto rounded-xl border-amber-200 hover:bg-amber-50">
+            <Button variant="outline" className="self-start md:self-auto rounded-xl border-primary/20 hover:bg-primary/5">
               Explore All Colleges
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
@@ -49,7 +49,7 @@ export function FeaturedColleges() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08 }}
-                className="group bg-card rounded-2xl border border-amber-100 overflow-hidden shadow-sm hover:shadow-lg transition-all"
+                className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-lg transition-all"
               >
                 <div className="relative h-44 overflow-hidden">
                   <img src={college.image} alt={college.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />

@@ -140,7 +140,7 @@ export function FeaturesSection() {
           className="mt-8 md:mt-12 text-center"
         >
           <p className="text-muted-foreground mb-4">Ready to start your journey?</p>
-          <Button size="lg" className="gradient-accent btn-accent-glow rounded-xl text-base">
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-base">
             Try DC Educational AI Free
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
