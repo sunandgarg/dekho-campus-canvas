@@ -1,11 +1,12 @@
 import { useState, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
-
+import { QuickLinksBar } from "@/components/QuickLinksBar";
 import { TopRankedColleges } from "@/components/TopRankedColleges";
 import { CategorySection } from "@/components/CategorySection";
 import { CitySearch } from "@/components/CitySearch";
 import { OnlineEducationSection } from "@/components/OnlineEducationSection";
+import { StudyAbroadSection } from "@/components/StudyAbroadSection";
 import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ToolsSection } from "@/components/ToolsSection";
@@ -16,11 +17,11 @@ import { Footer } from "@/components/Footer";
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 import { FloatingBot } from "@/components/FloatingBot";
 import { AILeadForm } from "@/components/AILeadForm";
-import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { StickyRightSidebar } from "@/components/StickyRightSidebar";
+import { HomeMobileBottomNav } from "@/components/HomeMobileBottomNav";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -54,6 +55,7 @@ const Index = () => {
       <Navbar />
       <main id="main-content">
         <HeroSection onOpenChat={handleOpenChat} />
+        <QuickLinksBar />
         <HeroBannerCarousel />
 
         {/* Main content with sticky right sidebar */}
@@ -62,13 +64,12 @@ const Index = () => {
             <TopRankedColleges />
             <UpcomingExams />
 
-            {/* Ad space after exams */}
+            {/* Ad space */}
             <section className="py-4">
               <DynamicAdBanner variant="leaderboard" position="mid-page" />
             </section>
 
             <CategorySection />
-            <CitySearch />
 
             {/* Mid-page lead capture */}
             <section className="py-8 md:py-10">
@@ -82,10 +83,21 @@ const Index = () => {
               </div>
             </section>
 
-            <OnlineEducationSection />
+            <CitySearch />
+          </div>
+
+          {/* Sticky right sidebar */}
+          <StickyRightSidebar source="homepage_sticky" />
+        </div>
+
+        {/* Full-width sections */}
+        <OnlineEducationSection />
+        <StudyAbroadSection />
+
+        <div className="container flex gap-6">
+          <div className="flex-1 min-w-0">
             <ToolsSection />
 
-            {/* Ad space after tools */}
             <section className="py-4">
               <DynamicAdBanner variant="horizontal" position="mid-page" />
             </section>
@@ -105,16 +117,13 @@ const Index = () => {
             <FAQSection page="homepage" title="Frequently Asked Questions" />
             <TrustedBySection />
           </div>
-
-          {/* Sticky right sidebar - visible on xl screens */}
-          <StickyRightSidebar source="homepage_sticky" />
         </div>
       </main>
       <Footer />
       <AILeadForm isOpen={isLeadFormOpen} onClose={() => setIsLeadFormOpen(false)} onSubmit={handleLeadSubmit} />
       <AIChatFullScreen isOpen={isChatOpen} onClose={handleCloseChat} initialMessage={initialChatMessage} leadData={leadInfo} />
       <FloatingBot />
-      <FixedCounsellingCTA />
+      <HomeMobileBottomNav />
     </div>
   );
 };
