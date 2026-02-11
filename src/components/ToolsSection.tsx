@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Calculator, Percent, IndianRupee, BarChart3, FileCheck, Heart, CalendarDays, Wallet, AlignLeft, Building2, ArrowRight } from "lucide-react";
 import { CGPAConverterTool } from "@/components/tools/CGPAConverterTool";
 import { EMICalculatorTool } from "@/components/tools/EMICalculatorTool";
