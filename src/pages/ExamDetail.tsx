@@ -214,10 +214,13 @@ export default function ExamDetail() {
             <LeadCaptureForm variant="inline" title={`Get preparation tips for ${exam.name}`} source={`exam_detail_${exam.slug}`} interestedExamSlug={exam.slug} />
           </div>
 
-          <aside className="space-y-6">
-            <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} interestedExamSlug={exam.slug} />
-            <DynamicAdBanner variant="vertical" position="sidebar" page="exams" itemSlug={slug} />
-            <LeadCaptureForm variant="sidebar" title="Exam Alerts" subtitle="Get notified about deadlines" source="exam_alert_sidebar" />
+          <aside className="hidden lg:block">
+            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} interestedExamSlug={exam.slug} />
+              <DynamicAdBanner variant="vertical" position="sidebar" page="exams" itemSlug={slug} />
+              <LeadCaptureForm variant="sidebar" title="Exam Alerts" subtitle="Get notified about deadlines" source="exam_alert_sidebar" />
+              <DynamicAdBanner variant="square" position="sidebar" page="exams" itemSlug={slug} />
+            </div>
           </aside>
         </div>
 

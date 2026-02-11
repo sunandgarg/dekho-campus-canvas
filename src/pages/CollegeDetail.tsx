@@ -183,6 +183,9 @@ export default function CollegeDetail() {
 
             <DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" itemSlug={slug} />
 
+            {/* Lead form inline */}
+            <LeadCaptureForm variant="inline" title="📞 Get admission guidance for this college" source={`college_inline_${college.slug}`} interestedCollegeSlug={college.slug} />
+
             {/* Facilities */}
             <section id="facilities" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Facilities</h2>
@@ -233,6 +236,8 @@ export default function CollegeDetail() {
                 ))}
               </div>
             </section>
+
+            <DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" itemSlug={slug} />
 
             {/* Top Recruiters */}
             <section id="recruiters" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
@@ -302,11 +307,14 @@ export default function CollegeDetail() {
             <LeadCaptureForm variant="inline" title={`Get admission details for ${college.name}`} source={`college_detail_${college.slug}`} interestedCollegeSlug={college.slug} />
           </div>
 
-          {/* Sidebar */}
-          <aside className="space-y-6">
-            <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
-            <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" itemSlug={slug} />
-            <LeadCaptureForm variant="sidebar" title="Compare Colleges" subtitle="Not sure? Compare this with similar colleges" source="college_compare_sidebar" />
+          {/* Sidebar - sticky */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
+              <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" itemSlug={slug} />
+              <LeadCaptureForm variant="sidebar" title="Compare Colleges" subtitle="Not sure? Compare this with similar colleges" source="college_compare_sidebar" />
+              <DynamicAdBanner variant="square" position="sidebar" page="colleges" itemSlug={slug} />
+            </div>
           </aside>
         </div>
 

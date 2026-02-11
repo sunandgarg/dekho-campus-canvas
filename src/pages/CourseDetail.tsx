@@ -255,10 +255,13 @@ export default function CourseDetail() {
             <LeadCaptureForm variant="inline" title={`Get admission details for ${course.name}`} source={`course_detail_${course.slug}`} interestedCourseSlug={course.slug} />
           </div>
 
-          <aside className="space-y-6">
-            <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} interestedCourseSlug={course.slug} />
-            <DynamicAdBanner variant="vertical" position="sidebar" page="courses" itemSlug={slug} />
-            <LeadCaptureForm variant="sidebar" title="Compare Courses" subtitle="Compare with similar courses" source="course_compare_sidebar" />
+          <aside className="hidden lg:block">
+            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} interestedCourseSlug={course.slug} />
+              <DynamicAdBanner variant="vertical" position="sidebar" page="courses" itemSlug={slug} />
+              <LeadCaptureForm variant="sidebar" title="Compare Courses" subtitle="Compare with similar courses" source="course_compare_sidebar" />
+              <DynamicAdBanner variant="square" position="sidebar" page="courses" itemSlug={slug} />
+            </div>
           </aside>
         </div>
 

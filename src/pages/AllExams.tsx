@@ -120,11 +120,13 @@ export default function AllExams() {
           <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="exams" /></div>
         </div>
 
-        <aside className="space-y-6">
-          <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy from experts" source="exams_listing" />
-          <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
-          <LeadCaptureForm variant="card" title="Exam Date Alerts" subtitle="Get notified about registration deadlines" source="exams_sidebar_card" />
-          <DynamicAdBanner variant="square" position="sidebar" page="exams" />
+        <aside className="hidden lg:block">
+          <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+            <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy from experts" source="exams_listing" />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
+            <LeadCaptureForm variant="card" title="Exam Date Alerts" subtitle="Get notified about registration deadlines" source="exams_sidebar_card" />
+            <DynamicAdBanner variant="square" position="sidebar" page="exams" />
+          </div>
         </aside>
       </div>
 

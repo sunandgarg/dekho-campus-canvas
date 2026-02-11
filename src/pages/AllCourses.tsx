@@ -121,11 +121,13 @@ export default function AllCourses() {
           <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="courses" /></div>
         </div>
 
-        <aside className="space-y-6">
-          <LeadCaptureForm variant="sidebar" title="Confused About Courses?" subtitle="Get free career counseling from our experts" source="courses_listing" />
-          <DynamicAdBanner variant="vertical" position="sidebar" page="courses" />
-          <LeadCaptureForm variant="card" title="Get Course Alerts" subtitle="Stay updated on admission deadlines" source="courses_sidebar_card" />
-          <DynamicAdBanner variant="square" position="sidebar" page="courses" />
+        <aside className="hidden lg:block">
+          <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+            <LeadCaptureForm variant="sidebar" title="Confused About Courses?" subtitle="Get free career counseling from our experts" source="courses_listing" />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="courses" />
+            <LeadCaptureForm variant="card" title="Get Course Alerts" subtitle="Stay updated on admission deadlines" source="courses_sidebar_card" />
+            <DynamicAdBanner variant="square" position="sidebar" page="courses" />
+          </div>
         </aside>
       </div>
 

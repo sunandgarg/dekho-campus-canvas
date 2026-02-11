@@ -8,11 +8,11 @@ import logo from "@/assets/dekhocampus-logo.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
 const wordColors = [
-  "text-gradient-accent",  // College - blue
-  "text-gradient",         // Course - orange
-  "text-gradient-accent",  // Career - blue
-  "text-gradient",         // Exam - orange
-  "text-gradient-accent",  // Future - blue
+  "text-gradient",         // College - blue (primary)
+  "text-gradient-accent",  // Course - orange (accent)
+  "text-gradient",         // Career - blue
+  "text-gradient-accent",  // Exam - orange
+  "text-gradient",         // Future - blue
 ];
 
 const suggestedPrompts = [

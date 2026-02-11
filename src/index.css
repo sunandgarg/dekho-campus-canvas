@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* DekhoCampus 2.0 - Clean Education Platform
-   Primary: #f4914a (Amber/Orange) | Contrast: #3257d2 (Blue)
+   Primary: #3257d2 (Blue) | Accent: #f4914a (Orange)
    All colors MUST be HSL
 */
 
@@ -21,20 +21,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 25% 10%;
 
-    /* Primary - Warm Orange */
-    --primary: 25 90% 55%;
+    /* Primary - Confident Blue */
+    --primary: 224 64% 51%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Soft warm tone */
-    --secondary: 30 30% 96%;
-    --secondary-foreground: 25 40% 35%;
+    /* Secondary - Soft cool tone */
+    --secondary: 220 30% 96%;
+    --secondary-foreground: 220 40% 35%;
 
     /* Muted */
     --muted: 220 15% 95%;
     --muted-foreground: 220 10% 45%;
 
-    /* Accent - Blue accent (used sparingly) */
-    --accent: 224 64% 51%;
+    /* Accent - Warm Orange */
+    --accent: 25 90% 55%;
     --accent-foreground: 0 0% 100%;
 
     /* Success */
@@ -52,7 +52,7 @@
     /* Borders */
     --border: 220 15% 91%;
     --input: 220 15% 91%;
-    --ring: 25 90% 55%;
+    --ring: 224 64% 51%;
 
     --radius: 1rem;
 
@@ -67,12 +67,12 @@
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 220 25% 10%;
-    --sidebar-primary: 25 90% 55%;
+    --sidebar-primary: 224 64% 51%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 30% 96%;
     --sidebar-accent-foreground: 220 40% 35%;
     --sidebar-border: 220 15% 91%;
-    --sidebar-ring: 25 90% 55%;
+    --sidebar-ring: 224 64% 51%;
   }
 
   .dark {
@@ -82,27 +82,27 @@
     --card-foreground: 210 40% 98%;
     --popover: 220 25% 8%;
     --popover-foreground: 210 40% 98%;
-    --primary: 25 85% 50%;
+    --primary: 224 64% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 25 20% 15%;
-    --secondary-foreground: 25 30% 90%;
+    --secondary: 220 20% 15%;
+    --secondary-foreground: 220 30% 90%;
     --muted: 220 20% 12%;
     --muted-foreground: 210 15% 65%;
-    --accent: 224 64% 55%;
+    --accent: 25 85% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 20% 15%;
     --input: 220 20% 15%;
-    --ring: 25 85% 50%;
+    --ring: 224 64% 55%;
     --sidebar-background: 220 25% 6%;
     --sidebar-foreground: 210 40% 95%;
-    --sidebar-primary: 25 85% 50%;
+    --sidebar-primary: 224 64% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 20% 15%;
     --sidebar-accent-foreground: 220 30% 90%;
     --sidebar-border: 220 20% 15%;
-    --sidebar-ring: 25 85% 50%;
+    --sidebar-ring: 224 64% 55%;
   }
 }
 
@@ -127,24 +127,24 @@
 }
 
 @layer components {
-  /* Gradient backgrounds */
+  /* Solid color backgrounds */
   .gradient-primary {
-    background: hsl(25 90% 55%);
-  }
-
-  .gradient-accent {
     background: hsl(224 64% 51%);
   }
 
-  .gradient-hero {
+  .gradient-accent {
     background: hsl(25 90% 55%);
+  }
+
+  .gradient-hero {
+    background: hsl(224 64% 51%);
   }
 
   .gradient-mesh {
     background: 
-      radial-gradient(at 40% 20%, hsl(25 90% 55% / 0.08) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsl(224 64% 51% / 0.06) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsl(25 90% 55% / 0.04) 0px, transparent 50%),
+      radial-gradient(at 40% 20%, hsl(224 64% 51% / 0.08) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsl(25 90% 55% / 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsl(224 64% 51% / 0.04) 0px, transparent 50%),
       hsl(var(--background));
   }
 
@@ -226,7 +226,7 @@
 
   /* Badge styles */
   .badge-gradient {
-    background: hsl(25 90% 55%);
+    background: hsl(224 64% 51%);
     color: white;
   }
 
@@ -238,12 +238,12 @@
 
   /* AI Chat bubble */
   .ai-bubble {
-    background: hsl(25 90% 55% / 0.06);
-    border: 1px solid hsl(25 90% 55% / 0.15);
+    background: hsl(224 64% 51% / 0.06);
+    border: 1px solid hsl(224 64% 51% / 0.15);
   }
 
   .user-bubble {
-    background: hsl(25 90% 55%);
+    background: hsl(224 64% 51%);
     color: white;
   }
 
@@ -315,7 +315,7 @@
 
   /* Progress bar */
   .progress-gradient {
-    background: hsl(25 90% 55%);
+    background: hsl(224 64% 51%);
   }
 
   /* Scrollbar styling */
@@ -335,15 +335,15 @@
 
 @layer utilities {
   .text-gradient {
-    color: hsl(25 90% 55%);
+    color: hsl(224 64% 51%);
   }
 
   .text-gradient-accent {
-    color: hsl(224 64% 51%);
+    color: hsl(25 90% 55%);
   }
 
   .text-gradient-hero {
-    color: hsl(224 64% 51%);
+    color: hsl(25 90% 55%);
   }
 
   .text-balance {
