@@ -20,6 +20,7 @@ import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
+import { StickyRightSidebar } from "@/components/StickyRightSidebar";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -54,45 +55,60 @@ const Index = () => {
       <main id="main-content">
         <HeroSection onOpenChat={handleOpenChat} />
         <HeroBannerCarousel />
-        <TopRankedColleges />
-        <UpcomingExams />
 
-        {/* Ad space after exams */}
-        <section className="py-4">
-          <div className="container">
-            <DynamicAdBanner variant="leaderboard" position="mid-page" />
+        {/* Main content with sticky right sidebar */}
+        <div className="container flex gap-6">
+          <div className="flex-1 min-w-0">
+            <TopRankedColleges />
+            <UpcomingExams />
+
+            {/* Ad space after exams */}
+            <section className="py-4">
+              <DynamicAdBanner variant="leaderboard" position="mid-page" />
+            </section>
+
+            <CategorySection />
+            <CitySearch />
+
+            {/* Mid-page lead capture */}
+            <section className="py-8 md:py-10">
+              <div className="max-w-4xl mx-auto">
+                <LeadCaptureForm
+                  variant="banner"
+                  title="🎯 Get Personalized College Recommendations"
+                  subtitle="Talk to our expert counselors — it's completely free!"
+                  source="homepage_mid"
+                />
+              </div>
+            </section>
+
+            <OnlineEducationSection />
+            <ToolsSection />
+
+            {/* Ad space after tools */}
+            <section className="py-4">
+              <DynamicAdBanner variant="horizontal" position="mid-page" />
+            </section>
+
+            <NewsSection />
+
+            {/* Second lead form */}
+            <section className="py-6">
+              <LeadCaptureForm
+                variant="inline"
+                title="📞 Talk to an Expert Counselor — Free!"
+                source="homepage_inline_2"
+              />
+            </section>
+
+            <FeaturesSection />
+            <FAQSection page="homepage" title="Frequently Asked Questions" />
+            <TrustedBySection />
           </div>
-        </section>
 
-        <CategorySection />
-        <CitySearch />
-
-        {/* Mid-page lead capture */}
-        <section className="py-8 md:py-10">
-          <div className="container max-w-4xl">
-            <LeadCaptureForm
-              variant="banner"
-              title="🎯 Get Personalized College Recommendations"
-              subtitle="Talk to our expert counselors — it's completely free!"
-              source="homepage_mid"
-            />
-          </div>
-        </section>
-
-        <OnlineEducationSection />
-        <ToolsSection />
-
-        {/* Ad space after tools */}
-        <section className="py-4">
-          <div className="container">
-            <DynamicAdBanner variant="horizontal" position="mid-page" />
-          </div>
-        </section>
-
-        <NewsSection />
-        <FeaturesSection />
-        <FAQSection page="homepage" title="Frequently Asked Questions" />
-        <TrustedBySection />
+          {/* Sticky right sidebar - visible on xl screens */}
+          <StickyRightSidebar source="homepage_sticky" />
+        </div>
       </main>
       <Footer />
       <AILeadForm isOpen={isLeadFormOpen} onClose={() => setIsLeadFormOpen(false)} onSubmit={handleLeadSubmit} />

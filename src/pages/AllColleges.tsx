@@ -136,11 +136,13 @@ export default function AllColleges() {
           <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" /></div>
         </div>
 
-        <aside className="space-y-6">
-          <LeadCaptureForm variant="sidebar" title="Need Help Choosing?" subtitle="Get free expert counseling for admissions" source="colleges_listing" />
-          <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" />
-          <LeadCaptureForm variant="card" title="Get Admission Alerts" subtitle="Never miss an important deadline" source="colleges_sidebar_card" />
-          <DynamicAdBanner variant="square" position="sidebar" page="colleges" />
+        <aside className="hidden lg:block">
+          <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+            <LeadCaptureForm variant="sidebar" title="Need Help Choosing?" subtitle="Get free expert counseling for admissions" source="colleges_listing" />
+            <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" />
+            <LeadCaptureForm variant="card" title="Get Admission Alerts" subtitle="Never miss an important deadline" source="colleges_sidebar_card" />
+            <DynamicAdBanner variant="square" position="sidebar" page="colleges" />
+          </div>
         </aside>
       </div>
 
