@@ -8,11 +8,11 @@ import logo from "@/assets/dekhocampus-logo.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
 const wordColors = [
-  "text-gradient",         // College - blue
-  "text-gradient-hero",    // Course - blue gradient
-  "text-gradient",         // Career - blue
-  "text-gradient-hero",    // Exam - blue gradient
-  "text-gradient",         // Future - blue
+  "text-gradient-accent",  // College - blue
+  "text-gradient",         // Course - orange
+  "text-gradient-accent",  // Career - blue
+  "text-gradient",         // Exam - orange
+  "text-gradient-accent",  // Future - blue
 ];
 
 const suggestedPrompts = [
@@ -142,11 +142,6 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
 
       <div className="container relative z-10 py-10 md:py-16 lg:py-20">
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-          {/* Logo */}
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="flex justify-center">
-            <img src={logo} alt="DekhoCampus" className="h-12 md:h-16" />
-          </motion.div>
-
           {/* AI Badge */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20">
             <Brain className="w-4 h-4 text-accent" />

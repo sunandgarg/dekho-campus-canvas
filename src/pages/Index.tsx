@@ -19,6 +19,7 @@ import { AILeadForm } from "@/components/AILeadForm";
 import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
+import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -55,10 +56,16 @@ const Index = () => {
         <HeroBannerCarousel />
         <TopRankedColleges />
         <UpcomingExams />
+
+        {/* Ad space after exams */}
+        <section className="py-4">
+          <div className="container">
+            <DynamicAdBanner variant="leaderboard" position="mid-page" />
+          </div>
+        </section>
+
         <CategorySection />
         <CitySearch />
-        <OnlineEducationSection />
-        <ToolsSection />
 
         {/* Mid-page lead capture */}
         <section className="py-8 md:py-10">
@@ -69,6 +76,16 @@ const Index = () => {
               subtitle="Talk to our expert counselors — it's completely free!"
               source="homepage_mid"
             />
+          </div>
+        </section>
+
+        <OnlineEducationSection />
+        <ToolsSection />
+
+        {/* Ad space after tools */}
+        <section className="py-4">
+          <div className="container">
+            <DynamicAdBanner variant="horizontal" position="mid-page" />
           </div>
         </section>
 
