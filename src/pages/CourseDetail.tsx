@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Building, TrendingUp, BookOpen, CheckCircle, Briefcase, FileText, IndianRupee, GraduationCap } from "lucide-react";
+import { Clock, Building, TrendingUp, BookOpen, CheckCircle, Briefcase, FileText, IndianRupee, GraduationCap, Newspaper, Award, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
@@ -11,19 +11,22 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ScrollSpy, type ScrollSection } from "@/components/ScrollSpy";
 import { FAQSection } from "@/components/FAQSection";
+import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { useDbCourse } from "@/hooks/useCoursesData";
 
 const COURSE_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
-  { id: "scope", label: "Scope" },
-  { id: "subjects", label: "Subjects" },
-  { id: "placements", label: "Placements" },
-  { id: "admission", label: "Admission Process" },
-  { id: "fees", label: "Fees" },
+  { id: "courses", label: "Courses" },
   { id: "syllabus", label: "Syllabus" },
-  { id: "cutoff", label: "Cut Off" },
+  { id: "career", label: "Career" },
+  { id: "admission", label: "Admission" },
+  { id: "fees", label: "Fees" },
+  { id: "popular-colleges", label: "Popular Colleges" },
+  { id: "top-ranked", label: "Top Ranked Colleges" },
+  { id: "top-exams", label: "Top Exams" },
   { id: "specializations", label: "Specializations" },
-  { id: "faq", label: "FAQ" },
+  { id: "cutoff", label: "Cut Off" },
+  { id: "faq", label: "Q&A" },
 ];
 
 export default function CourseDetail() {
@@ -103,31 +106,39 @@ export default function CourseDetail() {
             <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">About {course.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{course.description}</p>
-              <div className="mt-4">
-                <h3 className="text-sm font-semibold text-foreground mb-2">Eligibility</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{course.eligibility}</p>
-              </div>
-            </section>
-
-            {/* Scope */}
-            <section id="scope" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Scope of {course.name}</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                With a {course.growth} growth rate, {course.name} graduates are in high demand across industries. The average starting salary is {course.avg_salary} with top performers earning significantly more.
-              </p>
-              <div className="grid sm:grid-cols-2 gap-2">
-                {course.careers.map((c) => (
-                  <div key={c} className="flex items-center gap-2 p-2">
-                    <CheckCircle className="w-4 h-4 text-success flex-shrink-0" />
-                    <span className="text-sm text-foreground">{c}</span>
+              <div className="mt-4 grid sm:grid-cols-2 gap-3">
+                {[
+                  { label: "Duration", value: course.duration },
+                  { label: "Level", value: course.level },
+                  { label: "Mode", value: course.mode },
+                  { label: "Category", value: course.category },
+                  { label: "Avg Fees", value: course.avg_fees },
+                  { label: "Avg Salary", value: course.avg_salary },
+                ].map((info) => (
+                  <div key={info.label} className="flex justify-between py-2 border-b border-border last:border-0">
+                    <span className="text-sm text-muted-foreground">{info.label}</span>
+                    <span className="text-sm font-medium text-foreground">{info.value}</span>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* Subjects */}
-            <section id="subjects" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Key Subjects</h2>
+            {/* Courses / Specializations overview */}
+            <section id="courses" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">{course.name} Courses & Variants</h2>
+              <p className="text-sm text-muted-foreground mb-3">
+                {course.name} is offered in various modes: {course.mode}. Students can choose from {course.specializations.length}+ specializations.
+              </p>
+              <div className="mt-2">
+                <h3 className="text-sm font-semibold text-foreground mb-2">Eligibility</h3>
+                <p className="text-sm text-muted-foreground">{course.eligibility}</p>
+              </div>
+            </section>
+
+            {/* Syllabus */}
+            <section id="syllabus" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">{course.name} Syllabus</h2>
+              <p className="text-sm text-muted-foreground mb-3">The {course.duration} program covers these core subjects:</p>
               <div className="flex flex-wrap gap-2">
                 {course.subjects.map((s) => (
                   <Badge key={s} variant="secondary" className="text-sm py-1.5 px-3">{s}</Badge>
@@ -137,9 +148,9 @@ export default function CourseDetail() {
 
             <DynamicAdBanner variant="horizontal" position="mid-page" page="courses" itemSlug={slug} />
 
-            {/* Placements */}
-            <section id="placements" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Placements</h2>
+            {/* Career */}
+            <section id="career" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">Career Scope & Placements</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                 <div className="bg-muted rounded-xl p-3 text-center">
                   <p className="text-lg font-bold text-foreground">{course.avg_salary}</p>
@@ -151,13 +162,21 @@ export default function CourseDetail() {
                 </div>
                 <div className="bg-muted rounded-xl p-3 text-center">
                   <p className="text-lg font-bold text-foreground">{course.colleges_count}+</p>
-                  <p className="text-xs text-muted-foreground">Colleges Offering</p>
+                  <p className="text-xs text-muted-foreground">Colleges</p>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {course.name} graduates are recruited by leading companies. Top colleges offering this course report 90%+ placement rates.
-              </p>
+              <h3 className="text-sm font-semibold text-foreground mb-2">Career Options</h3>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {course.careers.map((c) => (
+                  <div key={c} className="flex items-center gap-2 p-2">
+                    <CheckCircle className="w-4 h-4 text-success flex-shrink-0" />
+                    <span className="text-sm text-foreground">{c}</span>
+                  </div>
+                ))}
+              </div>
             </section>
+
+            <LeadCaptureForm variant="inline" title={`📞 Get guidance for ${course.name}`} source={`course_inline_${course.slug}`} interestedCourseSlug={course.slug} />
 
             {/* Admission Process */}
             <section id="admission" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
@@ -175,15 +194,6 @@ export default function CourseDetail() {
                   </div>
                 ))}
               </div>
-              <h3 className="text-sm font-semibold text-foreground mb-2">Entrance Exams</h3>
-              <div className="flex flex-wrap gap-2">
-                {course.top_exams.map((exam) => (
-                  <div key={exam} className="flex items-center gap-2 bg-muted rounded-xl px-3 py-2">
-                    <FileText className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">{exam}</span>
-                  </div>
-                ))}
-              </div>
             </section>
 
             {/* Fees */}
@@ -193,42 +203,60 @@ export default function CourseDetail() {
                 <IndianRupee className="w-8 h-8 text-golden" />
                 <div>
                   <p className="text-xl font-bold text-foreground">{course.avg_fees}</p>
-                  <p className="text-xs text-muted-foreground">Average annual fees (varies by college and category)</p>
+                  <p className="text-xs text-muted-foreground">Average annual fees (varies by college)</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                Government colleges generally have lower fees compared to private institutions. Scholarships and fee waivers are available for meritorious and economically weaker students.
+                Government colleges generally have lower fees compared to private institutions. Scholarships and fee waivers are available for meritorious students.
               </p>
             </section>
 
-            {/* Syllabus */}
-            <section id="syllabus" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{course.name} Syllabus</h2>
+            <DynamicAdBanner variant="horizontal" position="mid-page" page="courses" itemSlug={slug} />
+
+            {/* Popular Colleges */}
+            <section id="popular-colleges" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">Popular Colleges for {course.name}</h2>
               <p className="text-sm text-muted-foreground mb-3">
-                The {course.duration} program covers the following core and elective subjects:
+                {course.colleges_count}+ colleges across India offer {course.name}. Top colleges include IITs, NITs, IIMs, and other prestigious institutions.
               </p>
-              <div className="flex flex-wrap gap-2">
-                {course.subjects.map((s) => (
-                  <Badge key={s} variant="secondary" className="text-sm py-1.5 px-3">{s}</Badge>
+              <Link to="/colleges">
+                <Button variant="outline" className="rounded-xl text-sm">View All Colleges →</Button>
+              </Link>
+            </section>
+
+            {/* Top Ranked Colleges */}
+            <section id="top-ranked" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">Top Ranked Colleges for {course.name}</h2>
+              <div className="space-y-2">
+                {[
+                  { rank: 1, name: "IIT Bombay", rating: "4.8" },
+                  { rank: 2, name: "IIT Delhi", rating: "4.7" },
+                  { rank: 3, name: "IIT Madras", rating: "4.7" },
+                  { rank: 4, name: "IIT Kanpur", rating: "4.6" },
+                  { rank: 5, name: "IIT Kharagpur", rating: "4.5" },
+                ].map((c) => (
+                  <div key={c.rank} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                    <div className="flex items-center gap-3">
+                      <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">{c.rank}</span>
+                      <span className="text-sm font-medium text-foreground">{c.name}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3.5 h-3.5 text-golden fill-golden" />
+                      <span className="text-sm text-foreground">{c.rating}</span>
+                    </div>
+                  </div>
                 ))}
               </div>
             </section>
 
-            {/* Cut Off */}
-            <section id="cutoff" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Cut Off</h2>
-              <p className="text-sm text-muted-foreground mb-3">
-                Cut-off scores vary by college and category. Here are typical ranges:
-              </p>
-              <div className="space-y-2">
-                {[
-                  { tier: "Top IITs/NITs", range: "Top 1-5% ranks" },
-                  { tier: "Tier-2 Colleges", range: "Top 10-20% ranks" },
-                  { tier: "Private Colleges", range: "50-60% marks in entrance" },
-                ].map((c) => (
-                  <div key={c.tier} className="flex justify-between py-2 border-b border-border last:border-0">
-                    <span className="text-sm text-foreground font-medium">{c.tier}</span>
-                    <span className="text-sm text-muted-foreground">{c.range}</span>
+            {/* Top Exams */}
+            <section id="top-exams" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">Entrance Exams for {course.name}</h2>
+              <div className="flex flex-wrap gap-2">
+                {course.top_exams.map((exam) => (
+                  <div key={exam} className="flex items-center gap-2 bg-muted rounded-xl px-3 py-2">
+                    <FileText className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">{exam}</span>
                   </div>
                 ))}
               </div>
@@ -242,6 +270,23 @@ export default function CourseDetail() {
                   <div key={s} className="flex items-center gap-2 p-3 bg-muted rounded-xl">
                     <GraduationCap className="w-4 h-4 text-primary flex-shrink-0" />
                     <span className="text-sm font-medium text-foreground">{s}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Cut Off */}
+            <section id="cutoff" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">Cut Off</h2>
+              <div className="space-y-2">
+                {[
+                  { tier: "Top IITs/NITs", range: "Top 1-5% ranks" },
+                  { tier: "Tier-2 Colleges", range: "Top 10-20% ranks" },
+                  { tier: "Private Colleges", range: "50-60% marks in entrance" },
+                ].map((c) => (
+                  <div key={c.tier} className="flex justify-between py-2 border-b border-border last:border-0">
+                    <span className="text-sm text-foreground font-medium">{c.tier}</span>
+                    <span className="text-sm text-muted-foreground">{c.range}</span>
                   </div>
                 ))}
               </div>
@@ -272,6 +317,7 @@ export default function CourseDetail() {
 
       <Footer />
       <FloatingBot />
+      <MobileBottomBar type="course" slug={course.slug} sections={COURSE_SECTIONS} />
     </div>
   );
 }
