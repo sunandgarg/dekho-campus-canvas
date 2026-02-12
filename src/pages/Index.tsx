@@ -31,16 +31,19 @@ const Index = () => {
   const [leadInfo, setLeadInfo] = useState<{ name: string; course: string; state: string; city: string } | undefined>();
 
   const handleOpenChat = useCallback((message?: string) => {
-    setPendingChatMessage(message);
+    // Open chat first, lead form will be triggered on first message
+    setInitialChatMessage(message);
+    setIsChatOpen(true);
+  }, []);
+
+  const handleRequestLeadForm = useCallback(() => {
     setIsLeadFormOpen(true);
   }, []);
 
   const handleLeadSubmit = useCallback((data: { name: string; course: string; state: string; city: string }) => {
     setIsLeadFormOpen(false);
     setLeadInfo(data);
-    setInitialChatMessage(pendingChatMessage);
-    setIsChatOpen(true);
-  }, [pendingChatMessage]);
+  }, []);
 
   const handleCloseChat = useCallback(() => {
     setIsChatOpen(false);
@@ -48,7 +51,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg">
         Skip to main content
       </a>
@@ -64,64 +67,61 @@ const Index = () => {
             <TopRankedColleges />
             <UpcomingExams />
 
-            {/* Ad space */}
             <section className="py-4">
               <DynamicAdBanner variant="leaderboard" position="mid-page" />
             </section>
 
             <CategorySection />
 
-            {/* Mid-page lead capture */}
-            <section className="py-8 md:py-10">
-              <div className="max-w-4xl mx-auto">
-                <LeadCaptureForm
-                  variant="banner"
-                  title="🎯 Get Personalized College Recommendations"
-                  subtitle="Talk to our expert counselors — it's completely free!"
-                  source="homepage_mid"
-                />
-              </div>
+            <section className="py-6 md:py-8">
+              <LeadCaptureForm
+                variant="banner"
+                title="🎯 Get Personalized College Recommendations"
+                subtitle="Talk to our expert counselors — it's completely free!"
+                source="homepage_mid"
+              />
             </section>
 
             <CitySearch />
           </div>
 
-          {/* Sticky right sidebar */}
           <StickyRightSidebar source="homepage_sticky" />
         </div>
 
-        {/* Full-width sections */}
         <OnlineEducationSection />
         <StudyAbroadSection />
 
-        <div className="container flex gap-6">
-          <div className="flex-1 min-w-0">
-            <ToolsSection />
+        <div className="container">
+          <ToolsSection />
 
-            <section className="py-4">
-              <DynamicAdBanner variant="horizontal" position="mid-page" />
-            </section>
+          <section className="py-4">
+            <DynamicAdBanner variant="horizontal" position="mid-page" />
+          </section>
 
-            <NewsSection />
+          <NewsSection />
 
-            {/* Second lead form */}
-            <section className="py-6">
-              <LeadCaptureForm
-                variant="inline"
-                title="📞 Talk to an Expert Counselor — Free!"
-                source="homepage_inline_2"
-              />
-            </section>
+          <section className="py-6">
+            <LeadCaptureForm
+              variant="inline"
+              title="📞 Talk to an Expert Counselor — Free!"
+              source="homepage_inline_2"
+            />
+          </section>
 
-            <FeaturesSection />
-            <FAQSection page="homepage" title="Frequently Asked Questions" />
-            <TrustedBySection />
-          </div>
+          <FeaturesSection />
+          <FAQSection page="homepage" title="Frequently Asked Questions" />
+          <TrustedBySection />
         </div>
       </main>
       <Footer />
       <AILeadForm isOpen={isLeadFormOpen} onClose={() => setIsLeadFormOpen(false)} onSubmit={handleLeadSubmit} />
-      <AIChatFullScreen isOpen={isChatOpen} onClose={handleCloseChat} initialMessage={initialChatMessage} leadData={leadInfo} />
+      <AIChatFullScreen
+        isOpen={isChatOpen}
+        onClose={handleCloseChat}
+        initialMessage={initialChatMessage}
+        leadData={leadInfo}
+        onRequestLeadForm={handleRequestLeadForm}
+      />
       <FloatingBot />
       <HomeMobileBottomNav />
     </div>

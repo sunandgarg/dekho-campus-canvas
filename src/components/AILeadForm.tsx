@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, Send, Sparkles, Loader2 } from "lucide-react";
+import { X, Send, Loader2, Phone, User, Mail, BookOpen, MapPin, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/SearchableSelect";
@@ -25,6 +25,7 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
     name: "", email: "", phone: "", course: "", otherCourse: "", state: "", city: "", education: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [authorized, setAuthorized] = useState(true);
 
   const update = (field: string, value: string) => setFormData((prev) => ({ ...prev, [field]: value }));
 
@@ -63,6 +64,8 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
 
   if (!isOpen) return null;
 
+  const selectCls = "w-full h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none";
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -78,13 +81,15 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
         className="bg-card rounded-2xl shadow-elevated w-full max-w-sm overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="gradient-primary px-5 py-4 flex items-center justify-between">
+        {/* Header - more human, less AI */}
+        <div className="bg-primary px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-5 h-5 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-primary-foreground" />
+            </div>
             <div>
-              <h3 className="font-bold text-primary-foreground text-sm">Quick Details</h3>
-              <p className="text-[11px] text-primary-foreground/80">Get personalized AI guidance</p>
+              <h3 className="font-bold text-primary-foreground text-sm">Help Us Understand You Better</h3>
+              <p className="text-[11px] text-primary-foreground/80">So we can give you the best guidance</p>
             </div>
           </div>
           <button onClick={onClose} className="text-primary-foreground/80 hover:text-primary-foreground">
@@ -92,29 +97,41 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-3">
-          <Input
-            value={formData.name}
-            onChange={(e) => update("name", e.target.value)}
-            placeholder="Your Name *"
-            className="rounded-xl h-10 text-sm"
-            required
-          />
-          <div className="grid grid-cols-2 gap-2">
+        <form onSubmit={handleSubmit} className="p-5 space-y-2.5">
+          {/* Name */}
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              value={formData.email}
-              onChange={(e) => update("email", e.target.value)}
-              placeholder="Email"
-              type="email"
-              className="rounded-xl h-10 text-sm"
+              value={formData.name}
+              onChange={(e) => update("name", e.target.value)}
+              placeholder="Your Name *"
+              className="pl-10 rounded-xl h-10 text-sm"
+              required
             />
+          </div>
+
+          {/* Phone with +91 */}
+          <div className="relative flex items-center gap-0">
+            <span className="flex-shrink-0 px-3 py-2.5 bg-muted rounded-l-xl border border-r-0 border-border text-sm text-muted-foreground font-medium">+91</span>
             <Input
               value={formData.phone}
               onChange={(e) => update("phone", e.target.value)}
-              placeholder="Phone *"
+              placeholder="Mobile Number *"
               type="tel"
-              className="rounded-xl h-10 text-sm"
+              className="rounded-l-none rounded-r-xl h-10 text-sm"
               required
+            />
+          </div>
+
+          {/* Email */}
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              value={formData.email}
+              onChange={(e) => update("email", e.target.value)}
+              placeholder="Email (optional)"
+              type="email"
+              className="pl-10 rounded-xl h-10 text-sm"
             />
           </div>
 
@@ -122,23 +139,25 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
           <select
             value={formData.education}
             onChange={(e) => update("education", e.target.value)}
-            className="w-full h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className={selectCls}
           >
-            <option value="">Education Status</option>
+            <option value="">Current Education Status</option>
             {educationStatus.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
 
           {/* Course select */}
-          <select
-            value={formData.course}
-            onChange={(e) => update("course", e.target.value)}
-            className="w-full h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            <option value="">Select Course Interest</option>
-            {courseOptions.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <div className="relative">
+            <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            <select
+              value={formData.course}
+              onChange={(e) => update("course", e.target.value)}
+              className={`${selectCls} pl-10`}
+            >
+              <option value="">Interested Course</option>
+              {courseOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
 
-          {/* Other course text field */}
           {formData.course === "Other" && (
             <Input
               value={formData.otherCourse}
@@ -148,7 +167,7 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
             />
           )}
 
-          {/* State & City with search */}
+          {/* State & City */}
           <div className="grid grid-cols-2 gap-2">
             <SearchableSelect
               options={indianStates}
@@ -164,12 +183,20 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
             />
           </div>
 
-          <Button type="submit" className="w-full gradient-primary rounded-xl h-11" disabled={isLoading}>
+          {/* Authorization checkbox */}
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" checked={authorized} onChange={e => setAuthorized(e.target.checked)} className="mt-0.5 w-4 h-4 rounded border-border text-primary accent-primary" />
+            <span className="text-[11px] text-muted-foreground leading-tight">
+              I authorize DekhoCampus to contact me with updates via Email, SMS, WhatsApp & Call. <a href="/terms" className="text-primary underline">T&C apply</a>
+            </span>
+          </label>
+
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 rounded-xl h-11 text-sm" disabled={isLoading || !authorized}>
             {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-            {isLoading ? "Saving..." : "Start AI Chat"}
+            {isLoading ? "Saving..." : "Get Expert Guidance"}
           </Button>
           <p className="text-[10px] text-center text-muted-foreground">
-            By submitting, you agree to receive guidance from our counselors
+            Our counselors will reach out within 30 minutes
           </p>
         </form>
       </motion.div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, User, Mail, Phone, MapPin, GraduationCap, Loader2, CheckCircle, Sparkles, BookOpen } from "lucide-react";
+import { Send, User, Mail, Phone, MapPin, GraduationCap, Loader2, CheckCircle, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -18,14 +18,8 @@ interface LeadCaptureFormProps {
 const LEAD_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-lead`;
 
 const courseOptions = [
-  "B.Tech / B.E.",
-  "MBBS / BDS",
-  "B.Com / BBA / MBA",
-  "B.Sc / M.Sc",
-  "B.A / M.A",
-  "Law (LLB)",
-  "Design / Architecture",
-  "Other",
+  "B.Tech / B.E.", "MBBS / BDS", "B.Com / BBA / MBA", "B.Sc / M.Sc",
+  "B.A / M.A", "Law (LLB)", "Design / Architecture", "Other",
 ];
 
 const stateOptions = [
@@ -44,12 +38,7 @@ export function LeadCaptureForm({
   interestedExamSlug,
 }: LeadCaptureFormProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    course: "",
-    state: "",
-    city: "",
+    name: "", email: "", phone: "", course: "", state: "", city: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -73,13 +62,9 @@ export function LeadCaptureForm({
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email || null,
-          phone: formData.phone,
-          city: formData.city || null,
-          state: formData.state || null,
-          current_situation: formData.course || null,
-          source,
+          name: formData.name, email: formData.email || null, phone: formData.phone,
+          city: formData.city || null, state: formData.state || null,
+          current_situation: formData.course || null, source,
           interested_college_slug: interestedCollegeSlug || null,
           interested_course_slug: interestedCourseSlug || null,
           interested_exam_slug: interestedExamSlug || null,
@@ -106,17 +91,17 @@ export function LeadCaptureForm({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className={`
-          ${variant === "card" ? "bg-card rounded-2xl border border-border p-5 md:p-6 shadow-lg" : ""}
-          ${variant === "banner" ? "bg-gradient-to-r from-success to-mint rounded-2xl p-5 md:p-6 text-primary-foreground" : ""}
-          ${variant === "sidebar" ? "bg-card rounded-2xl border border-border p-4 md:p-5" : ""}
+          ${variant === "card" ? "bg-card rounded-2xl border border-border p-5 shadow-soft" : ""}
+          ${variant === "banner" ? "bg-primary rounded-2xl p-5 text-primary-foreground" : ""}
+          ${variant === "sidebar" ? "bg-card rounded-2xl border border-border p-4" : ""}
           ${variant === "inline" ? "bg-muted/50 rounded-xl p-4" : ""}
         `}
       >
-        <div className="text-center py-4 md:py-6">
-          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-3 md:mb-4">
-            <CheckCircle className="w-7 h-7 md:w-8 md:h-8 text-success" />
+        <div className="text-center py-4">
+          <div className="w-14 h-14 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-3">
+            <CheckCircle className="w-7 h-7 text-success" />
           </div>
-          <h3 className={`text-lg md:text-xl font-bold mb-2 ${variant === "banner" ? "text-primary-foreground" : "text-foreground"}`}>
+          <h3 className={`text-lg font-bold mb-2 ${variant === "banner" ? "text-primary-foreground" : "text-foreground"}`}>
             Thank You! 🎉
           </h3>
           <p className={`text-sm ${variant === "banner" ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
@@ -127,25 +112,24 @@ export function LeadCaptureForm({
     );
   }
 
-  // Shared select classes
   const selectCls = "w-full px-3 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none";
 
-  // Card variant — full featured form
+  // Card variant
   if (variant === "card") {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="bg-card rounded-2xl border border-border p-5 md:p-6 shadow-lg"
+        className="bg-card rounded-2xl border border-border p-5 shadow-soft"
       >
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl gradient-accent flex items-center justify-center">
-            <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-accent-foreground" />
+          <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+            <GraduationCap className="w-5 h-5 text-accent" />
           </div>
           <div>
-            <h3 className="text-base md:text-lg font-bold text-foreground">{title}</h3>
-            <p className="text-xs md:text-sm text-muted-foreground">{subtitle}</p>
+            <h3 className="text-sm font-bold text-foreground">{title}</h3>
+            <p className="text-xs text-muted-foreground">{subtitle}</p>
           </div>
         </div>
 
@@ -162,8 +146,6 @@ export function LeadCaptureForm({
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={formData.email} onChange={e => update("email", e.target.value)} placeholder="Email (optional)" type="email" className="pl-10 rounded-xl h-10 text-sm" />
           </div>
-
-          {/* Course dropdown */}
           <div className="relative">
             <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <select value={formData.course} onChange={e => update("course", e.target.value)} className={`${selectCls} pl-10`}>
@@ -171,8 +153,6 @@ export function LeadCaptureForm({
               {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
-
-          {/* State & City in a row */}
           <div className="grid grid-cols-2 gap-2">
             <select value={formData.state} onChange={e => update("state", e.target.value)} className={selectCls}>
               <option value="">State</option>
@@ -187,7 +167,7 @@ export function LeadCaptureForm({
           <label className="flex items-start gap-2 cursor-pointer">
             <input type="checkbox" checked={authorized} onChange={e => setAuthorized(e.target.checked)} className="mt-0.5 w-4 h-4 rounded border-border text-primary accent-primary" />
             <span className="text-[11px] text-muted-foreground leading-tight">
-              I authorize to contact me with updates & notifications via Email, SMS, WhatsApp & Call. <a href="/terms" className="text-primary underline">Terms & Conditions</a>
+              I authorize DekhoCampus to contact me via Email, SMS, WhatsApp & Call. <a href="/terms" className="text-primary underline">T&C apply</a>
             </span>
           </label>
 
@@ -195,7 +175,7 @@ export function LeadCaptureForm({
             {isLoading ? (
               <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting...</>
             ) : (
-              <>Register <Send className="w-4 h-4 ml-2" /></>
+              <>Register Now <Send className="w-4 h-4 ml-2" /></>
             )}
           </Button>
         </form>
@@ -203,21 +183,21 @@ export function LeadCaptureForm({
     );
   }
 
-  // Banner variant — horizontal layout
+  // Banner variant
   if (variant === "banner") {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="bg-gradient-to-r from-primary via-primary to-accent rounded-2xl p-5 md:p-8"
+        className="bg-primary rounded-2xl p-5 md:p-8"
       >
         <div className="flex flex-col lg:flex-row items-center gap-4 md:gap-6">
           <div className="flex-1 text-center lg:text-left">
-            <h3 className="text-xl md:text-2xl font-bold text-primary-foreground mb-1 md:mb-2">{title}</h3>
-            <p className="text-primary-foreground/90 text-sm md:text-base">{subtitle}</p>
+            <h3 className="text-xl md:text-2xl font-bold text-primary-foreground mb-1">{title}</h3>
+            <p className="text-primary-foreground/90 text-sm">{subtitle}</p>
           </div>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full lg:w-auto">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
             <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Your Name" className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60 rounded-xl min-w-[140px] h-10 text-sm" required />
             <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Phone Number" type="tel" className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60 rounded-xl min-w-[140px] h-10 text-sm" required />
             <select value={formData.course} onChange={e => update("course", e.target.value)} className="px-3 py-2 rounded-xl bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground text-sm min-w-[140px] focus:outline-none [&>option]:text-foreground">
@@ -233,20 +213,20 @@ export function LeadCaptureForm({
     );
   }
 
-  // Sidebar variant — compact vertical
+  // Sidebar variant
   if (variant === "sidebar") {
     return (
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        className="bg-gradient-to-br from-secondary to-muted rounded-2xl border border-border p-4 md:p-5"
+        className="bg-card rounded-2xl border border-border p-4"
       >
-        <div className="text-center mb-3 md:mb-4">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full gradient-accent flex items-center justify-center mx-auto mb-2 md:mb-3">
-            <GraduationCap className="w-5 h-5 md:w-6 md:h-6 text-accent-foreground" />
+        <div className="text-center mb-3">
+          <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-2">
+            <GraduationCap className="w-5 h-5 text-accent" />
           </div>
-          <h4 className="font-bold text-foreground text-sm md:text-base">{title}</h4>
+          <h4 className="font-bold text-foreground text-sm">{title}</h4>
           <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
         </div>
 
@@ -265,7 +245,7 @@ export function LeadCaptureForm({
             </select>
             <Input value={formData.city} onChange={e => update("city", e.target.value)} placeholder="City" className="rounded-xl text-sm h-9" />
           </div>
-          <Button type="submit" size="sm" className="w-full gradient-accent rounded-xl h-9 text-sm" disabled={isLoading}>
+          <Button type="submit" size="sm" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-xl h-9 text-sm" disabled={isLoading}>
             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Get Free Help"}
           </Button>
         </form>
@@ -273,7 +253,7 @@ export function LeadCaptureForm({
     );
   }
 
-  // Inline variant — with email added
+  // Inline variant
   return (
     <div className="bg-muted/50 rounded-xl p-4">
       <p className="text-sm font-medium text-foreground mb-3">{title}</p>
@@ -285,7 +265,7 @@ export function LeadCaptureForm({
           <option value="">Course</option>
           {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <Button type="submit" size="sm" className="gradient-primary rounded-lg h-10 px-5" disabled={isLoading}>
+        <Button type="submit" size="sm" className="bg-primary text-primary-foreground rounded-lg h-10 px-5" disabled={isLoading}>
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit"}
         </Button>
       </form>
