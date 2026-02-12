@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
-import { Calendar, Users, FileText, Award, Building, BookOpen, CheckCircle, Clock, Newspaper, CreditCard, MapPin, ClipboardList } from "lucide-react";
+import { Calendar, Users, FileText, Award, Building, BookOpen, CheckCircle, Clock, Newspaper, CreditCard, MapPin, ClipboardList, ExternalLink, Globe, AlertCircle, Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
@@ -17,18 +17,19 @@ import { useDbExam } from "@/hooks/useExamsData";
 
 const EXAM_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
-  { id: "dates", label: "Dates" },
-  { id: "application", label: "Application Form" },
+  { id: "highlights", label: "Highlights" },
+  { id: "dates", label: "Important Dates" },
+  { id: "application", label: "Application" },
   { id: "eligibility", label: "Eligibility" },
   { id: "syllabus", label: "Syllabus" },
-  { id: "pattern", label: "Pattern" },
+  { id: "pattern", label: "Exam Pattern" },
   { id: "preparation", label: "Preparation" },
   { id: "admit-card", label: "Admit Card" },
   { id: "answer-key", label: "Answer Key" },
   { id: "results", label: "Results" },
   { id: "counselling", label: "Counselling" },
   { id: "cutoff", label: "Cut Off" },
-  { id: "colleges", label: "Accepting Colleges" },
+  { id: "colleges", label: "Top Colleges" },
   { id: "news", label: "News" },
   { id: "faq", label: "Q&A" },
 ];
@@ -78,17 +79,37 @@ export default function ExamDetail() {
       <main className="container py-4 md:py-6">
         <PageBreadcrumb items={[{ label: "Exams", href: "/exams" }, { label: exam.name }]} />
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative rounded-2xl overflow-hidden mb-0">
-          <img src={exam.image} alt={exam.name} className="w-full h-48 md:h-64 object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-            <div className="flex items-center gap-2 mb-2">
+        {/* Hero Card */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0">
+          <div className="relative">
+            <img src={exam.image} alt={exam.name} className="w-full h-48 md:h-56 object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+          </div>
+          <div className="p-4 md:p-6 -mt-14 relative z-10">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <Badge className="bg-primary/90 text-primary-foreground text-xs">{exam.category}</Badge>
               <Badge className="bg-accent/90 text-accent-foreground text-xs">{exam.level}</Badge>
               <Badge className={`text-xs ${exam.status === "Applications Open" ? "bg-success/90 text-success-foreground" : "bg-muted text-muted-foreground"}`}>{exam.status}</Badge>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-background mb-1">{exam.name}</h1>
-            <p className="text-background/80 text-sm">{exam.full_name}</p>
+            <h1 className="text-xl md:text-2xl font-bold text-background md:text-foreground mb-1">{exam.name} 2026</h1>
+            <p className="text-sm text-muted-foreground mb-3">{exam.full_name}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              {exam.registration_url && exam.registration_url !== "#" && (
+                <a href={exam.registration_url} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" className="rounded-xl text-xs gap-1"><ExternalLink className="w-3.5 h-3.5" />Apply Now</Button>
+                </a>
+              )}
+              {exam.sample_paper_url && exam.sample_paper_url !== "#" && (
+                <a href={exam.sample_paper_url} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1"><Download className="w-3.5 h-3.5" />Sample Papers</Button>
+                </a>
+              )}
+              {exam.website && exam.website !== "#" && (
+                <a href={exam.website} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1"><Globe className="w-3.5 h-3.5" />Official Website</Button>
+                </a>
+              )}
+            </div>
           </div>
         </motion.div>
 
@@ -114,14 +135,18 @@ export default function ExamDetail() {
 
             {/* Overview */}
             <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">About {exam.name}</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">About {exam.name} 2026</h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">{exam.description}</p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
+                  { label: "Full Name", value: exam.full_name },
+                  { label: "Conducting Body", value: "NTA" },
                   { label: "Category", value: exam.category },
                   { label: "Level", value: exam.level },
                   { label: "Exam Type", value: exam.exam_type },
+                  { label: "Mode", value: exam.mode },
                   { label: "Language", value: exam.language },
+                  { label: "Duration", value: exam.duration },
                   { label: "Frequency", value: exam.frequency },
                   { label: "Application Mode", value: exam.application_mode },
                   { label: "Seats", value: exam.seats || "Varies" },
@@ -129,7 +154,28 @@ export default function ExamDetail() {
                 ].map((info) => (
                   <div key={info.label} className="flex justify-between py-2 border-b border-border last:border-0">
                     <span className="text-sm text-muted-foreground">{info.label}</span>
-                    <span className="text-sm font-medium text-foreground">{info.value}</span>
+                    <span className="text-sm font-medium text-foreground text-right max-w-[60%]">{info.value}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Highlights */}
+            <section id="highlights" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Key Highlights</h2>
+              <div className="space-y-2">
+                {[
+                  `${exam.name} is conducted by NTA (National Testing Agency)`,
+                  `Mode of exam: ${exam.mode}`,
+                  `Exam duration: ${exam.duration}`,
+                  `Available in ${exam.language}`,
+                  `Frequency: ${exam.frequency}`,
+                  exam.negative_marking ? "Negative marking applicable" : "No negative marking",
+                  `Total applicants: ${exam.applicants}`,
+                ].map((h, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-foreground">{h}</span>
                   </div>
                 ))}
               </div>
@@ -137,41 +183,45 @@ export default function ExamDetail() {
 
             {/* Important Dates */}
             <section id="dates" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Important Dates</h2>
-              <div className="space-y-3">
-                {[
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Important Dates</h2>
+              {exam.dates_content && <p className="text-sm text-muted-foreground mb-3">{exam.dates_content}</p>}
+              <div className="space-y-0">
+                {(exam.important_dates && exam.important_dates.length > 0 ? exam.important_dates : [
                   { event: "Application Start", date: exam.application_start_date || "TBA" },
                   { event: "Application End", date: exam.application_end_date || "TBA" },
                   { event: "Exam Date", date: exam.exam_date },
                   { event: "Result Date", date: exam.result_date || "TBA" },
-                ].map((d, i) => (
-                  <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-primary" />
-                      <span className="text-sm text-foreground">{d.event}</span>
+                ]).map((d, i) => (
+                  <div key={i} className="flex items-center justify-between py-3 border-b border-border last:border-0">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Calendar className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-sm text-foreground font-medium">{d.event}</span>
                     </div>
-                    <span className="text-sm font-semibold text-foreground">{d.date}</span>
+                    <span className="text-sm font-semibold text-primary">{d.date}</span>
                   </div>
                 ))}
               </div>
-              {exam.dates_content && <p className="text-sm text-muted-foreground mt-3">{exam.dates_content}</p>}
             </section>
 
             {/* Application Form */}
             <section id="application" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Application Form</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Application Form</h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                {exam.application_process || `Apply online through the official ${exam.name} website. Keep your documents ready including passport-size photo, signature, and academic certificates.`}
+                {exam.application_process || `Apply online through the official ${exam.name} website.`}
               </p>
-              {exam.registration_url && exam.registration_url !== "#" && (
-                <a href={exam.registration_url} target="_blank" rel="noopener noreferrer">
-                  <Button className="bg-accent text-accent-foreground rounded-xl">Apply Now</Button>
-                </a>
-              )}
               {exam.cast_wise_fee && (
-                <div className="mt-3">
-                  <h3 className="text-sm font-semibold text-foreground mb-1">Application Fee</h3>
+                <div className="bg-muted rounded-xl p-4 mt-3">
+                  <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2"><CreditCard className="w-4 h-4" />Application Fee</h3>
                   <p className="text-sm text-muted-foreground">{exam.cast_wise_fee}</p>
+                </div>
+              )}
+              {exam.registration_url && exam.registration_url !== "#" && (
+                <div className="mt-3">
+                  <a href={exam.registration_url} target="_blank" rel="noopener noreferrer">
+                    <Button className="rounded-xl gap-1"><ExternalLink className="w-4 h-4" />Apply Now on Official Website</Button>
+                  </a>
                 </div>
               )}
             </section>
@@ -181,19 +231,24 @@ export default function ExamDetail() {
 
             {/* Eligibility */}
             <section id="eligibility" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Eligibility Criteria</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Eligibility Criteria</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{exam.eligibility}</p>
               {exam.age_limit && (
-                <div className="mt-2">
-                  <span className="text-sm text-muted-foreground">Age Limit: </span>
-                  <span className="text-sm font-medium text-foreground">{exam.age_limit}</span>
+                <div className="mt-3 bg-muted rounded-xl p-3 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                  <span className="text-sm text-foreground">Age Limit: {exam.age_limit}</span>
+                </div>
+              )}
+              {exam.gender_wise && (
+                <div className="mt-2 bg-muted rounded-xl p-3">
+                  <p className="text-sm text-muted-foreground">{exam.gender_wise}</p>
                 </div>
               )}
             </section>
 
             {/* Syllabus */}
             <section id="syllabus" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Syllabus</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Syllabus</h2>
               <div className="flex flex-wrap gap-2">
                 {exam.syllabus.map((s) => (
                   <Badge key={s} variant="secondary" className="text-sm py-1.5 px-3">{s}</Badge>
@@ -203,13 +258,13 @@ export default function ExamDetail() {
 
             {/* Pattern */}
             <section id="pattern" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Exam Pattern</h2>
-              <div className="grid sm:grid-cols-2 gap-3 mb-4">
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Exam Pattern</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                 {[
                   { label: "Mode", value: exam.mode },
                   { label: "Duration", value: exam.duration },
                   { label: "Language", value: exam.language },
-                  { label: "Negative Marking", value: exam.negative_marking ? "Yes" : "No" },
+                  { label: "Negative Marking", value: exam.negative_marking ? "Yes (-1)" : "No" },
                 ].map((item) => (
                   <div key={item.label} className="bg-muted rounded-xl p-3">
                     <p className="text-xs text-muted-foreground">{item.label}</p>
@@ -222,30 +277,33 @@ export default function ExamDetail() {
 
             {/* Preparation */}
             <section id="preparation" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Preparation Tips</h2>
-              <div className="space-y-3">
-                {[
-                  "Start with NCERT/standard textbooks to build strong fundamentals",
-                  "Create a realistic study schedule and stick to it daily",
-                  "Practice previous year question papers and mock tests regularly",
-                  "Focus on weak areas and revise frequently",
-                  "Join a reputed coaching or online course for structured preparation",
-                  "Stay updated with exam notifications and syllabus changes",
-                ].map((tip, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-foreground">{tip}</span>
-                  </div>
-                ))}
-              </div>
-              {exam.preparation_tips && <p className="text-sm text-muted-foreground mt-3">{exam.preparation_tips}</p>}
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Preparation Tips</h2>
+              {exam.preparation_tips ? (
+                <p className="text-sm text-muted-foreground leading-relaxed">{exam.preparation_tips}</p>
+              ) : (
+                <div className="space-y-3">
+                  {[
+                    "Start with NCERT/standard textbooks to build strong fundamentals",
+                    "Create a realistic study schedule and stick to it daily",
+                    "Practice previous year question papers and mock tests regularly",
+                    "Focus on weak areas and revise frequently",
+                    "Join a reputed coaching or online course for structured preparation",
+                    "Stay updated with exam notifications and syllabus changes",
+                  ].map((tip, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-foreground">{tip}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
 
             <DynamicAdBanner variant="horizontal" position="mid-page" page="exams" itemSlug={slug} />
 
             {/* Admit Card */}
             <section id="admit-card" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Admit Card</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Admit Card</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 The {exam.name} admit card will be available for download from the official website. Candidates must carry a valid photo ID along with the printed admit card to the exam center.
               </p>
@@ -253,16 +311,15 @@ export default function ExamDetail() {
 
             {/* Answer Key */}
             <section id="answer-key" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Answer Key</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Answer Key</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                The provisional answer key for {exam.name} will be released on the official website after the exam. Candidates can challenge the answer key within the specified window.
+                {exam.question_paper || `The provisional answer key for ${exam.name} will be released on the official website after the exam. Candidates can challenge the answer key within the specified window.`}
               </p>
-              {exam.question_paper && <p className="text-sm text-muted-foreground mt-2">{exam.question_paper}</p>}
             </section>
 
             {/* Results */}
             <section id="results" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Results</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Results</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {exam.result_content || `${exam.name} results will be declared on ${exam.result_date || "the official website"}. Candidates can check their scores and download scorecards.`}
               </p>
@@ -270,30 +327,35 @@ export default function ExamDetail() {
 
             {/* Counselling */}
             <section id="counselling" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Counselling</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Counselling</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {exam.counselling_content || `After results, qualified candidates can participate in the ${exam.name} counselling process for seat allocation. Multiple rounds of counselling are conducted.`}
+                {exam.counselling_content || `After results, qualified candidates can participate in the ${exam.name} counselling process for seat allocation.`}
               </p>
             </section>
 
             {/* Cut Off */}
             <section id="cutoff" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} Cut Off</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">{exam.name} 2026 Cut Off</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {exam.cutoff_content || `Cut-off scores for ${exam.name} vary by category and year. General category typically requires higher scores than reserved categories.`}
+                {exam.cutoff_content || `Cut-off scores for ${exam.name} vary by category and year.`}
               </p>
             </section>
 
             {/* Accepting Colleges */}
             <section id="colleges" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Colleges Accepting {exam.name}</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">Top Colleges Accepting {exam.name}</h2>
               <div className="grid sm:grid-cols-2 gap-2">
                 {exam.top_colleges.map((c) => (
-                  <div key={c} className="flex items-center gap-2 p-2">
+                  <div key={c} className="flex items-center gap-2 p-2.5 bg-muted rounded-xl">
                     <Building className="w-4 h-4 text-primary flex-shrink-0" />
                     <span className="text-sm text-foreground">{c}</span>
                   </div>
                 ))}
+              </div>
+              <div className="mt-3">
+                <Link to="/colleges">
+                  <Button variant="outline" size="sm" className="rounded-xl text-xs">View All Colleges →</Button>
+                </Link>
               </div>
             </section>
 
@@ -305,6 +367,7 @@ export default function ExamDetail() {
                   { title: `${exam.name} 2026 registration opens`, date: "Feb 2026" },
                   { title: `${exam.name} syllabus revised for 2026`, date: "Jan 2026" },
                   { title: `${exam.name} exam date announced`, date: "Dec 2025" },
+                  { title: `NTA releases ${exam.name} 2025 final answer key`, date: "Nov 2025" },
                 ].map((n, i) => (
                   <div key={i} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
                     <Newspaper className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
