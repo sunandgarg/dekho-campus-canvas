@@ -1,153 +1,145 @@
 import { useState, useMemo } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
-import { ListingPageLayout } from "@/components/ListingPageLayout";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { FloatingBot } from "@/components/FloatingBot";
+import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ExamCard } from "@/components/ExamCard";
 import { useDbExams } from "@/hooks/useExamsData";
 
-const examCategories = ["All", "Engineering", "Medical", "Management", "Law", "Design", "Science"] as const;
-const examLevels = ["All", "National", "State", "University", "International", "Professional"] as const;
-const examModes = ["All", "Online (CBT)", "Offline (Pen & Paper)", "Both"] as const;
-const examStatuses = ["All", "Upcoming", "Applications Open", "Applications Closed", "Exam Over"] as const;
+const examCategories = ["Engineering", "Medical", "Management", "Law", "Design", "Science"] as const;
+const examLevels = ["National", "State", "University", "International"] as const;
+const examModes = ["Online (CBT)", "Offline (Pen & Paper)", "Both"] as const;
+const examStatuses = ["Upcoming", "Applications Open", "Applications Closed", "Exam Over"] as const;
 
 export default function AllExams() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [level, setLevel] = useState("All");
-  const [mode, setMode] = useState("All");
-  const [status, setStatus] = useState("All");
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  const [selectedModes, setSelectedModes] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const { data: dbExams } = useDbExams();
   const exams = dbExams ?? [];
 
-  const activeFilters = [category, level, mode, status].filter((f) => f !== "All").length;
+  const activeFilters = [...selectedCategories, ...selectedLevels, ...selectedModes, ...selectedStatuses];
 
   const filtered = useMemo(() => {
     return exams.filter((e) => {
-      const matchSearch = e.name.toLowerCase().includes(search.toLowerCase()) || e.full_name.toLowerCase().includes(search.toLowerCase());
-      const matchCategory = category === "All" || e.category === category;
-      const matchLevel = level === "All" || e.level === level;
-      const matchMode = mode === "All" || e.mode === mode;
-      const matchStatus = status === "All" || e.status === status;
+      const matchSearch = !search || e.name.toLowerCase().includes(search.toLowerCase()) || e.full_name.toLowerCase().includes(search.toLowerCase());
+      const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(e.category);
+      const matchLevel = selectedLevels.length === 0 || selectedLevels.includes(e.level);
+      const matchMode = selectedModes.length === 0 || selectedModes.includes(e.mode);
+      const matchStatus = selectedStatuses.length === 0 || selectedStatuses.includes(e.status);
       return matchSearch && matchCategory && matchLevel && matchMode && matchStatus;
     });
-  }, [search, category, level, mode, status, exams]);
+  }, [search, selectedCategories, selectedLevels, selectedModes, selectedStatuses, exams]);
 
-  const clearAll = () => { setCategory("All"); setLevel("All"); setMode("All"); setStatus("All"); };
+  const heading = useMemo(() => {
+    const cat = selectedCategories.length === 1 ? selectedCategories[0] + " " : "";
+    return `Top ${cat}Entrance Exams 2026`;
+  }, [selectedCategories]);
+
+  const clearAll = () => { setSelectedCategories([]); setSelectedLevels([]); setSelectedModes([]); setSelectedStatuses([]); };
+
+  const removeFilter = (f: string) => {
+    setSelectedCategories(prev => prev.filter(x => x !== f));
+    setSelectedLevels(prev => prev.filter(x => x !== f));
+    setSelectedModes(prev => prev.filter(x => x !== f));
+    setSelectedStatuses(prev => prev.filter(x => x !== f));
+  };
 
   return (
-    <ListingPageLayout title="All Entrance Exams 2026" description="Complete guide to 500+ entrance exams — dates, eligibility, syllabus & preparation tips" page="exams">
-      <PageBreadcrumb items={[{ label: "Exams" }]} />
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page="exams" />
+      <main className="container py-4 md:py-6">
+        <PageBreadcrumb items={[{ label: "Exams" }]} />
+        <header className="mb-6">
+          <h1 className="text-xl md:text-2xl font-bold text-primary mb-2">{heading}</h1>
+          <p className="text-sm text-muted-foreground">Complete guide to {filtered.length}+ entrance exams — dates, eligibility, syllabus & preparation tips</p>
+        </header>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
+        <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search exams (e.g. JEE, NEET, CAT...)" className="pl-10 rounded-xl h-11" />
         </div>
-        <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="rounded-xl gap-2 h-11">
-          <SlidersHorizontal className="w-4 h-4" />
-          Filters
-          {activeFilters > 0 && <Badge className="ml-1 bg-primary text-primary-foreground text-xs px-1.5">{activeFilters}</Badge>}
-        </Button>
-      </div>
 
-      {showFilters && (
-        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="bg-card rounded-2xl border border-border p-4 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-foreground">Filter Exams</h3>
+        {activeFilters.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {activeFilters.map(f => (
+              <Badge key={f} variant="secondary" className="gap-1 pr-1">{f}<button onClick={() => removeFilter(f)} className="ml-1"><X className="w-3 h-3" /></button></Badge>
+            ))}
             <button onClick={clearAll} className="text-xs text-primary hover:underline">Clear all</button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <FilterGroup label="Category" options={examCategories} value={category} onChange={setCategory} />
-            <FilterGroup label="Level" options={examLevels} value={level} onChange={setLevel} />
-            <FilterGroup label="Mode" options={examModes} value={mode} onChange={setMode} />
-            <FilterGroup label="Status" options={examStatuses} value={status} onChange={setStatus} />
-          </div>
-        </motion.div>
-      )}
+        )}
 
-      <p className="text-sm text-muted-foreground mb-4">
-        Showing <span className="font-semibold text-foreground">{filtered.length}</span> exams
-      </p>
+        <div className="flex gap-6">
+          <aside className="hidden lg:block w-64 shrink-0">
+            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              <FilterSection title="Category" items={examCategories as unknown as string[]} selected={selectedCategories} onChange={setSelectedCategories} />
+              <FilterSection title="Level" items={examLevels as unknown as string[]} selected={selectedLevels} onChange={setSelectedLevels} />
+              <FilterSection title="Mode" items={examModes as unknown as string[]} selected={selectedModes} onChange={setSelectedModes} />
+              <FilterSection title="Status" items={examStatuses as unknown as string[]} selected={selectedStatuses} onChange={setSelectedStatuses} />
+              <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy" source="exams_sidebar" />
+              <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
+            </div>
+          </aside>
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3">
-          <div className="space-y-4">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm text-muted-foreground mb-4">Showing <span className="font-semibold text-foreground">{filtered.length}</span> exams</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filtered.slice(0, 6).map((exam, i) => (
+              {filtered.map((exam, i) => (
                 <ExamCard key={exam.slug} exam={exam} index={i} />
               ))}
             </div>
-
-            {filtered.length > 6 && (
-              <DynamicAdBanner variant="leaderboard" position="inline" page="exams" />
-            )}
-
-            {filtered.length > 6 && (
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                {filtered.slice(6, 12).map((exam, i) => (
-                  <ExamCard key={exam.slug} exam={exam} index={i + 6} />
-                ))}
+            {filtered.length === 0 && (
+              <div className="text-center py-12 bg-card rounded-2xl border border-border">
+                <h3 className="font-semibold text-foreground mb-1">No exams found</h3>
+                <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
               </div>
             )}
-
-            {filtered.length > 12 && (
-              <LeadCaptureForm variant="inline" title="Need Exam Guidance?" source="exams_inline" />
-            )}
-
-            {filtered.length > 12 && (
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                {filtered.slice(12).map((exam, i) => (
-                  <ExamCard key={exam.slug} exam={exam} index={i + 12} />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {filtered.length === 0 && (
-            <div className="text-center py-12 bg-card rounded-2xl border border-border">
-              <h3 className="font-semibold text-foreground mb-1">No exams found</h3>
-              <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
+            <div className="mt-8">
+              <LeadCaptureForm variant="banner" title="📝 Need help preparing? Get expert guidance for free!" subtitle="Our counselors help you plan the perfect exam strategy" source="exams_bottom_banner" />
             </div>
-          )}
-
-          <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="exams" /></div>
-        </div>
-
-        <aside className="hidden lg:block">
-          <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
-            <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy from experts" source="exams_listing" />
-            <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
-            <LeadCaptureForm variant="card" title="Exam Date Alerts" subtitle="Get notified about registration deadlines" source="exams_sidebar_card" />
-            <DynamicAdBanner variant="square" position="sidebar" page="exams" />
           </div>
-        </aside>
-      </div>
-
-      <div className="mt-10">
-        <LeadCaptureForm variant="banner" title="📝 Need help preparing? Get expert guidance for free!" subtitle="Our counselors help you plan the perfect exam strategy" source="exams_bottom_banner" />
-      </div>
-    </ListingPageLayout>
+        </div>
+      </main>
+      <Footer />
+      <FloatingBot />
+      <FixedCounsellingCTA />
+    </div>
   );
 }
 
-function FilterGroup({ label, options, value, onChange }: { label: string; options: readonly string[]; value: string; onChange: (v: string) => void }) {
+function FilterSection({ title, items, selected, onChange }: { title: string; items: string[]; selected: string[]; onChange: (v: string[]) => void }) {
+  const [expanded, setExpanded] = useState(true);
+
+  const toggle = (item: string) => {
+    onChange(selected.includes(item) ? selected.filter(x => x !== item) : [...selected, item]);
+  };
+
   return (
-    <div>
-      <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{label}</label>
-      <div className="flex flex-wrap gap-1.5">
-        {options.map((o) => (
-          <button key={o} onClick={() => onChange(o)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${value === o ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>
-            {o}
-          </button>
-        ))}
-      </div>
+    <div className="bg-card rounded-xl border border-border p-3">
+      <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-between w-full text-sm font-semibold text-foreground">
+        {title}
+        {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      </button>
+      {expanded && (
+        <div className="mt-2 space-y-1.5">
+          {items.map(item => (
+            <label key={item} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted rounded px-1 py-0.5">
+              <Checkbox checked={selected.includes(item)} onCheckedChange={() => toggle(item)} className="w-4 h-4" />
+              <span className="text-xs">{item}</span>
+            </label>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

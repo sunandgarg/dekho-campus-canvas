@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 export interface ScrollSection {
@@ -10,7 +10,7 @@ export interface ScrollSection {
 interface ScrollSpyProps {
   sections: ScrollSection[];
   className?: string;
-  baseUrl?: string; // e.g. "/colleges/iit-delhi"
+  baseUrl?: string;
 }
 
 export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
@@ -22,18 +22,19 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
   const navRef = useRef<HTMLDivElement>(null);
   const isUserClick = useRef(false);
 
-  // Scroll to tab section on mount
+  // Scroll to tab section on mount if tab param exists
   useEffect(() => {
     if (tab) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         const el = document.getElementById(tab);
         if (el) {
-          const y = el.getBoundingClientRect().top + window.scrollY - 100;
+          const y = el.getBoundingClientRect().top + window.scrollY - 120;
           window.scrollTo({ top: y, behavior: "smooth" });
         }
-      }, 300);
+      }, 500);
+      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [tab]);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -45,13 +46,12 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
         if (visible.length > 0) {
           const newId = visible[0].target.id;
           setActiveId(newId);
-          // Update URL silently
           if (baseUrl) {
             window.history.replaceState(null, "", `${baseUrl}/${newId}`);
           }
         }
       },
-      { rootMargin: "-80px 0px -60% 0px", threshold: 0.1 }
+      { rootMargin: "-100px 0px -60% 0px", threshold: 0.1 }
     );
 
     sections.forEach(({ id }) => {
@@ -65,18 +65,21 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
   const scrollTo = useCallback((id: string) => {
     isUserClick.current = true;
     setActiveId(id);
+    
+    // Use navigate for proper URL update
     if (baseUrl) {
-      window.history.replaceState(null, "", `${baseUrl}/${id}`);
+      navigate(`${baseUrl}/${id}`, { replace: true });
     }
+    
     const el = document.getElementById(id);
     if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 100;
+      const y = el.getBoundingClientRect().top + window.scrollY - 120;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
     setTimeout(() => {
       isUserClick.current = false;
-    }, 1000);
-  }, [baseUrl]);
+    }, 1200);
+  }, [baseUrl, navigate]);
 
   // Auto-scroll active tab into view
   useEffect(() => {
