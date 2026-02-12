@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, Brain, Zap, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Search, Bot } from "lucide-react";
+import { Send, Sparkles, Brain, Zap, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -186,26 +186,18 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     className="flex-1 bg-transparent border-0 text-sm md:text-base placeholder:text-muted-foreground/50 focus:outline-none focus:ring-0 py-2.5 md:py-3 px-2.5 md:px-3 text-foreground min-w-0"
                     aria-label="Search or ask AI"
                   />
-                  {/* Small AI badge on search bar */}
-                  <button
-                    type="button"
-                    onClick={() => onOpenChat?.()}
-                    className="flex-shrink-0 w-9 h-9 rounded-xl bg-primary flex items-center justify-center mr-1 relative hover:bg-primary/90 transition-colors"
-                    aria-label="Open AI Counselor"
-                  >
-                    <Bot className="w-4.5 h-4.5 text-primary-foreground" />
-                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-accent text-[8px] text-accent-foreground font-bold flex items-center justify-center">
-                      AI
-                    </span>
-                  </button>
                   <Button
                     type="submit"
                     size="default"
-                    className="rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 text-white px-3 md:px-5 shadow-lg h-9 md:h-10"
+                    className="rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 text-white px-3 md:px-5 shadow-lg h-9 md:h-10 relative"
                     disabled={!searchQuery.trim()}
+                    aria-label="Ask AI"
                   >
                     <Send className="w-4 h-4 md:mr-2" />
                     <span className="hidden md:inline font-semibold text-sm">Ask AI</span>
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-accent text-[8px] text-accent-foreground font-bold flex items-center justify-center animate-bounce-gentle">
+                      AI
+                    </span>
                   </Button>
                 </div>
 

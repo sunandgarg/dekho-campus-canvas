@@ -74,10 +74,17 @@ supabase/functions/
       title: "Routing & Navigation",
       content: `**Public Routes:**
 - \`/\` — Homepage (hero, search, featured, categories, tools)
-- \`/colleges\` → \`/colleges/:slug\` — College listing & detail
-- \`/courses\` → \`/courses/:slug\` — Course listing & detail
-- \`/exams\` → \`/exams/:slug\` — Exam listing & detail
+- \`/colleges\` → \`/colleges/:slug\` → \`/colleges/:slug/:tab\` — College listing, detail & sub-sections
+- \`/courses\` → \`/courses/:slug\` → \`/courses/:slug/:tab\` — Course listing, detail & sub-sections
+- \`/exams\` → \`/exams/:slug\` → \`/exams/:slug/:tab\` — Exam listing, detail & sub-sections
 - \`/articles\` → \`/articles/:slug\` — Article listing & detail
+
+**Sub-slug Pattern (Collegedunia-style):**
+- \`/colleges/iit-delhi/overview\` — College overview tab
+- \`/colleges/iit-delhi/courses\` — Courses at this college
+- \`/colleges/iit-delhi/fees\` — Fee structure
+- \`/colleges/iit-delhi/placements\` — Placement info
+- Same pattern for courses and exams
 
 **Admin Routes (open access):**
 - \`/admin\` — Dashboard with stats & quick actions
@@ -86,6 +93,8 @@ supabase/functions/
 - \`/admin/featured\` — Featured college ordering
 - \`/admin/leads\` — Lead management
 - \`/admin/content\` — FAQs & popular places
+- \`/admin/banners\` — Hero banner management
+- \`/admin/partners\` — Trusted partners management
 - \`/admin/docs\` — This documentation page
 
 All routes use **lazy loading** via \`React.lazy()\` for optimal bundle splitting.`,

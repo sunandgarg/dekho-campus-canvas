@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, GraduationCap, BookOpen, FileText, Wrench, Menu, X, ChevronRight, Newspaper, Globe, Laptop, Phone } from "lucide-react";
+import { Home, Menu, X, ChevronRight, Newspaper, Wrench, Globe, Laptop, Phone, Search, Bot } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 
 const navItems = [
   { icon: Home, label: "Home", href: "/" },
-  { icon: GraduationCap, label: "Colleges", href: "/colleges" },
-  { icon: BookOpen, label: "Courses", href: "/courses" },
-  { icon: FileText, label: "Exams", href: "/exams" },
+  { icon: Search, label: "Explore", href: "/colleges" },
+  { icon: Bot, label: "AI Help", href: "#ai" },
   { icon: Menu, label: "More", href: "#more" },
 ];
 
@@ -40,12 +39,12 @@ export function HomeMobileBottomNav() {
 
   return (
     <>
-      {/* Bottom navigation bar - mobile only */}
       <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-background border-t border-border">
         <div className="flex items-center justify-around px-1 py-1.5">
           {navItems.map((item) => {
-            const isActive = item.href === "/" ? location.pathname === "/" : location.pathname.startsWith(item.href) && item.href !== "#more";
+            const isActive = item.href === "/" ? location.pathname === "/" : location.pathname.startsWith(item.href) && item.href !== "#more" && item.href !== "#ai";
             const isMore = item.href === "#more";
+            const isAI = item.href === "#ai";
 
             if (isMore) {
               return (
@@ -55,6 +54,26 @@ export function HomeMobileBottomNav() {
                   className="flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-colors text-muted-foreground"
                 >
                   <item.icon className="w-5 h-5" />
+                  <span className="text-[10px] font-medium">{item.label}</span>
+                </button>
+              );
+            }
+
+            if (isAI) {
+              return (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    // Trigger floating bot
+                    const botBtn = document.querySelector('[aria-label="Talk to AI Counselor"]') as HTMLButtonElement;
+                    if (botBtn) botBtn.click();
+                  }}
+                  className="flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-colors text-primary"
+                >
+                  <div className="relative">
+                    <item.icon className="w-5 h-5" />
+                    <span className="absolute -top-1 -right-2 w-3.5 h-3.5 rounded-full bg-accent text-[7px] text-accent-foreground font-bold flex items-center justify-center">AI</span>
+                  </div>
                   <span className="text-[10px] font-medium">{item.label}</span>
                 </button>
               );
@@ -79,7 +98,6 @@ export function HomeMobileBottomNav() {
         </div>
       </div>
 
-      {/* More menu popup */}
       <Dialog open={showMore} onOpenChange={setShowMore}>
         <DialogContent className="max-w-sm mx-auto">
           <DialogHeader>
@@ -111,7 +129,6 @@ export function HomeMobileBottomNav() {
         </DialogContent>
       </Dialog>
 
-      {/* Counselling form popup */}
       <Dialog open={showCounselling} onOpenChange={setShowCounselling}>
         <DialogContent className="max-w-md mx-auto p-1">
           <LeadCaptureForm
@@ -123,7 +140,6 @@ export function HomeMobileBottomNav() {
         </DialogContent>
       </Dialog>
 
-      {/* Spacer */}
       <div className="h-14 lg:hidden" />
     </>
   );
