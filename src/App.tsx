@@ -56,10 +56,13 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/colleges" element={<AllColleges />} />
               <Route path="/colleges/:slug" element={<CollegeDetail />} />
+              <Route path="/colleges/:slug/:tab" element={<CollegeDetail />} />
               <Route path="/courses" element={<AllCourses />} />
               <Route path="/courses/:slug" element={<CourseDetail />} />
+              <Route path="/courses/:slug/:tab" element={<CourseDetail />} />
               <Route path="/exams" element={<AllExams />} />
               <Route path="/exams/:slug" element={<ExamDetail />} />
+              <Route path="/exams/:slug/:tab" element={<ExamDetail />} />
               <Route path="/articles" element={<AllArticles />} />
               <Route path="/articles/:slug" element={<ArticleDetail />} />
               {/* Admin routes - open to everyone */}

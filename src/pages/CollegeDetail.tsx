@@ -97,7 +97,7 @@ export default function CollegeDetail() {
           </div>
         </motion.div>
 
-        <ScrollSpy sections={COLLEGE_SECTIONS} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
+        <ScrollSpy sections={COLLEGE_SECTIONS} baseUrl={`/colleges/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
 
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
