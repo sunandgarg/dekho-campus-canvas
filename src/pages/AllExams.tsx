@@ -12,46 +12,47 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ExamCard } from "@/components/ExamCard";
 import { useDbExams } from "@/hooks/useExamsData";
-
-const examCategories = ["Engineering", "Medical", "Management", "Law", "Design", "Science"] as const;
-const examLevels = ["National", "State", "University", "International"] as const;
-const examModes = ["Online (CBT)", "Offline (Pen & Paper)", "Both"] as const;
-const examStatuses = ["Upcoming", "Applications Open", "Applications Closed", "Exam Over"] as const;
+import {
+  examCategories, examStreams, examCourseGroups, examLevels,
+} from "@/data/indianLocations";
 
 export default function AllExams() {
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
+  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-  const [selectedModes, setSelectedModes] = useState<string[]>([]);
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const { data: dbExams } = useDbExams();
   const exams = dbExams ?? [];
 
-  const activeFilters = [...selectedCategories, ...selectedLevels, ...selectedModes, ...selectedStatuses];
+  const activeFilters = [...selectedCategories, ...selectedStreams, ...selectedCourseGroups, ...selectedLevels];
 
   const filtered = useMemo(() => {
     return exams.filter((e) => {
       const matchSearch = !search || e.name.toLowerCase().includes(search.toLowerCase()) || e.full_name.toLowerCase().includes(search.toLowerCase());
-      const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(e.category);
+      const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(e.exam_type);
+      const matchStream = selectedStreams.length === 0 || selectedStreams.includes(e.category);
       const matchLevel = selectedLevels.length === 0 || selectedLevels.includes(e.level);
-      const matchMode = selectedModes.length === 0 || selectedModes.includes(e.mode);
-      const matchStatus = selectedStatuses.length === 0 || selectedStatuses.includes(e.status);
-      return matchSearch && matchCategory && matchLevel && matchMode && matchStatus;
+      return matchSearch && matchCategory && matchStream && matchLevel;
     });
-  }, [search, selectedCategories, selectedLevels, selectedModes, selectedStatuses, exams]);
+  }, [search, selectedCategories, selectedStreams, selectedCourseGroups, selectedLevels, exams]);
 
   const heading = useMemo(() => {
+    const stream = selectedStreams.length === 1 ? selectedStreams[0] + " " : "";
     const cat = selectedCategories.length === 1 ? selectedCategories[0] + " " : "";
-    return `Top ${cat}Entrance Exams 2026`;
-  }, [selectedCategories]);
+    return `Top ${stream}${cat}Exams 2026`;
+  }, [selectedStreams, selectedCategories]);
 
-  const clearAll = () => { setSelectedCategories([]); setSelectedLevels([]); setSelectedModes([]); setSelectedStatuses([]); };
+  const clearAll = () => {
+    setSelectedCategories([]); setSelectedStreams([]);
+    setSelectedCourseGroups([]); setSelectedLevels([]);
+  };
 
   const removeFilter = (f: string) => {
     setSelectedCategories(prev => prev.filter(x => x !== f));
+    setSelectedStreams(prev => prev.filter(x => x !== f));
+    setSelectedCourseGroups(prev => prev.filter(x => x !== f));
     setSelectedLevels(prev => prev.filter(x => x !== f));
-    setSelectedModes(prev => prev.filter(x => x !== f));
-    setSelectedStatuses(prev => prev.filter(x => x !== f));
   };
 
   return (
@@ -82,10 +83,16 @@ export default function AllExams() {
         <div className="flex gap-6">
           <aside className="hidden lg:block w-64 shrink-0">
             <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
-              <FilterSection title="Category" items={examCategories as unknown as string[]} selected={selectedCategories} onChange={setSelectedCategories} />
-              <FilterSection title="Level" items={examLevels as unknown as string[]} selected={selectedLevels} onChange={setSelectedLevels} />
-              <FilterSection title="Mode" items={examModes as unknown as string[]} selected={selectedModes} onChange={setSelectedModes} />
-              <FilterSection title="Status" items={examStatuses as unknown as string[]} selected={selectedStatuses} onChange={setSelectedStatuses} />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-bold text-foreground">Filter By</span>
+                {activeFilters.length > 0 && (
+                  <button onClick={clearAll} className="text-xs text-destructive hover:underline">Reset</button>
+                )}
+              </div>
+              <FilterSection title="Category of Exams" items={examCategories} selected={selectedCategories} onChange={setSelectedCategories} />
+              <FilterSection title="Streams of Exams" items={examStreams} selected={selectedStreams} onChange={setSelectedStreams} />
+              <FilterSection title="Course Groups" items={examCourseGroups} selected={selectedCourseGroups} onChange={setSelectedCourseGroups} />
+              <FilterSection title="Level of Exams" items={examLevels} selected={selectedLevels} onChange={setSelectedLevels} />
               <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy" source="exams_sidebar" />
               <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
             </div>
@@ -128,7 +135,8 @@ function FilterSection({ title, items, selected, onChange }: { title: string; it
     <div className="bg-card rounded-xl border border-border p-3">
       <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-between w-full text-sm font-semibold text-foreground">
         {title}
-        {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        {selected.length > 0 && <Badge variant="secondary" className="text-[10px] ml-2 px-1.5">{selected.length}</Badge>}
+        <span className="ml-auto">{expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</span>
       </button>
       {expanded && (
         <div className="mt-2 space-y-1.5">

@@ -15,43 +15,53 @@ import { CollegeCard } from "@/components/CollegeCard";
 import { useDbColleges } from "@/hooks/useCollegesData";
 import { useDbArticles } from "@/hooks/useArticlesData";
 import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
-import { indianStates, citiesByState } from "@/data/indianLocations";
+import {
+  indianStates, citiesByState, collegeStreams, collegeTypes,
+  collegeFeeRanges, collegeCourseGroups, collegeExams,
+} from "@/data/indianLocations";
 import { Link } from "react-router-dom";
 
-const collegeCategories = ["Engineering", "Medical", "Management", "Law", "Design", "Science", "Commerce"] as const;
-const collegeTypes = ["Government", "Private", "Deemed", "Autonomous"] as const;
 const collegeApprovals = ["AICTE", "UGC", "NAAC", "MCI", "BCI", "AACSB"] as const;
 const collegeNaacGrades = ["A++", "A+", "A", "B++", "B+"] as const;
 
 export default function AllColleges() {
   const [search, setSearch] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedApprovals, setSelectedApprovals] = useState<string[]>([]);
   const [selectedNaac, setSelectedNaac] = useState<string[]>([]);
+  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
+  const [selectedFeeRanges, setSelectedFeeRanges] = useState<string[]>([]);
+  const [selectedExams, setSelectedExams] = useState<string[]>([]);
   const { data: dbColleges } = useDbColleges();
   const { data: articles } = useDbArticles();
   const colleges = dbColleges ?? [];
 
-  const category = selectedCategories[0] || "";
+  const category = selectedStreams[0] || "";
   const { data: featuredSlugs } = useFeaturedColleges(category || undefined, selectedState || undefined);
 
-  const activeFilters = [...selectedCategories, ...selectedTypes, ...selectedApprovals, ...selectedNaac, ...(selectedState ? [selectedState] : []), ...(selectedCity ? [selectedCity] : [])];
+  const activeFilters = [
+    ...selectedStreams, ...selectedTypes, ...selectedApprovals,
+    ...selectedNaac, ...selectedCourseGroups, ...selectedFeeRanges,
+    ...selectedExams,
+    ...(selectedState ? [selectedState] : []),
+    ...(selectedCity ? [selectedCity] : []),
+  ];
 
   const cities = selectedState ? (citiesByState[selectedState] || []) : [];
 
   const filtered = useMemo(() => {
     const base = colleges.filter((c) => {
       const matchSearch = !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.location.toLowerCase().includes(search.toLowerCase()) || c.city.toLowerCase().includes(search.toLowerCase());
-      const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(c.category);
+      const matchStream = selectedStreams.length === 0 || selectedStreams.includes(c.category);
       const matchState = !selectedState || c.state === selectedState;
       const matchCity = !selectedCity || c.city === selectedCity;
       const matchType = selectedTypes.length === 0 || selectedTypes.includes(c.type);
       const matchApproval = selectedApprovals.length === 0 || selectedApprovals.some(a => c.approvals.includes(a));
       const matchNaac = selectedNaac.length === 0 || selectedNaac.includes(c.naac_grade);
-      return matchSearch && matchCategory && matchState && matchCity && matchType && matchApproval && matchNaac;
+      return matchSearch && matchStream && matchState && matchCity && matchType && matchApproval && matchNaac;
     });
 
     if (featuredSlugs && featuredSlugs.length > 0) {
@@ -62,56 +72,57 @@ export default function AllColleges() {
       ];
     }
     return base;
-  }, [search, selectedCategories, selectedState, selectedCity, selectedTypes, selectedApprovals, selectedNaac, featuredSlugs, colleges]);
+  }, [search, selectedStreams, selectedState, selectedCity, selectedTypes, selectedApprovals, selectedNaac, featuredSlugs, colleges]);
 
-  // Dynamic heading
   const heading = useMemo(() => {
     const parts: string[] = [];
-    if (selectedCategories.length === 1) parts.push(selectedCategories[0]);
+    if (selectedStreams.length === 1) parts.push(selectedStreams[0]);
     parts.push("Colleges");
     if (selectedCity) parts.push(`in ${selectedCity}`);
     else if (selectedState) parts.push(`in ${selectedState}`);
     else parts.push("in India");
     parts.push("2026");
     return `Top ${parts.join(" ")}`;
-  }, [selectedCategories, selectedState, selectedCity]);
+  }, [selectedStreams, selectedState, selectedCity]);
 
   const description = useMemo(() => {
     const count = filtered.length;
     const location = selectedCity || selectedState || "India";
-    const stream = selectedCategories.length === 1 ? selectedCategories[0] : "";
+    const stream = selectedStreams.length === 1 ? selectedStreams[0] : "";
     return `There are total ${count} ${stream} colleges in ${location}. Explore fees, placements, rankings & more.`;
-  }, [filtered.length, selectedCategories, selectedState, selectedCity]);
+  }, [filtered.length, selectedStreams, selectedState, selectedCity]);
 
-  // Related articles
   const relatedArticles = useMemo(() => {
     if (!articles) return [];
-    const cat = selectedCategories[0]?.toLowerCase() || "";
-    return articles.filter(a => 
-      a.vertical === "colleges" || 
+    const cat = selectedStreams[0]?.toLowerCase() || "";
+    return articles.filter(a =>
+      a.vertical === "colleges" ||
       (cat && a.category.toLowerCase().includes(cat))
     ).slice(0, 3);
-  }, [articles, selectedCategories]);
+  }, [articles, selectedStreams]);
 
-  const clearAll = () => { 
-    setSelectedCategories([]); setSelectedState(""); setSelectedCity(""); 
-    setSelectedTypes([]); setSelectedApprovals([]); setSelectedNaac([]); 
+  const clearAll = () => {
+    setSelectedStreams([]); setSelectedState(""); setSelectedCity("");
+    setSelectedTypes([]); setSelectedApprovals([]); setSelectedNaac([]);
+    setSelectedCourseGroups([]); setSelectedFeeRanges([]); setSelectedExams([]);
   };
 
   const removeFilter = (f: string) => {
-    setSelectedCategories(prev => prev.filter(x => x !== f));
+    setSelectedStreams(prev => prev.filter(x => x !== f));
     setSelectedTypes(prev => prev.filter(x => x !== f));
     setSelectedApprovals(prev => prev.filter(x => x !== f));
     setSelectedNaac(prev => prev.filter(x => x !== f));
+    setSelectedCourseGroups(prev => prev.filter(x => x !== f));
+    setSelectedFeeRanges(prev => prev.filter(x => x !== f));
+    setSelectedExams(prev => prev.filter(x => x !== f));
     if (f === selectedState) { setSelectedState(""); setSelectedCity(""); }
     if (f === selectedCity) setSelectedCity("");
   };
 
-  // Breadcrumb
   const breadcrumbItems = useMemo(() => {
     const items: { label: string; href?: string }[] = [];
-    if (selectedCategories.length === 1) {
-      items.push({ label: `${selectedCategories[0]} Colleges India`, href: "/colleges" });
+    if (selectedStreams.length === 1) {
+      items.push({ label: `${selectedStreams[0]} Colleges India`, href: "/colleges" });
     }
     if (selectedState) {
       items.push({ label: `Colleges in ${selectedState}` });
@@ -119,17 +130,16 @@ export default function AllColleges() {
       items.push({ label: "Colleges" });
     }
     return items;
-  }, [selectedCategories, selectedState]);
+  }, [selectedStreams, selectedState]);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="colleges" />
-      
+
       <main className="container py-4 md:py-6">
         <PageBreadcrumb items={breadcrumbItems} />
 
-        {/* Dynamic Title & Description */}
         <header className="mb-6">
           <h1 className="text-xl md:text-2xl font-bold text-primary mb-2">{heading}</h1>
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
@@ -140,13 +150,11 @@ export default function AllColleges() {
           <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
         </header>
 
-        {/* Search */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search colleges by name or city..." className="pl-10 rounded-xl h-11" />
         </div>
 
-        {/* Active filter pills */}
         {activeFilters.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {activeFilters.map(f => (
@@ -160,24 +168,31 @@ export default function AllColleges() {
         )}
 
         <div className="flex gap-6">
-          {/* Left Sidebar Filters - Desktop */}
           <aside className="hidden lg:block w-64 shrink-0">
             <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
-              <FilterSection title="Stream" items={collegeCategories as unknown as string[]} selected={selectedCategories} onChange={setSelectedCategories} />
-              <FilterSection title="State" items={indianStates} selected={selectedState ? [selectedState] : []} onChange={(v) => { setSelectedState(v[v.length - 1] || ""); setSelectedCity(""); }} singleSelect />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-bold text-foreground">Filter By</span>
+                {activeFilters.length > 0 && (
+                  <button onClick={clearAll} className="text-xs text-destructive hover:underline">Reset All</button>
+                )}
+              </div>
+              <FilterSection title="Streams" items={collegeStreams} selected={selectedStreams} onChange={setSelectedStreams} />
+              <FilterSection title="Course Groups" items={collegeCourseGroups} selected={selectedCourseGroups} onChange={setSelectedCourseGroups} />
+              <FilterSection title="States" items={indianStates} selected={selectedState ? [selectedState] : []} onChange={(v) => { setSelectedState(v[v.length - 1] || ""); setSelectedCity(""); }} singleSelect />
               {cities.length > 0 && (
-                <FilterSection title="City" items={cities} selected={selectedCity ? [selectedCity] : []} onChange={(v) => setSelectedCity(v[v.length - 1] || "")} singleSelect />
+                <FilterSection title="Cities" items={cities} selected={selectedCity ? [selectedCity] : []} onChange={(v) => setSelectedCity(v[v.length - 1] || "")} singleSelect />
               )}
-              <FilterSection title="College Type" items={collegeTypes as unknown as string[]} selected={selectedTypes} onChange={setSelectedTypes} />
+              <FilterSection title="Exams" items={collegeExams} selected={selectedExams} onChange={setSelectedExams} />
+              <FilterSection title="Institute Type" items={collegeTypes} selected={selectedTypes} onChange={setSelectedTypes} />
+              <FilterSection title="Total Fees" items={collegeFeeRanges} selected={selectedFeeRanges} onChange={setSelectedFeeRanges} />
               <FilterSection title="Approved By" items={collegeApprovals as unknown as string[]} selected={selectedApprovals} onChange={setSelectedApprovals} />
               <FilterSection title="NAAC Grade" items={collegeNaacGrades as unknown as string[]} selected={selectedNaac} onChange={setSelectedNaac} />
-              
+
               <LeadCaptureForm variant="sidebar" title="Need Help Choosing?" subtitle="Get free expert counseling" source="colleges_sidebar" />
               <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" />
             </div>
           </aside>
 
-          {/* Main Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm text-muted-foreground">
@@ -189,24 +204,19 @@ export default function AllColleges() {
               </div>
             </div>
 
-            {/* College List */}
             <div className="space-y-4">
               {filtered.slice(0, 6).map((college, i) => (
                 <CollegeListCard key={college.slug} college={college} index={i} />
               ))}
-
               {filtered.length > 6 && (
                 <DynamicAdBanner variant="leaderboard" position="inline" page="colleges" />
               )}
-
               {filtered.slice(6, 12).map((college, i) => (
                 <CollegeListCard key={college.slug} college={college} index={i + 6} />
               ))}
-
               {filtered.length > 12 && (
                 <LeadCaptureForm variant="inline" title="Get Free College Guidance" source="colleges_inline" />
               )}
-
               {filtered.slice(12).map((college, i) => (
                 <CollegeListCard key={college.slug} college={college} index={i + 12} />
               ))}
@@ -219,7 +229,6 @@ export default function AllColleges() {
               </div>
             )}
 
-            {/* Related Articles */}
             {relatedArticles.length > 0 && (
               <div className="mt-8">
                 <h2 className="text-lg font-bold text-foreground mb-4">Latest News & Articles</h2>
@@ -255,17 +264,13 @@ export default function AllColleges() {
   );
 }
 
-// CollegeDekho-style horizontal college card
 function CollegeListCard({ college, index }: { college: any; index: number }) {
   return (
     <article className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow">
       <div className="flex flex-col sm:flex-row">
-        {/* Image */}
         <div className="sm:w-52 shrink-0">
           <img src={college.image} alt={college.name} className="w-full h-40 sm:h-full object-cover" loading="lazy" />
         </div>
-
-        {/* Content */}
         <div className="flex-1 p-4">
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -286,8 +291,6 @@ function CollegeListCard({ college, index }: { college: any; index: number }) {
               <span className="text-xs text-muted-foreground">({college.reviews})</span>
             </div>
           </div>
-
-          {/* Stats Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
             <div>
               <p className="text-xs text-muted-foreground">Fees</p>
@@ -306,8 +309,6 @@ function CollegeListCard({ college, index }: { college: any; index: number }) {
               <p className="text-sm font-semibold text-foreground">{college.courses_count}+</p>
             </div>
           </div>
-
-          {/* Action Buttons */}
           <div className="flex items-center gap-2 mt-3">
             <Link to={`/colleges/${college.slug}`}>
               <Button variant="outline" size="sm" className="rounded-lg text-xs h-8">View Details</Button>
@@ -321,13 +322,17 @@ function CollegeListCard({ college, index }: { college: any; index: number }) {
   );
 }
 
-// Filter sidebar section with checkboxes
-function FilterSection({ title, items, selected, onChange, singleSelect }: { 
-  title: string; items: string[]; selected: string[]; onChange: (v: string[]) => void; singleSelect?: boolean 
+function FilterSection({ title, items, selected, onChange, singleSelect }: {
+  title: string; items: string[]; selected: string[]; onChange: (v: string[]) => void; singleSelect?: boolean
 }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [showAll, setShowAll] = useState(false);
-  const displayItems = showAll ? items : items.slice(0, 6);
+  const [filterSearch, setFilterSearch] = useState("");
+  
+  const filteredItems = filterSearch
+    ? items.filter(i => i.toLowerCase().includes(filterSearch.toLowerCase()))
+    : items;
+  const displayItems = showAll ? filteredItems : filteredItems.slice(0, 6);
 
   const toggle = (item: string) => {
     if (singleSelect) {
@@ -341,19 +346,30 @@ function FilterSection({ title, items, selected, onChange, singleSelect }: {
     <div className="bg-card rounded-xl border border-border p-3">
       <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-between w-full text-sm font-semibold text-foreground">
         {title}
-        {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        {selected.length > 0 && <Badge variant="secondary" className="text-[10px] ml-2 px-1.5">{selected.length}</Badge>}
+        <span className="ml-auto">{expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</span>
       </button>
       {expanded && (
-        <div className="mt-2 space-y-1.5">
-          {displayItems.map(item => (
-            <label key={item} className="flex items-center gap-2 text-sm text-foreground cursor-pointer hover:bg-muted rounded px-1 py-0.5">
-              <Checkbox checked={selected.includes(item)} onCheckedChange={() => toggle(item)} className="w-4 h-4" />
-              <span className="text-xs">{item}</span>
-            </label>
-          ))}
-          {items.length > 6 && (
+        <div className="mt-2">
+          {items.length > 10 && (
+            <Input
+              value={filterSearch}
+              onChange={e => setFilterSearch(e.target.value)}
+              placeholder={`Search ${title.toLowerCase()}...`}
+              className="h-8 text-xs mb-2 rounded-lg"
+            />
+          )}
+          <div className="space-y-1.5 max-h-48 overflow-y-auto">
+            {displayItems.map(item => (
+              <label key={item} className="flex items-center gap-2 text-sm text-foreground cursor-pointer hover:bg-muted rounded px-1 py-0.5">
+                <Checkbox checked={selected.includes(item)} onCheckedChange={() => toggle(item)} className="w-4 h-4" />
+                <span className="text-xs">{item}</span>
+              </label>
+            ))}
+          </div>
+          {filteredItems.length > 6 && !filterSearch && (
             <button onClick={() => setShowAll(!showAll)} className="text-xs text-primary hover:underline mt-1">
-              {showAll ? "Show less" : `+ ${items.length - 6} more`}
+              {showAll ? "Show less" : `+ ${filteredItems.length - 6} more`}
             </button>
           )}
         </div>
