@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
 import { Star, MapPin, Calendar, GraduationCap, TrendingUp, Building, CheckCircle, Briefcase, BookOpen, Image as ImageIcon, Users, Award, Scale, Newspaper, HelpCircle, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +40,12 @@ export default function CollegeDetail() {
   const { data: sameStateColleges } = useCollegesByState(college?.state, slug);
   const { data: similarColleges } = useCollegesByCategory(college?.category, slug);
   const { data: allCourses } = useDbCourses();
+
+  useSEO({
+    title: college ? (college.meta_title || `${college.name} - Admissions, Fees, Placements 2026`) : undefined,
+    description: college ? (college.meta_description || `${college.name} - admissions, fees, placements, courses, ranking details for 2026`) : undefined,
+    keywords: college?.meta_keywords || undefined,
+  });
 
   if (isLoading) {
     return (

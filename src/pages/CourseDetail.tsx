@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
 import { Clock, Building, TrendingUp, BookOpen, CheckCircle, Briefcase, FileText, IndianRupee, GraduationCap, Newspaper, Award, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +33,12 @@ const COURSE_SECTIONS: ScrollSection[] = [
 export default function CourseDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { data: course, isLoading } = useDbCourse(slug);
+
+  useSEO({
+    title: course ? (course.meta_title || `${course.name} Course - Fees, Colleges, Career 2026`) : undefined,
+    description: course ? (course.meta_description || `${course.name} course details - fees, top colleges, career scope for 2026`) : undefined,
+    keywords: course?.meta_keywords || undefined,
+  });
 
   if (isLoading) {
     return (

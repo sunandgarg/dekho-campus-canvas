@@ -1,162 +1,141 @@
 import { useState, useMemo } from "react";
-import { Search, SlidersHorizontal, BookOpen } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
-import { ListingPageLayout } from "@/components/ListingPageLayout";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { FloatingBot } from "@/components/FloatingBot";
+import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CourseCard } from "@/components/CourseCard";
 import { useDbCourses } from "@/hooks/useCoursesData";
 
-const courseCategories = ["All", "Engineering", "Medical", "Management", "Law", "Design", "Science", "Commerce", "Arts"] as const;
-const courseLevels = ["All", "Undergraduate", "Postgraduate", "Diploma", "Doctoral"] as const;
-const courseModes = ["All", "Full-Time", "Part-Time", "Online", "Distance"] as const;
-const courseDurations = ["All", "1-2 Years", "3 Years", "4 Years", "5+ Years"] as const;
+const courseCategories = ["Engineering", "Medical", "Management", "Law", "Design", "Science", "Commerce", "Arts"] as const;
+const courseLevels = ["Undergraduate", "Postgraduate", "Diploma", "Doctoral"] as const;
+const courseModes = ["Full-Time", "Part-Time", "Online", "Distance"] as const;
 
 export default function AllCourses() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [level, setLevel] = useState("All");
-  const [mode, setMode] = useState("All");
-  const [duration, setDuration] = useState("All");
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  const [selectedModes, setSelectedModes] = useState<string[]>([]);
   const { data: dbCourses } = useDbCourses();
   const courses = dbCourses ?? [];
 
-  const activeFilters = [category, level, mode, duration].filter((f) => f !== "All").length;
+  const activeFilters = [...selectedCategories, ...selectedLevels, ...selectedModes];
 
   const filtered = useMemo(() => {
     return courses.filter((c) => {
-      const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.full_name.toLowerCase().includes(search.toLowerCase());
-      const matchCategory = category === "All" || c.category === category;
-      const matchLevel = level === "All" || c.level === level;
-      const matchMode = mode === "All" || c.mode === mode;
-      const matchDuration = duration === "All" || matchesDuration(c.duration, duration);
-      return matchSearch && matchCategory && matchLevel && matchMode && matchDuration;
+      const matchSearch = !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.full_name.toLowerCase().includes(search.toLowerCase());
+      const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(c.category);
+      const matchLevel = selectedLevels.length === 0 || selectedLevels.includes(c.level);
+      const matchMode = selectedModes.length === 0 || selectedModes.includes(c.mode);
+      return matchSearch && matchCategory && matchLevel && matchMode;
     });
-  }, [search, category, level, mode, duration, courses]);
+  }, [search, selectedCategories, selectedLevels, selectedModes, courses]);
 
-  const clearAll = () => { setCategory("All"); setLevel("All"); setMode("All"); setDuration("All"); };
+  const heading = useMemo(() => {
+    const cat = selectedCategories.length === 1 ? selectedCategories[0] + " " : "";
+    const lvl = selectedLevels.length === 1 ? selectedLevels[0] + " " : "";
+    return `Top ${cat}${lvl}Courses in India 2026`;
+  }, [selectedCategories, selectedLevels]);
+
+  const clearAll = () => { setSelectedCategories([]); setSelectedLevels([]); setSelectedModes([]); };
+
+  const removeFilter = (f: string) => {
+    setSelectedCategories(prev => prev.filter(x => x !== f));
+    setSelectedLevels(prev => prev.filter(x => x !== f));
+    setSelectedModes(prev => prev.filter(x => x !== f));
+  };
 
   return (
-    <ListingPageLayout title="All Courses in India 2026" description="Explore 10,000+ courses — compare eligibility, fees, career prospects & top colleges" page="courses">
-      <PageBreadcrumb items={[{ label: "Courses" }]} />
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <DynamicAdBanner variant="leaderboard" position="leaderboard" page="courses" />
+      <main className="container py-4 md:py-6">
+        <PageBreadcrumb items={[{ label: "Courses" }]} />
+        <header className="mb-6">
+          <h1 className="text-xl md:text-2xl font-bold text-primary mb-2">{heading}</h1>
+          <p className="text-sm text-muted-foreground">Explore {filtered.length}+ courses — compare eligibility, fees, career prospects & top colleges</p>
+        </header>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
+        <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search courses (e.g. B.Tech CS, MBA, MBBS...)" className="pl-10 rounded-xl h-11" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search courses (e.g. B.Tech, MBA, MBBS...)" className="pl-10 rounded-xl h-11" />
         </div>
-        <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="rounded-xl gap-2 h-11">
-          <SlidersHorizontal className="w-4 h-4" />
-          Filters
-          {activeFilters > 0 && <Badge className="ml-1 bg-primary text-primary-foreground text-xs px-1.5">{activeFilters}</Badge>}
-        </Button>
-      </div>
 
-      {showFilters && (
-        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="bg-card rounded-2xl border border-border p-4 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-foreground">Filter Courses</h3>
+        {activeFilters.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {activeFilters.map(f => (
+              <Badge key={f} variant="secondary" className="gap-1 pr-1">{f}<button onClick={() => removeFilter(f)} className="ml-1"><X className="w-3 h-3" /></button></Badge>
+            ))}
             <button onClick={clearAll} className="text-xs text-primary hover:underline">Clear all</button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <FilterGroup label="Category" options={courseCategories} value={category} onChange={setCategory} />
-            <FilterGroup label="Level" options={courseLevels} value={level} onChange={setLevel} />
-            <FilterGroup label="Mode" options={courseModes} value={mode} onChange={setMode} />
-            <FilterGroup label="Duration" options={courseDurations} value={duration} onChange={setDuration} />
-          </div>
-        </motion.div>
-      )}
+        )}
 
-      <p className="text-sm text-muted-foreground mb-4">
-        Showing <span className="font-semibold text-foreground">{filtered.length}</span> courses
-      </p>
+        <div className="flex gap-6">
+          <aside className="hidden lg:block w-64 shrink-0">
+            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              <FilterSection title="Stream" items={courseCategories as unknown as string[]} selected={selectedCategories} onChange={setSelectedCategories} />
+              <FilterSection title="Level" items={courseLevels as unknown as string[]} selected={selectedLevels} onChange={setSelectedLevels} />
+              <FilterSection title="Mode" items={courseModes as unknown as string[]} selected={selectedModes} onChange={setSelectedModes} />
+              <LeadCaptureForm variant="sidebar" title="Confused About Courses?" subtitle="Get free career counseling" source="courses_sidebar" />
+              <DynamicAdBanner variant="vertical" position="sidebar" page="courses" />
+            </div>
+          </aside>
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3">
-          <div className="space-y-4">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm text-muted-foreground mb-4">Showing <span className="font-semibold text-foreground">{filtered.length}</span> courses</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filtered.slice(0, 6).map((course, i) => (
+              {filtered.map((course, i) => (
                 <CourseCard key={course.slug} course={course} index={i} />
               ))}
             </div>
-
-            {filtered.length > 6 && (
-              <DynamicAdBanner variant="leaderboard" position="inline" page="courses" />
-            )}
-
-            {filtered.length > 6 && (
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                {filtered.slice(6, 12).map((course, i) => (
-                  <CourseCard key={course.slug} course={course} index={i + 6} />
-                ))}
+            {filtered.length === 0 && (
+              <div className="text-center py-12 bg-card rounded-2xl border border-border">
+                <h3 className="font-semibold text-foreground mb-1">No courses found</h3>
+                <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
               </div>
             )}
-
-            {filtered.length > 12 && (
-              <LeadCaptureForm variant="inline" title="Need Course Guidance?" source="courses_inline" />
-            )}
-
-            {filtered.length > 12 && (
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                {filtered.slice(12).map((course, i) => (
-                  <CourseCard key={course.slug} course={course} index={i + 12} />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {filtered.length === 0 && (
-            <div className="text-center py-12 bg-card rounded-2xl border border-border">
-              <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-              <h3 className="font-semibold text-foreground mb-1">No courses found</h3>
-              <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
+            <div className="mt-8">
+              <LeadCaptureForm variant="banner" title="📚 Not sure which course is right? Talk to an expert!" subtitle="Our counselors analyze your interests, scores & goals" source="courses_bottom_banner" />
             </div>
-          )}
-
-          <div className="mt-6"><DynamicAdBanner variant="horizontal" position="mid-page" page="courses" /></div>
-        </div>
-
-        <aside className="hidden lg:block">
-          <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
-            <LeadCaptureForm variant="sidebar" title="Confused About Courses?" subtitle="Get free career counseling from our experts" source="courses_listing" />
-            <DynamicAdBanner variant="vertical" position="sidebar" page="courses" />
-            <LeadCaptureForm variant="card" title="Get Course Alerts" subtitle="Stay updated on admission deadlines" source="courses_sidebar_card" />
-            <DynamicAdBanner variant="square" position="sidebar" page="courses" />
           </div>
-        </aside>
-      </div>
-
-      <div className="mt-10">
-        <LeadCaptureForm variant="banner" title="📚 Not sure which course is right? Talk to an expert!" subtitle="Our counselors analyze your interests, scores & goals" source="courses_bottom_banner" />
-      </div>
-    </ListingPageLayout>
+        </div>
+      </main>
+      <Footer />
+      <FloatingBot />
+      <FixedCounsellingCTA />
+    </div>
   );
 }
 
-function matchesDuration(dur: string, filter: string): boolean {
-  if (filter === "1-2 Years") return dur.includes("1") || dur.includes("2");
-  if (filter === "3 Years") return dur === "3 Years";
-  if (filter === "4 Years") return dur === "4 Years";
-  if (filter === "5+ Years") return parseFloat(dur) >= 5;
-  return true;
-}
+function FilterSection({ title, items, selected, onChange }: { title: string; items: string[]; selected: string[]; onChange: (v: string[]) => void }) {
+  const [expanded, setExpanded] = useState(true);
 
-function FilterGroup({ label, options, value, onChange }: { label: string; options: readonly string[]; value: string; onChange: (v: string) => void }) {
+  const toggle = (item: string) => {
+    onChange(selected.includes(item) ? selected.filter(x => x !== item) : [...selected, item]);
+  };
+
   return (
-    <div>
-      <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{label}</label>
-      <div className="flex flex-wrap gap-1.5">
-        {options.map((o) => (
-          <button key={o} onClick={() => onChange(o)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${value === o ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>
-            {o}
-          </button>
-        ))}
-      </div>
+    <div className="bg-card rounded-xl border border-border p-3">
+      <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-between w-full text-sm font-semibold text-foreground">
+        {title}
+        {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      </button>
+      {expanded && (
+        <div className="mt-2 space-y-1.5">
+          {items.map(item => (
+            <label key={item} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted rounded px-1 py-0.5">
+              <Checkbox checked={selected.includes(item)} onCheckedChange={() => toggle(item)} className="w-4 h-4" />
+              <span className="text-xs">{item}</span>
+            </label>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
 import { Calendar, Users, FileText, Award, Building, BookOpen, CheckCircle, Clock, Newspaper, CreditCard, MapPin, ClipboardList } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +36,12 @@ const EXAM_SECTIONS: ScrollSection[] = [
 export default function ExamDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { data: exam, isLoading } = useDbExam(slug);
+
+  useSEO({
+    title: exam ? (exam.meta_title || `${exam.name} 2026 - Dates, Syllabus, Preparation`) : undefined,
+    description: exam ? (exam.meta_description || `${exam.name} 2026 exam dates, syllabus, preparation tips, cutoff`) : undefined,
+    keywords: exam?.meta_keywords || undefined,
+  });
 
   if (isLoading) {
     return (
