@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,8 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ExamCard } from "@/components/ExamCard";
+import { InlineAdSlot } from "@/components/InlineAdSlot";
+import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { useDbExams } from "@/hooks/useExamsData";
 import {
   examCategories, examStreams, examCourseGroups, examLevels,
@@ -55,26 +57,39 @@ export default function AllExams() {
     setSelectedLevels(prev => prev.filter(x => x !== f));
   };
 
+  const filterConfigs = [
+    { title: "Category of Exams", items: examCategories, selected: selectedCategories, onChange: setSelectedCategories },
+    { title: "Streams of Exams", items: examStreams, selected: selectedStreams, onChange: setSelectedStreams },
+    { title: "Course Groups", items: examCourseGroups, selected: selectedCourseGroups, onChange: setSelectedCourseGroups },
+    { title: "Level of Exams", items: examLevels, selected: selectedLevels, onChange: setSelectedLevels },
+  ];
+
+  // Chunk filtered items into groups of 4 for inserting ads
+  const ITEMS_PER_AD = 4;
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="exams" />
-      <main className="container py-4 md:py-6">
+      <main className="px-3 md:container py-4 md:py-6">
         <PageBreadcrumb items={[{ label: "Exams" }]} />
-        <header className="mb-6">
-          <h1 className="text-xl md:text-2xl font-bold text-primary mb-2">{heading}</h1>
+        <header className="mb-4">
+          <h1 className="text-xl md:text-2xl font-bold text-primary mb-1">{heading}</h1>
           <p className="text-sm text-muted-foreground">Complete guide to {filtered.length}+ entrance exams — dates, eligibility, syllabus & preparation tips</p>
         </header>
 
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search exams (e.g. JEE, NEET, CAT...)" className="pl-10 rounded-xl h-11" />
+        <div className="flex items-center gap-2 mb-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search exams (e.g. JEE, NEET, CAT...)" className="pl-10 rounded-xl h-10" />
+          </div>
+          <MobileFilterSheet filters={filterConfigs} activeCount={activeFilters.length} onClearAll={clearAll} />
         </div>
 
         {activeFilters.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-1.5 mb-4">
             {activeFilters.map(f => (
-              <Badge key={f} variant="secondary" className="gap-1 pr-1">{f}<button onClick={() => removeFilter(f)} className="ml-1"><X className="w-3 h-3" /></button></Badge>
+              <Badge key={f} variant="secondary" className="gap-1 pr-1 text-xs">{f}<button onClick={() => removeFilter(f)} className="ml-1"><X className="w-3 h-3" /></button></Badge>
             ))}
             <button onClick={clearAll} className="text-xs text-primary hover:underline">Clear all</button>
           </div>
@@ -82,27 +97,31 @@ export default function AllExams() {
 
         <div className="flex gap-6">
           <aside className="hidden lg:block w-64 shrink-0">
-            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+            <div className="sticky top-20 space-y-3 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-foreground">Filter By</span>
                 {activeFilters.length > 0 && (
                   <button onClick={clearAll} className="text-xs text-destructive hover:underline">Reset</button>
                 )}
               </div>
-              <FilterSection title="Category of Exams" items={examCategories} selected={selectedCategories} onChange={setSelectedCategories} />
-              <FilterSection title="Streams of Exams" items={examStreams} selected={selectedStreams} onChange={setSelectedStreams} />
-              <FilterSection title="Course Groups" items={examCourseGroups} selected={selectedCourseGroups} onChange={setSelectedCourseGroups} />
-              <FilterSection title="Level of Exams" items={examLevels} selected={selectedLevels} onChange={setSelectedLevels} />
+              {filterConfigs.map((fc) => (
+                <FilterSection key={fc.title} {...fc} />
+              ))}
               <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy" source="exams_sidebar" />
               <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
             </div>
           </aside>
 
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-muted-foreground mb-4">Showing <span className="font-semibold text-foreground">{filtered.length}</span> exams</p>
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> exams</p>
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {filtered.map((exam, i) => (
-                <ExamCard key={exam.slug} exam={exam} index={i} />
+                <Fragment key={exam.slug}>
+                  <ExamCard exam={exam} index={i} />
+                  {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
+                    <InlineAdSlot page="exams" index={Math.floor(i / ITEMS_PER_AD)} source={`exams_inline_${i}`} />
+                  )}
+                </Fragment>
               ))}
             </div>
             {filtered.length === 0 && (
@@ -111,7 +130,7 @@ export default function AllExams() {
                 <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
               </div>
             )}
-            <div className="mt-8">
+            <div className="mt-6">
               <LeadCaptureForm variant="banner" title="📝 Need help preparing? Get expert guidance for free!" subtitle="Our counselors help you plan the perfect exam strategy" source="exams_bottom_banner" />
             </div>
           </div>
@@ -126,6 +145,8 @@ export default function AllExams() {
 
 function FilterSection({ title, items, selected, onChange }: { title: string; items: string[]; selected: string[]; onChange: (v: string[]) => void }) {
   const [expanded, setExpanded] = useState(true);
+  const [showAll, setShowAll] = useState(false);
+  const displayItems = showAll ? items : items.slice(0, 4);
 
   const toggle = (item: string) => {
     onChange(selected.includes(item) ? selected.filter(x => x !== item) : [...selected, item]);
@@ -140,12 +161,17 @@ function FilterSection({ title, items, selected, onChange }: { title: string; it
       </button>
       {expanded && (
         <div className="mt-2 space-y-1.5">
-          {items.map(item => (
+          {displayItems.map(item => (
             <label key={item} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted rounded px-1 py-0.5">
               <Checkbox checked={selected.includes(item)} onCheckedChange={() => toggle(item)} className="w-4 h-4" />
               <span className="text-xs">{item}</span>
             </label>
           ))}
+          {items.length > 4 && (
+            <button onClick={() => setShowAll(!showAll)} className="text-xs text-primary hover:underline mt-1">
+              {showAll ? "Show less" : `+ ${items.length - 4} more`}
+            </button>
+          )}
         </div>
       )}
     </div>

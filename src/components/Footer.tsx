@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { Link } from "react-router-dom";
+import logo from "@/assets/dekhocampus-logo.png";
 
 const footerLinks = {
   explore: [
@@ -46,7 +47,7 @@ export function Footer() {
     <footer className="bg-foreground text-background" role="contentinfo">
       {/* Lead Capture Section */}
       <div className="border-b border-background/10">
-        <div className="container py-12">
+        <div className="px-3 md:container py-8 md:py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -64,17 +65,14 @@ export function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="container py-16">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+      <div className="px-4 md:container py-10 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
           {/* Brand */}
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <span className="text-2xl font-bold text-background">DekhoCampus</span>
+              <img src={logo} alt="DekhoCampus" className="h-8 md:h-10" />
             </Link>
-            <p className="text-background/70 mb-6 max-w-xs">
+            <p className="text-background/70 text-sm mb-6 max-w-xs">
               India's #1 AI-powered education platform helping students find their perfect career path.
             </p>
             <div className="space-y-3 text-sm text-background/70">
@@ -95,24 +93,19 @@ export function Footer() {
 
           {/* Links */}
           <nav aria-label="Explore">
-            <h4 className="font-bold text-background mb-4">Explore</h4>
-            <ul className="space-y-3">
+            <h4 className="font-bold text-background mb-4 text-sm">Explore</h4>
+            <ul className="space-y-2.5">
               {footerLinks.explore.map((link) => (
                 <li key={link.label}>
-                  <Link
-                    to={link.href}
-                    className="text-background/70 hover:text-accent transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
+                  <Link to={link.href} className="text-background/70 hover:text-accent transition-colors text-sm">{link.label}</Link>
                 </li>
               ))}
             </ul>
           </nav>
 
           <nav aria-label="Resources">
-            <h4 className="font-bold text-background mb-4">Resources</h4>
-            <ul className="space-y-3">
+            <h4 className="font-bold text-background mb-4 text-sm">Resources</h4>
+            <ul className="space-y-2.5">
               {footerLinks.resources.map((link) => (
                 <li key={link.label}>
                   <Link to={link.href} className="text-background/70 hover:text-accent transition-colors text-sm">{link.label}</Link>
@@ -122,8 +115,8 @@ export function Footer() {
           </nav>
 
           <nav aria-label="Company">
-            <h4 className="font-bold text-background mb-4">Company</h4>
-            <ul className="space-y-3">
+            <h4 className="font-bold text-background mb-4 text-sm">Company</h4>
+            <ul className="space-y-2.5">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
                   <Link to={link.href} className="text-background/70 hover:text-accent transition-colors text-sm">{link.label}</Link>
@@ -133,8 +126,8 @@ export function Footer() {
           </nav>
 
           <nav aria-label="Legal">
-            <h4 className="font-bold text-background mb-4">Legal</h4>
-            <ul className="space-y-3">
+            <h4 className="font-bold text-background mb-4 text-sm">Legal</h4>
+            <ul className="space-y-2.5">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
                   <Link to={link.href} className="text-background/70 hover:text-accent transition-colors text-sm">{link.label}</Link>
@@ -147,19 +140,19 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-background/10">
-        <div className="container py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-background/70">
+        <div className="px-4 md:container py-4 md:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs md:text-sm text-background/70">
             © 2026 DekhoCampus. Made with ❤️ for students in India
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             {socialLinks.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
-                className="w-10 h-10 rounded-xl bg-background/10 flex items-center justify-center hover:bg-accent hover:text-foreground transition-colors"
+                className="w-9 h-9 rounded-lg bg-background/10 flex items-center justify-center hover:bg-accent hover:text-foreground transition-colors"
                 aria-label={social.label}
               >
-                <social.icon className="w-5 h-5" />
+                <social.icon className="w-4 h-4" />
               </a>
             ))}
           </div>
