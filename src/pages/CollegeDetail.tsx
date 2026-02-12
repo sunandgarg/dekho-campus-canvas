@@ -15,6 +15,8 @@ import { FAQSection } from "@/components/FAQSection";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { useDbCollege, useCollegesByState, useCollegesByCategory } from "@/hooks/useCollegesData";
 import { useDbCourses } from "@/hooks/useCoursesData";
+import { WhatsNewSection } from "@/components/WhatsNewSection";
+import { UsefulLinks } from "@/components/UsefulLinks";
 
 const COLLEGE_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "College Info" },
@@ -127,6 +129,13 @@ export default function CollegeDetail() {
         <ScrollSpy sections={COLLEGE_SECTIONS} baseUrl={`/colleges/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
 
         <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <WhatsNewSection entityName={college.short_name || college.name} entityType="college" category={college.category} />
+          </div>
+          <div className="hidden lg:block" /> {/* spacer for grid alignment */}
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-6 mt-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -483,6 +492,19 @@ export default function CollegeDetail() {
             </section>
 
             <LeadCaptureForm variant="inline" title={`Get admission details for ${college.name}`} source={`college_detail_${college.slug}`} interestedCollegeSlug={college.slug} />
+
+            {/* Useful Links */}
+            <UsefulLinks
+              type="college"
+              name={college.name}
+              shortName={college.short_name}
+              slug={college.slug}
+              state={college.state}
+              city={college.city}
+              category={college.category}
+              sections={COLLEGE_SECTIONS}
+              topCourses={popularCourses.map((c) => ({ name: c.name, slug: c.slug }))}
+            />
           </div>
 
           {/* Sidebar */}

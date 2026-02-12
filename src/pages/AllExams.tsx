@@ -1,4 +1,4 @@
-import { useState, useMemo, Fragment } from "react";
+import { useState, useMemo, Fragment, useEffect } from "react";
 import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -14,18 +14,32 @@ import { ExamCard } from "@/components/ExamCard";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { useDbExams } from "@/hooks/useExamsData";
+import { useSearchParams } from "react-router-dom";
 import {
   examCategories, examStreams, examCourseGroups, examLevels,
 } from "@/data/indianLocations";
 
 export default function AllExams() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() => {
+    const c = searchParams.get("category"); return c ? [c] : [];
+  });
+  const [selectedStreams, setSelectedStreams] = useState<string[]>(() => {
+    const s = searchParams.get("stream"); return s ? [s] : [];
+  });
   const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const { data: dbExams } = useDbExams();
   const exams = dbExams ?? [];
+
+  // Sync filters to URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
+    if (selectedCategories.length === 1) params.set("category", selectedCategories[0]);
+    setSearchParams(params, { replace: true });
+  }, [selectedStreams, selectedCategories, setSearchParams]);
 
   const activeFilters = [...selectedCategories, ...selectedStreams, ...selectedCourseGroups, ...selectedLevels];
 

@@ -1,4 +1,4 @@
-import { useState, useMemo, Fragment } from "react";
+import { useState, useMemo, Fragment, useEffect } from "react";
 import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -14,20 +14,34 @@ import { CourseCard } from "@/components/CourseCard";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { useDbCourses } from "@/hooks/useCoursesData";
+import { useSearchParams } from "react-router-dom";
 import {
   courseStreams, courseCourseGroups, courseSpecializations,
   courseModes, courseDurations,
 } from "@/data/indianLocations";
 
 export default function AllCourses() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
-  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
+  const [selectedStreams, setSelectedStreams] = useState<string[]>(() => {
+    const s = searchParams.get("stream"); return s ? [s] : [];
+  });
+  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>(() => {
+    const g = searchParams.get("group"); return g ? [g] : [];
+  });
   const [selectedSpecializations, setSelectedSpecializations] = useState<string[]>([]);
   const [selectedModes, setSelectedModes] = useState<string[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
   const { data: dbCourses } = useDbCourses();
   const courses = dbCourses ?? [];
+
+  // Sync filters to URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
+    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
+    setSearchParams(params, { replace: true });
+  }, [selectedStreams, selectedCourseGroups, setSearchParams]);
 
   const activeFilters = [
     ...selectedStreams, ...selectedCourseGroups, ...selectedSpecializations,

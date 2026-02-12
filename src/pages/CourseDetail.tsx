@@ -14,6 +14,8 @@ import { ScrollSpy, type ScrollSection } from "@/components/ScrollSpy";
 import { FAQSection } from "@/components/FAQSection";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { useDbCourse } from "@/hooks/useCoursesData";
+import { WhatsNewSection } from "@/components/WhatsNewSection";
+import { UsefulLinks } from "@/components/UsefulLinks";
 
 const COURSE_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
@@ -96,6 +98,13 @@ export default function CourseDetail() {
         <ScrollSpy sections={COURSE_SECTIONS} baseUrl={`/courses/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
 
         <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <WhatsNewSection entityName={course.name} entityType="course" category={course.category} />
+          </div>
+          <div className="hidden lg:block" />
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-6 mt-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -372,6 +381,16 @@ export default function CourseDetail() {
             </section>
 
             <LeadCaptureForm variant="inline" title={`Get admission details for ${course.name}`} source={`course_detail_${course.slug}`} interestedCourseSlug={course.slug} />
+
+            {/* Useful Links */}
+            <UsefulLinks
+              type="course"
+              name={course.name}
+              shortName={course.name}
+              slug={course.slug}
+              category={course.category}
+              sections={COURSE_SECTIONS}
+            />
           </div>
 
           <aside className="hidden lg:block">

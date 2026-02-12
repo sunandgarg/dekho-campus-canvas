@@ -6,10 +6,24 @@ import { Badge } from "@/components/ui/badge";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { useDbColleges } from "@/hooks/useCollegesData";
+import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
+import { useMemo } from "react";
 
 export function FeaturedColleges() {
   const { data: dbColleges } = useDbColleges();
-  const topColleges = (dbColleges ?? []).slice(0, 6);
+  const { data: featuredSlugs } = useFeaturedColleges();
+
+  const topColleges = useMemo(() => {
+    const allColleges = dbColleges ?? [];
+    const slugs = featuredSlugs ?? [];
+    if (slugs.length > 0) {
+      const slugSet = new Set(slugs);
+      const featured = allColleges.filter((c) => slugSet.has(c.slug));
+      return featured.slice(0, 6);
+    }
+    // Fallback: show top rated
+    return allColleges.slice(0, 6);
+  }, [dbColleges, featuredSlugs]);
 
   return (
     <section className="py-10 md:py-16 bg-background" aria-labelledby="featured-heading">
