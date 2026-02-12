@@ -4,6 +4,7 @@ import { Send, User, Mail, Phone, MapPin, GraduationCap, Loader2, CheckCircle, B
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import logo from "@/assets/dekhocampus-logo.png";
 
 interface LeadCaptureFormProps {
   variant?: "inline" | "card" | "banner" | "sidebar";
@@ -114,6 +115,10 @@ export function LeadCaptureForm({
 
   const selectCls = "w-full px-3 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none";
 
+  const LogoBadge = () => (
+    <img src={logo} alt="DekhoCampus" className="h-5 opacity-70" />
+  );
+
   // Card variant
   if (variant === "card") {
     return (
@@ -123,14 +128,17 @@ export function LeadCaptureForm({
         viewport={{ once: true }}
         className="bg-card rounded-2xl border border-border p-5 shadow-soft"
       >
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-            <GraduationCap className="w-5 h-5 text-accent" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-foreground">{title}</h3>
+              <p className="text-xs text-muted-foreground">{subtitle}</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-sm font-bold text-foreground">{title}</h3>
-            <p className="text-xs text-muted-foreground">{subtitle}</p>
-          </div>
+          <LogoBadge />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-2.5">
@@ -190,11 +198,11 @@ export function LeadCaptureForm({
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="bg-primary rounded-2xl p-5 md:p-8"
+        className="bg-primary rounded-2xl p-4 md:p-8"
       >
         <div className="flex flex-col lg:flex-row items-center gap-4 md:gap-6">
           <div className="flex-1 text-center lg:text-left">
-            <h3 className="text-xl md:text-2xl font-bold text-primary-foreground mb-1">{title}</h3>
+            <h3 className="text-lg md:text-2xl font-bold text-primary-foreground mb-1">{title}</h3>
             <p className="text-primary-foreground/90 text-sm">{subtitle}</p>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
@@ -222,12 +230,17 @@ export function LeadCaptureForm({
         viewport={{ once: true }}
         className="bg-card rounded-2xl border border-border p-4"
       >
-        <div className="text-center mb-3">
-          <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-2">
-            <GraduationCap className="w-5 h-5 text-accent" />
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-center flex-1">
+            <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-2">
+              <GraduationCap className="w-5 h-5 text-accent" />
+            </div>
+            <h4 className="font-bold text-foreground text-sm">{title}</h4>
+            <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
           </div>
-          <h4 className="font-bold text-foreground text-sm">{title}</h4>
-          <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+        </div>
+        <div className="flex justify-center mb-2">
+          <LogoBadge />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-2">
@@ -256,7 +269,10 @@ export function LeadCaptureForm({
   // Inline variant
   return (
     <div className="bg-muted/50 rounded-xl p-4">
-      <p className="text-sm font-medium text-foreground mb-3">{title}</p>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-sm font-medium text-foreground">{title}</p>
+        <LogoBadge />
+      </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
         <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Name *" className="rounded-lg text-sm h-10" required />
         <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Phone *" type="tel" className="rounded-lg text-sm h-10" required />
