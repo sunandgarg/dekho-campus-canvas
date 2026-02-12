@@ -1,15 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Bot, User, Loader2, Sparkles, ArrowLeft, MessageCircle } from "lucide-react";
+import { X, Send, Bot, User, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+type Message = { role: "user" | "assistant"; content: string };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-counselor`;
 
@@ -18,29 +15,28 @@ interface AIChatFullScreenProps {
   onClose: () => void;
   initialMessage?: string;
   leadData?: { name: string; course: string; state: string; city: string };
+  onRequestLeadForm?: () => void;
 }
 
-export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: AIChatFullScreenProps) {
+export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData, onRequestLeadForm }: AIChatFullScreenProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hasCollectedLead, setHasCollectedLead] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const hasInit = useRef(false);
 
-  // Build dynamic suggested queries based on lead data
   const suggestedQueries = (() => {
     const queries: string[] = [];
     const state = leadData?.state || "India";
     const course = leadData?.course || "";
-
     queries.push(`Top 5 colleges in ${state}`);
     if (course) queries.push(`Best colleges for ${course}`);
     queries.push("Career options after Science");
-    queries.push("Career options after Commerce");
     queries.push("Which entrance exams should I prepare for?");
     queries.push("How to get scholarships?");
-    return queries.slice(0, 6);
+    return queries.slice(0, 5);
   })();
 
   useEffect(() => {
@@ -54,13 +50,11 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
   useEffect(() => {
     if (isOpen && !hasInit.current) {
       hasInit.current = true;
-      // Greet with context
+      setHasCollectedLead(!!leadData?.name);
       const greeting = leadData?.name
         ? `Hi **${leadData.name}**! 👋 I have your details — ${leadData.course || "your course"} interest from ${leadData.city || leadData.state || "India"}. How can I help you today?`
-        : "Hi! 👋 I'm your **DekhoCampus AI Counselor**. Ask me about colleges, courses, exams, or career paths!";
+        : "Hi! 👋 I'm your **DekhoCampus Counselor**. Ask me about colleges, courses, exams, or career paths!";
       setMessages([{ role: "assistant", content: greeting }]);
-
-      // Don't auto-send initial message; just show greeting and let user type
     }
   }, [isOpen]);
 
@@ -68,16 +62,25 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
     if (!isOpen) hasInit.current = false;
   }, [isOpen]);
 
-  const streamChat = async (userMessage: string, prevMessages?: Message[]) => {
+  const streamChat = useCallback(async (userMessage: string) => {
     const userMsg: Message = { role: "user", content: userMessage };
-    const history = prevMessages || messages;
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
     setInput("");
 
-    let assistantContent = "";
+    // If lead not collected yet, trigger lead form on first user message
+    if (!hasCollectedLead && onRequestLeadForm) {
+      setMessages((prev) => [...prev, {
+        role: "assistant",
+        content: "Great question! 🎯 To give you the **most accurate and personalized** recommendations, I need a few quick details. This helps me understand your background better.\n\nPlease fill in the short form that just appeared — it takes less than 30 seconds! 📝"
+      }]);
+      setIsLoading(false);
+      onRequestLeadForm();
+      setHasCollectedLead(true);
+      return;
+    }
 
-    // Build context string for AI
+    let assistantContent = "";
     const contextPrefix = leadData
       ? `[Student: ${leadData.name}, Course: ${leadData.course || "Not specified"}, State: ${leadData.state || "Not specified"}, City: ${leadData.city || "Not specified"}] `
       : "";
@@ -91,7 +94,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
         },
         body: JSON.stringify({
           messages: [
-            ...history.map(m => ({ role: m.role, content: m.content })),
+            ...messages.map(m => ({ role: m.role, content: m.content })),
             { role: "user", content: contextPrefix + userMessage },
           ],
         }),
@@ -99,7 +102,6 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
 
       if (!resp.ok) {
         if (resp.status === 429) toast.error("Too many requests. Please wait.");
-        else if (resp.status === 402) toast.error("AI service temporarily unavailable.");
         else toast.error("Failed to get response.");
         setIsLoading(false);
         return;
@@ -137,9 +139,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
                 return updated;
               });
             }
-          } catch {
-            // Skip malformed SSE chunks gracefully
-          }
+          } catch { /* skip */ }
         }
       }
     } catch (error) {
@@ -148,7 +148,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [messages, leadData, hasCollectedLead, onRequestLeadForm]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,15 +156,9 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
     streamChat(input.trim());
   };
 
-  const handleSuggestion = (q: string) => {
-    if (isLoading) return;
-    streamChat(q);
-  };
-
   const handleNewChat = () => {
     setMessages([]);
     hasInit.current = false;
-    // Re-trigger init
     const greeting = leadData?.name
       ? `Hi **${leadData.name}**! 👋 How can I help you today?`
       : "Hi! 👋 Ask me anything about education!";
@@ -182,16 +176,16 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
         >
           <div className="h-full flex flex-col">
             {/* Header */}
-            <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border bg-card">
+            <header className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
               <div className="flex items-center gap-3">
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-xl">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
-                <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
                   <Bot className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <h1 className="font-bold text-foreground text-sm">DekhoCampus AI</h1>
+                  <h1 className="font-bold text-foreground text-sm">DekhoCampus Counselor</h1>
                   <p className="text-xs text-muted-foreground">Your education guide</p>
                 </div>
               </div>
@@ -205,7 +199,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
               <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
                 {messages.map((msg, i) => (
                   <div key={i} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${msg.role === "user" ? "gradient-accent" : "bg-secondary"}`}>
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${msg.role === "user" ? "bg-accent" : "bg-secondary"}`}>
                       {msg.role === "user" ? <User className="w-4 h-4 text-accent-foreground" /> : <Bot className="w-4 h-4 text-secondary-foreground" />}
                     </div>
                     <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm ${msg.role === "user" ? "user-bubble rounded-br-md" : "ai-bubble rounded-bl-md"}`}>
@@ -231,7 +225,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
                   </div>
                 )}
 
-                {/* Suggested queries after greeting */}
+                {/* Suggested queries */}
                 {messages.length <= 2 && !isLoading && (
                   <div className="pt-2">
                     <p className="text-xs font-medium text-muted-foreground mb-2">Quick questions:</p>
@@ -239,7 +233,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
                       {suggestedQueries.map((q) => (
                         <button
                           key={q}
-                          onClick={() => handleSuggestion(q)}
+                          onClick={() => streamChat(q)}
                           className="px-3 py-1.5 text-xs bg-secondary hover:bg-secondary/80 rounded-full text-foreground border border-border transition-colors"
                         >
                           {q}
@@ -262,7 +256,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData }: 
                   className="flex-1 rounded-xl text-sm py-5"
                   disabled={isLoading}
                 />
-                <Button type="submit" className="rounded-xl gradient-primary px-5" disabled={isLoading || !input.trim()}>
+                <Button type="submit" className="rounded-xl bg-primary px-5" disabled={isLoading || !input.trim()}>
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </Button>
               </form>
