@@ -133,10 +133,10 @@ export default function AdminFeatured() {
 
             <div>
               <Label className="text-xs">Category (optional)</Label>
-              <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
+              <Select value={form.category || "__any__"} onValueChange={(v) => setForm({ ...form, category: v === "__any__" ? "" : v })}>
                 <SelectTrigger className="rounded-xl mt-1"><SelectValue placeholder="Any category" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any</SelectItem>
+                  <SelectItem value="__any__">Any</SelectItem>
                   {categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
               </Select>
@@ -144,10 +144,10 @@ export default function AdminFeatured() {
 
             <div>
               <Label className="text-xs">State (optional)</Label>
-              <Select value={form.state} onValueChange={(v) => setForm({ ...form, state: v })}>
+              <Select value={form.state || "__any__"} onValueChange={(v) => setForm({ ...form, state: v === "__any__" ? "" : v })}>
                 <SelectTrigger className="rounded-xl mt-1"><SelectValue placeholder="Any state" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any</SelectItem>
+                  <SelectItem value="__any__">Any</SelectItem>
                   {states.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                 </SelectContent>
               </Select>

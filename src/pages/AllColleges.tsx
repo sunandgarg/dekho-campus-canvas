@@ -1,4 +1,4 @@
-import { useState, useMemo, Fragment } from "react";
+import { useState, useMemo, Fragment, useEffect } from "react";
 import { Search, MapPin, Star, Building, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,16 +21,19 @@ import {
   indianStates, citiesByState, collegeStreams, collegeTypes,
   collegeFeeRanges, collegeCourseGroups, collegeExams,
 } from "@/data/indianLocations";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const collegeApprovals = ["AICTE", "UGC", "NAAC", "MCI", "BCI", "AACSB"] as const;
 const collegeNaacGrades = ["A++", "A+", "A", "B++", "B+"] as const;
 
 export default function AllColleges() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedStreams, setSelectedStreams] = useState<string[]>(() => {
+    const s = searchParams.get("stream"); return s ? [s] : [];
+  });
+  const [selectedState, setSelectedState] = useState(() => searchParams.get("state") || "");
+  const [selectedCity, setSelectedCity] = useState(() => searchParams.get("city") || "");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedApprovals, setSelectedApprovals] = useState<string[]>([]);
   const [selectedNaac, setSelectedNaac] = useState<string[]>([]);
@@ -43,6 +46,15 @@ export default function AllColleges() {
 
   const category = selectedStreams[0] || "";
   const { data: featuredSlugs } = useFeaturedColleges(category || undefined, selectedState || undefined);
+
+  // Sync filters to URL search params
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
+    if (selectedState) params.set("state", selectedState);
+    if (selectedCity) params.set("city", selectedCity);
+    setSearchParams(params, { replace: true });
+  }, [selectedStreams, selectedState, selectedCity, setSearchParams]);
 
   const activeFilters = [
     ...selectedStreams, ...selectedTypes, ...selectedApprovals,

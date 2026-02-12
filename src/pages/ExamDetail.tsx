@@ -14,6 +14,8 @@ import { ScrollSpy, type ScrollSection } from "@/components/ScrollSpy";
 import { FAQSection } from "@/components/FAQSection";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { useDbExam } from "@/hooks/useExamsData";
+import { WhatsNewSection } from "@/components/WhatsNewSection";
+import { UsefulLinks } from "@/components/UsefulLinks";
 
 const EXAM_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
@@ -116,6 +118,13 @@ export default function ExamDetail() {
         <ScrollSpy sections={EXAM_SECTIONS} baseUrl={`/exams/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
 
         <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <WhatsNewSection entityName={exam.name} entityType="exam" category={exam.category} />
+          </div>
+          <div className="hidden lg:block" />
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-6 mt-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -386,6 +395,16 @@ export default function ExamDetail() {
             </section>
 
             <LeadCaptureForm variant="inline" title={`Get preparation tips for ${exam.name}`} source={`exam_detail_${exam.slug}`} interestedExamSlug={exam.slug} />
+
+            {/* Useful Links */}
+            <UsefulLinks
+              type="exam"
+              name={exam.name}
+              shortName={exam.short_name}
+              slug={exam.slug}
+              category={exam.category}
+              sections={EXAM_SECTIONS}
+            />
           </div>
 
           <aside className="hidden lg:block">
