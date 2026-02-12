@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, X, Phone, Send, Loader2 } from "lucide-react";
+import { X, Phone, Send, Loader2 } from "lucide-react";
+import dcLogo from "@/assets/dc-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -52,9 +53,7 @@ export function FixedCounsellingCTA() {
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
-                  <GraduationCap className="w-5 h-5 text-primary-foreground" />
-                </div>
+                <img src={dcLogo} alt="DekhoCampus" className="w-9 h-9 object-contain" />
                 <div>
                   <h4 className="text-sm font-bold text-foreground">Free Expert Counselling</h4>
                   <p className="text-[11px] text-muted-foreground">Get a callback in 30 minutes</p>

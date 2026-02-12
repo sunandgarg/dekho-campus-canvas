@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, Send, Loader2, Phone, User, Mail, BookOpen, MapPin, GraduationCap } from "lucide-react";
+import { X, Send, Loader2, Phone, User, Mail, BookOpen, MapPin } from "lucide-react";
+import dcLogo from "@/assets/dc-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/SearchableSelect";
@@ -84,9 +85,7 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
         {/* Header - more human, less AI */}
         <div className="bg-primary px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <img src={dcLogo} alt="DekhoCampus" className="w-10 h-10 object-contain rounded-full bg-primary-foreground/20 p-1" />
             <div>
               <h3 className="font-bold text-primary-foreground text-sm">Help Us Understand You Better</h3>
               <p className="text-[11px] text-primary-foreground/80">So we can give you the best guidance</p>
