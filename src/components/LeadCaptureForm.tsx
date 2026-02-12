@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, User, Mail, Phone, MapPin, GraduationCap, Loader2, CheckCircle, BookOpen } from "lucide-react";
+import { Send, User, Mail, Phone, MapPin, Loader2, CheckCircle, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import logo from "@/assets/dekhocampus-logo.png";
+import dcLogo from "@/assets/dc-logo.png";
 
 interface LeadCaptureFormProps {
   variant?: "inline" | "card" | "banner" | "sidebar";
@@ -116,7 +116,7 @@ export function LeadCaptureForm({
   const selectCls = "w-full px-3 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none";
 
   const LogoBadge = () => (
-    <img src={logo} alt="DekhoCampus" className="h-5 opacity-70" />
+    <img src={dcLogo} alt="DekhoCampus" className="h-8 w-8 object-contain" />
   );
 
   // Card variant
@@ -130,15 +130,12 @@ export function LeadCaptureForm({
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-accent" />
-            </div>
+            <img src={dcLogo} alt="DekhoCampus" className="w-10 h-10 object-contain" />
             <div>
               <h3 className="text-sm font-bold text-foreground">{title}</h3>
               <p className="text-xs text-muted-foreground">{subtitle}</p>
             </div>
           </div>
-          <LogoBadge />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-2.5">
@@ -230,17 +227,10 @@ export function LeadCaptureForm({
         viewport={{ once: true }}
         className="bg-card rounded-2xl border border-border p-4"
       >
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-center flex-1">
-            <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-2">
-              <GraduationCap className="w-5 h-5 text-accent" />
-            </div>
-            <h4 className="font-bold text-foreground text-sm">{title}</h4>
-            <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
-          </div>
-        </div>
-        <div className="flex justify-center mb-2">
-          <LogoBadge />
+        <div className="text-center mb-3">
+          <img src={dcLogo} alt="DekhoCampus" className="w-10 h-10 object-contain mx-auto mb-2" />
+          <h4 className="font-bold text-foreground text-sm">{title}</h4>
+          <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-2">
@@ -271,7 +261,7 @@ export function LeadCaptureForm({
     <div className="bg-muted/50 rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm font-medium text-foreground">{title}</p>
-        <LogoBadge />
+        <img src={dcLogo} alt="DekhoCampus" className="h-7 w-7 object-contain" />
       </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
         <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Name *" className="rounded-lg text-sm h-10" required />
