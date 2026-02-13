@@ -1,26 +1,26 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, User, Loader2 } from "lucide-react";
+import { X, Send, Bot, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { AILeadForm } from "@/components/AILeadForm";
 
 type Message = {
   role: "user" | "assistant" | "system";
   content: string;
 };
 
-type BotStep = "greeting" | "query" | "name" | "situation" | "city" | "contact" | "responding" | "done";
-
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-counselor`;
 const LEAD_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-lead`;
 
-const situationOptions = [
-  { label: "Appearing in 12th", value: "12th_appearing" },
-  { label: "Passed 12th", value: "12th_passed" },
-  { label: "Graduated", value: "graduated" },
-  { label: "Other", value: "other" },
+const DEFAULT_SUGGESTIONS = [
+  "Top 5 engineering colleges in India",
+  "Best colleges for MBA",
+  "Career options after 12th Science",
+  "Which entrance exams should I prepare for?",
+  "How to get scholarships?",
 ];
 
 export function FloatingBot() {
@@ -28,8 +28,9 @@ export function FloatingBot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState<BotStep>("greeting");
-  const [leadData, setLeadData] = useState({ name: "", situation: "", city: "", state: "", email: "", phone: "", query: "" });
+  const [leadData, setLeadData] = useState<{ name: string; course: string; state: string; city: string } | null>(null);
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [pendingQuery, setPendingQuery] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,7 +40,7 @@ export function FloatingBot() {
 
   useEffect(() => {
     if (isOpen && inputRef.current) setTimeout(() => inputRef.current?.focus(), 200);
-  }, [isOpen, step]);
+  }, [isOpen]);
 
   const addBotMessage = (content: string) => {
     setMessages(prev => [...prev, { role: "assistant", content }]);
@@ -48,43 +49,34 @@ export function FloatingBot() {
   const handleOpen = () => {
     setIsOpen(true);
     if (messages.length === 0) {
+      // Always show lead form first
       setTimeout(() => {
-        addBotMessage("Hi there! 👋 I'm your **DekhoCampus AI Counselor** — available 24/7 to help you with colleges, courses, exams & career guidance.\n\nWhat would you like to know today? 🎓");
-        setStep("query");
-      }, 500);
+        setShowLeadForm(true);
+      }, 300);
     }
   };
 
-  const saveLead = async (data: typeof leadData) => {
-    try {
-      await fetch(LEAD_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({
-          name: data.name || null,
-          email: data.email || null,
-          phone: data.phone || null,
-          current_situation: data.situation || null,
-          city: data.city || null,
-          state: data.state || null,
-          initial_query: data.query || null,
-          source: "chatbot",
-        }),
-      });
-    } catch (e) {
-      console.error("Lead save failed:", e);
+  const handleLeadSubmit = (data: { name: string; course: string; state: string; city: string }) => {
+    setLeadData(data);
+    setShowLeadForm(false);
+    
+    const greeting = `Hi **${data.name}**! 👋\n\nHere's what I know about you:\n- **Course Interest:** ${data.course || "Not specified"}\n- **Location:** ${data.city ? `${data.city}, ${data.state}` : data.state || "India"}\n\nI'm ready to help you find the perfect college! Pick a question below or ask me anything! 🎓`;
+    setMessages([{ role: "assistant", content: greeting }]);
+
+    // If there was a pending query, process it
+    if (pendingQuery) {
+      setTimeout(() => streamAIResponse(pendingQuery, data), 500);
+      setPendingQuery(null);
     }
   };
 
-  const streamAIResponse = async (query: string) => {
+  const streamAIResponse = async (query: string, lead?: typeof leadData) => {
     setIsLoading(true);
     let assistantContent = "";
+    const ld = lead || leadData;
 
-    const contextMsg = leadData.name
-      ? `Student Info - Name: ${leadData.name}, Status: ${leadData.situation}, Location: ${leadData.city}, ${leadData.state}. Query: ${query}`
+    const contextMsg = ld?.name
+      ? `[Student: ${ld.name}, Course: ${ld.course || "Not specified"}, State: ${ld.state || "Not specified"}, City: ${ld.city || "Not specified"}] ${query}`
       : query;
 
     try {
@@ -95,20 +87,21 @@ export function FloatingBot() {
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
-          messages: [{ role: "user", content: contextMsg }],
+          messages: [
+            ...messages.filter(m => m.role !== "system").map(m => ({ role: m.role, content: m.content })),
+            { role: "user", content: contextMsg },
+          ],
         }),
       });
 
       if (!resp.ok) {
         if (resp.status === 429) toast.error("Too many requests. Please wait a moment.");
-        else if (resp.status === 402) toast.error("AI service temporarily unavailable.");
         else toast.error("Failed to get response.");
         setIsLoading(false);
         return;
       }
 
       if (!resp.body) throw new Error("No body");
-
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
       let textBuffer = "";
@@ -141,7 +134,7 @@ export function FloatingBot() {
               });
             }
           } catch {
-            // Skip malformed SSE chunks gracefully
+            // Skip malformed SSE chunks
           }
         }
       }
@@ -160,89 +153,33 @@ export function FloatingBot() {
     setMessages(prev => [...prev, { role: "user", content: userInput }]);
     setInput("");
 
-    switch (step) {
-      case "query":
-        setLeadData(prev => ({ ...prev, query: userInput }));
-        setTimeout(() => {
-          addBotMessage("Great question! To give you the best guidance, can I know your **name**? 😊");
-          setStep("name");
-        }, 300);
-        break;
-
-      case "name":
-        setLeadData(prev => ({ ...prev, name: userInput }));
-        setTimeout(() => {
-          addBotMessage(`Nice to meet you, **${userInput}**! 🙌\n\nWhat's your current education status?\n- Appearing in 12th\n- Passed 12th\n- Graduated\n- Other`);
-          setStep("situation");
-        }, 300);
-        break;
-
-      case "situation": {
-        const matched = situationOptions.find(o =>
-          userInput.toLowerCase().includes(o.label.toLowerCase()) ||
-          userInput.toLowerCase().includes(o.value.replace("_", " "))
-        );
-        const situation = matched?.value || userInput;
-        setLeadData(prev => ({ ...prev, situation }));
-        setTimeout(() => {
-          addBotMessage("Which **city and state** are you from? 📍\n\n(e.g., Mumbai, Maharashtra)");
-          setStep("city");
-        }, 300);
-        break;
-      }
-
-      case "city": {
-        const parts = userInput.split(",").map(s => s.trim());
-        setLeadData(prev => ({ ...prev, city: parts[0] || userInput, state: parts[1] || "" }));
-        setTimeout(() => {
-          addBotMessage("Let me find the best options for you! 🔍✨");
-          setStep("responding");
-          const updatedLead = {
-            ...leadData,
-            city: parts[0] || userInput,
-            state: parts[1] || "",
-          };
-          saveLead(updatedLead);
-          streamAIResponse(leadData.query).then(() => {
-            setTimeout(() => {
-              addBotMessage("📱 For **personalized recommendations**, share your **phone number or email** and our expert counselors will reach out!\n\n(Or type 'skip' to continue chatting)");
-              setStep("contact");
-            }, 500);
-          });
-        }, 300);
-        break;
-      }
-
-      case "contact":
-        if (userInput.toLowerCase() !== "skip") {
-          const isEmail = userInput.includes("@");
-          const isPhone = /\d{10}/.test(userInput.replace(/\s/g, ""));
-          const update = isEmail ? { email: userInput } : isPhone ? { phone: userInput } : { email: userInput };
-          const updatedLead = { ...leadData, ...update };
-          setLeadData(updatedLead);
-          saveLead(updatedLead);
-          setTimeout(() => {
-            addBotMessage("Thank you! 🎉 Our counselors will connect with you soon.\n\nFeel free to ask me anything else! I'm here 24/7 💪");
-            setStep("done");
-          }, 300);
-        } else {
-          setTimeout(() => {
-            addBotMessage("No problem! Feel free to ask me anything else 😊");
-            setStep("done");
-          }, 300);
-        }
-        break;
-
-      case "done":
-      case "responding":
-        streamAIResponse(userInput);
-        break;
+    // If lead not collected, show lead form first
+    if (!leadData) {
+      setPendingQuery(userInput);
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: "Great question! 🎯 To give you **personalized recommendations**, I need a few quick details.\n\nPlease fill the form — it takes less than 30 seconds! 📝"
+      }]);
+      setShowLeadForm(true);
+      return;
     }
+
+    streamAIResponse(userInput);
   };
+
+  const suggestedQueries = leadData?.name
+    ? [
+        `Top 5 colleges for ${leadData.course || "B.Tech"} in ${leadData.state || "India"}`,
+        `Best colleges in ${leadData.city || leadData.state || "India"}`,
+        "Career options and salary packages",
+        "Which entrance exams should I prepare for?",
+        "How to get scholarships?",
+      ]
+    : DEFAULT_SUGGESTIONS;
 
   return (
     <>
-      {/* Floating button - positioned above bottom nav on mobile */}
+      {/* Floating button */}
       <AnimatePresence>
         {!isOpen && (
           <motion.button
@@ -253,7 +190,7 @@ export function FloatingBot() {
             className="fixed bottom-20 lg:bottom-6 right-4 md:right-6 z-50 w-14 h-14 rounded-full bg-primary shadow-glow flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
             aria-label="Talk to AI Counselor"
           >
-            <MessageCircle className="w-7 h-7 text-primary-foreground" />
+            <Bot className="w-7 h-7 text-primary-foreground" />
             <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-[10px] text-accent-foreground font-bold flex items-center justify-center animate-bounce-gentle">
               AI
             </span>
@@ -261,9 +198,16 @@ export function FloatingBot() {
         )}
       </AnimatePresence>
 
+      {/* Lead form modal */}
+      <AILeadForm
+        isOpen={showLeadForm}
+        onClose={() => { setShowLeadForm(false); if (!leadData && messages.length === 0) setIsOpen(false); }}
+        onSubmit={handleLeadSubmit}
+      />
+
       {/* Chat window */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen && !showLeadForm && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -314,6 +258,27 @@ export function FloatingBot() {
                   </div>
                 </div>
               )}
+
+              {/* Suggested queries */}
+              {!isLoading && leadData && messages.length <= 3 && (
+                <div className="pt-2">
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Quick questions:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {suggestedQueries.map((q) => (
+                      <button
+                        key={q}
+                        onClick={() => {
+                          setMessages(prev => [...prev, { role: "user", content: q }]);
+                          streamAIResponse(q);
+                        }}
+                        className="px-3 py-1.5 text-xs bg-secondary hover:bg-secondary/80 rounded-full text-foreground border border-border transition-colors"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Input */}
@@ -323,14 +288,7 @@ export function FloatingBot() {
                   ref={inputRef}
                   value={input}
                   onChange={e => setInput(e.target.value)}
-                  placeholder={
-                    step === "query" ? "Type your question..." :
-                    step === "name" ? "Enter your name..." :
-                    step === "situation" ? "e.g., Appearing in 12th" :
-                    step === "city" ? "e.g., Delhi, Delhi" :
-                    step === "contact" ? "Email or phone (or 'skip')" :
-                    "Ask anything..."
-                  }
+                  placeholder="Ask anything about education..."
                   className="flex-1 rounded-xl text-sm h-10"
                   disabled={isLoading}
                 />

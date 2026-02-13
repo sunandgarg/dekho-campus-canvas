@@ -44,31 +44,32 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData, on
     if (isOpen && inputRef.current) setTimeout(() => inputRef.current?.focus(), 100);
   }, [isOpen]);
 
-  // Initialize chat
+  // Initialize: always show lead form first if no lead data
   useEffect(() => {
     if (isOpen && !hasInit.current) {
       hasInit.current = true;
-      setHasCollectedLead(!!leadData?.name);
       
       if (leadData?.name) {
-        // Lead already collected - show personalized greeting with details and suggestions
-        const greeting = `Hi **${leadData.name}**! 👋\n\nHere's what I know about you:\n- **Course Interest:** ${leadData.course || "Not specified"}\n- **Location:** ${leadData.city || leadData.state || "India"}\n\nI'm ready to help you find the perfect college. Pick a question below or ask me anything!`;
+        setHasCollectedLead(true);
+        const greeting = `Hi **${leadData.name}**! 👋\n\nHere's what I know about you:\n- **Course Interest:** ${leadData.course || "Not specified"}\n- **Location:** ${leadData.city ? `${leadData.city}, ${leadData.state}` : leadData.state || "India"}\n\nI'm ready to help you find the perfect college. Pick a question below or ask me anything!`;
         setMessages([{ role: "assistant", content: greeting }]);
       } else {
-        // No lead - show welcome
-        setMessages([{ role: "assistant", content: "Hi! 👋 I'm your **DekhoCampus AI Counselor**.\n\nAsk me about colleges, courses, exams, or career paths!" }]);
+        // No lead data - show lead form immediately
+        if (onRequestLeadForm) {
+          onRequestLeadForm();
+        }
+        setMessages([{ role: "assistant", content: "Hi! 👋 Please fill in your details so I can give you **personalized recommendations**! 📝" }]);
       }
     }
-  }, [isOpen, leadData]);
+  }, [isOpen, leadData, onRequestLeadForm]);
 
-  // When lead data arrives after form submission
+  // When lead data arrives after form
   useEffect(() => {
     if (leadData?.name && isOpen && hasInit.current && !hasCollectedLead) {
       setHasCollectedLead(true);
       const infoMsg = `Great! Here's what I know about you:\n\n👤 **Name:** ${leadData.name}\n📚 **Course Interest:** ${leadData.course || "Not specified"}\n📍 **Location:** ${leadData.city ? `${leadData.city}, ${leadData.state}` : leadData.state || "India"}\n\nI'll use this to give you personalized recommendations! Pick a question below or ask me anything:`;
       setMessages(prev => [...prev, { role: "assistant", content: infoMsg }]);
       
-      // If there was a pending query, now process it
       if (pendingQuery) {
         setTimeout(() => streamChat(pendingQuery), 500);
         setPendingQuery(null);
@@ -162,7 +163,7 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData, on
     if (!input.trim() || isLoading) return;
     const userInput = input.trim();
 
-    // If lead not collected, show lead form first and save pending query
+    // If lead not collected, show lead form first
     if (!hasCollectedLead && onRequestLeadForm) {
       setMessages(prev => [...prev, { role: "user", content: userInput }]);
       setInput("");
@@ -181,10 +182,12 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData, on
   const handleNewChat = () => {
     setMessages([]);
     hasInit.current = false;
-    const greeting = leadData?.name
-      ? `Hi **${leadData.name}**! 👋 How can I help you today?`
-      : "Hi! 👋 Ask me anything about education!";
-    setMessages([{ role: "assistant", content: greeting }]);
+    setHasCollectedLead(false);
+    // Re-open lead form for new chat
+    if (onRequestLeadForm) {
+      onRequestLeadForm();
+    }
+    setMessages([{ role: "assistant", content: "Hi! 👋 Please fill in your details to get started! 📝" }]);
   };
 
   const suggestedQueries = leadData?.name
@@ -257,27 +260,15 @@ export function AIChatFullScreen({ isOpen, onClose, initialMessage, leadData, on
                   </div>
                 )}
 
-                {/* Suggested queries - show after greeting or lead info */}
-                {!isLoading && messages.length <= 3 && (
+                {/* Suggested queries */}
+                {!isLoading && hasCollectedLead && messages.length <= 3 && (
                   <div className="pt-2">
                     <p className="text-xs font-medium text-muted-foreground mb-2">Quick questions:</p>
                     <div className="flex flex-wrap gap-2">
                       {suggestedQueries.map((q) => (
                         <button
                           key={q}
-                          onClick={() => {
-                            if (!hasCollectedLead && onRequestLeadForm) {
-                              setMessages(prev => [...prev, { role: "user", content: q }]);
-                              setPendingQuery(q);
-                              setMessages(prev => [...prev, {
-                                role: "assistant",
-                                content: "Great question! 🎯 To give you **personalized recommendations**, please fill the form that just appeared. 📝"
-                              }]);
-                              onRequestLeadForm();
-                            } else {
-                              streamChat(q);
-                            }
-                          }}
+                          onClick={() => streamChat(q)}
                           className="px-3 py-1.5 text-xs bg-secondary hover:bg-secondary/80 rounded-full text-foreground border border-border transition-colors"
                         >
                           {q}
