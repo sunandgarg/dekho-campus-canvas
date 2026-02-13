@@ -20,7 +20,6 @@ import { AILeadForm } from "@/components/AILeadForm";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
-import { StickyRightSidebar } from "@/components/StickyRightSidebar";
 import { HomeMobileBottomNav } from "@/components/HomeMobileBottomNav";
 
 const Index = () => {
@@ -61,31 +60,27 @@ const Index = () => {
         <QuickLinksBar />
         <HeroBannerCarousel />
 
-        {/* Main content with sticky right sidebar */}
-        <div className="container flex gap-6">
-          <div className="flex-1 min-w-0">
-            <TopRankedColleges />
-            <UpcomingExams />
+        {/* Main content - full width sections */}
+        <div className="container">
+          <TopRankedColleges />
+          <UpcomingExams />
 
-            <section className="py-4">
-              <DynamicAdBanner variant="leaderboard" position="mid-page" />
-            </section>
+          <section className="py-4">
+            <DynamicAdBanner variant="leaderboard" position="mid-page" />
+          </section>
 
-            <CategorySection />
+          <CategorySection />
 
-            <section className="py-6 md:py-8">
-              <LeadCaptureForm
-                variant="banner"
-                title="🎯 Get Personalized College Recommendations"
-                subtitle="Talk to our expert counselors — it's completely free!"
-                source="homepage_mid"
-              />
-            </section>
+          <section className="py-6 md:py-8">
+            <LeadCaptureForm
+              variant="banner"
+              title="🎯 Get Personalized College Recommendations"
+              subtitle="Talk to our expert counselors — it's completely free!"
+              source="homepage_mid"
+            />
+          </section>
 
-            <CitySearch />
-          </div>
-
-          <StickyRightSidebar source="homepage_sticky" />
+          <CitySearch />
         </div>
 
         <OnlineEducationSection />

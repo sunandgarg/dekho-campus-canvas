@@ -35,12 +35,12 @@ export default function AllCourses() {
   const { data: dbCourses } = useDbCourses();
   const courses = dbCourses ?? [];
 
-  // Sync filters to URL with SEO-friendly slugs
+  // Sync filters to URL
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0].toLowerCase().replace(/[\s\/\.]+/g, "-"));
-    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0].toLowerCase().replace(/\s+/g, "-"));
-    if (selectedModes.length === 1) params.set("mode", selectedModes[0].toLowerCase().replace(/\s+/g, "-"));
+    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
+    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
+    if (selectedModes.length === 1) params.set("mode", selectedModes[0]);
     setSearchParams(params, { replace: true });
   }, [selectedStreams, selectedCourseGroups, selectedModes, setSearchParams]);
 

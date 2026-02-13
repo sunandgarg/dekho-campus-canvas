@@ -82,7 +82,7 @@ export default function CourseDetail() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0">
           <div className="relative">
             <img src={course.image} alt={course.name} className="w-full h-48 md:h-56 object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
           </div>
           <div className="p-4 md:p-6 -mt-14 relative z-10">
             <div className="flex items-center gap-2 mb-2">
@@ -90,21 +90,18 @@ export default function CourseDetail() {
               <Badge className="bg-accent/90 text-accent-foreground text-xs">{course.level}</Badge>
               <Badge variant="secondary" className="text-xs">{course.duration}</Badge>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-white md:text-foreground mb-1">{course.name} ({course.full_name})</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-foreground mb-1">{course.name} ({course.full_name})</h1>
             <p className="text-sm text-muted-foreground">{course.short_description || course.description?.slice(0, 120)}</p>
           </div>
         </motion.div>
 
         <ScrollSpy sections={COURSE_SECTIONS} baseUrl={`/courses/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <WhatsNewSection entityName={course.name} entityType="course" category={course.category} />
-          </div>
-          <div className="hidden lg:block" />
+        <div className="mb-6">
+          <WhatsNewSection entityName={course.name} entityType="course" category={course.category} />
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -394,7 +391,9 @@ export default function CourseDetail() {
           </div>
 
           <aside className="hidden lg:block">
-            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+            <div className="space-y-4">
+              <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} interestedCourseSlug={course.slug} />
+
               {/* Other Courses */}
               <div className="bg-card rounded-2xl border border-border p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3">📚 Other Courses</h3>
@@ -412,7 +411,6 @@ export default function CourseDetail() {
                 <Button size="sm" className="w-full rounded-xl text-xs">Enquiry Now</Button>
               </div>
 
-              <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} interestedCourseSlug={course.slug} />
               <DynamicAdBanner variant="vertical" position="sidebar" page="courses" itemSlug={slug} />
             </div>
           </aside>
