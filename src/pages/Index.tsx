@@ -62,7 +62,7 @@ const Index = () => {
         <HeroBannerCarousel />
 
         {/* Main content with sticky right sidebar */}
-        <div className="container flex gap-6">
+        <div className="px-3 md:container flex gap-6">
           <div className="flex-1 min-w-0">
             <TopRankedColleges />
             <UpcomingExams />
@@ -91,7 +91,7 @@ const Index = () => {
         <OnlineEducationSection />
         <StudyAbroadSection />
 
-        <div className="container">
+        <div className="px-3 md:container">
           <ToolsSection />
 
           <section className="py-4">

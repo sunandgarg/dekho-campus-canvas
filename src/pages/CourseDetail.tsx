@@ -90,7 +90,7 @@ export default function CourseDetail() {
               <Badge className="bg-accent/90 text-accent-foreground text-xs">{course.level}</Badge>
               <Badge variant="secondary" className="text-xs">{course.duration}</Badge>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-background md:text-foreground mb-1">{course.name} ({course.full_name})</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-white md:text-foreground mb-1">{course.name} ({course.full_name})</h1>
             <p className="text-sm text-muted-foreground">{course.short_description || course.description?.slice(0, 120)}</p>
           </div>
         </motion.div>
@@ -395,10 +395,25 @@ export default function CourseDetail() {
 
           <aside className="hidden lg:block">
             <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              {/* Other Courses */}
+              <div className="bg-card rounded-2xl border border-border p-4">
+                <h3 className="text-sm font-bold text-foreground mb-3">📚 Other Courses</h3>
+                <div className="space-y-2">
+                  {["B.Tech", "MBA", "MBBS", "B.Sc", "B.Com", "LLB", "BBA", "MCA"].filter(c => c !== course.name).slice(0, 6).map((c) => (
+                    <Link key={c} to={`/courses/${c.toLowerCase().replace(/[\s\.]+/g, "-")}`} className="block text-xs text-primary hover:underline py-1 border-b border-border last:border-0">{c}</Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Get Started CTA */}
+              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl border border-primary/20 p-4 text-center">
+                <h3 className="text-sm font-bold text-foreground mb-1">Get Started!</h3>
+                <p className="text-xs text-muted-foreground mb-3">Find the best college for {course.name}</p>
+                <Button size="sm" className="w-full rounded-xl text-xs">Enquiry Now</Button>
+              </div>
+
               <LeadCaptureForm variant="card" title={`Study ${course.name}`} subtitle="Get free counseling and college recommendations" source={`course_detail_sidebar_${course.slug}`} interestedCourseSlug={course.slug} />
               <DynamicAdBanner variant="vertical" position="sidebar" page="courses" itemSlug={slug} />
-              <LeadCaptureForm variant="sidebar" title="Compare Courses" subtitle="Compare with similar courses" source="course_compare_sidebar" />
-              <DynamicAdBanner variant="square" position="sidebar" page="courses" itemSlug={slug} />
             </div>
           </aside>
         </div>

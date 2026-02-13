@@ -93,7 +93,7 @@ export default function ExamDetail() {
               <Badge className="bg-accent/90 text-accent-foreground text-xs">{exam.level}</Badge>
               <Badge className={`text-xs ${exam.status === "Applications Open" ? "bg-success/90 text-success-foreground" : "bg-muted text-muted-foreground"}`}>{exam.status}</Badge>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-background md:text-foreground mb-1">{exam.name} 2026</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-white md:text-foreground mb-1">{exam.name} 2026</h1>
             <p className="text-sm text-muted-foreground mb-3">{exam.full_name}</p>
             <div className="flex items-center gap-2 flex-wrap">
               {exam.registration_url && exam.registration_url !== "#" && (
@@ -409,10 +409,53 @@ export default function ExamDetail() {
 
           <aside className="hidden lg:block">
             <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              {/* Upcoming Exams */}
+              <div className="bg-card rounded-2xl border border-border p-4">
+                <h3 className="text-sm font-bold text-foreground mb-3">📅 Upcoming Exams</h3>
+                <div className="space-y-2">
+                  {["JEE Main 2026", "NEET UG 2026", "CAT 2026", "GATE 2026", "CLAT 2026"].map((e) => (
+                    <Link key={e} to={`/exams/${e.toLowerCase().replace(/\s+/g, "-")}`} className="block text-xs text-primary hover:underline py-1 border-b border-border last:border-0">{e}</Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Get Started CTA */}
+              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl border border-primary/20 p-4 text-center">
+                <h3 className="text-sm font-bold text-foreground mb-1">What are you waiting for?</h3>
+                <p className="text-xs text-muted-foreground mb-3">Discover Your Education Journey With Us</p>
+                <div className="space-y-2">
+                  <Button size="sm" className="w-full rounded-xl text-xs">Enquiry Now</Button>
+                  <Button size="sm" variant="outline" className="w-full rounded-xl text-xs">Apply Now</Button>
+                </div>
+              </div>
+
+              {/* Previous Year Papers */}
+              {exam.sample_paper_url && (
+                <div className="bg-card rounded-2xl border border-border p-4">
+                  <h3 className="text-sm font-bold text-foreground mb-3">📄 Previous Year Papers</h3>
+                  <div className="space-y-2">
+                    {[`${exam.name} 2025 Paper`, `${exam.name} 2024 Paper`, `${exam.name} 2023 Paper`].map((p) => (
+                      <div key={p} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
+                        <span className="text-xs text-foreground">{p}</span>
+                        <Download className="w-3.5 h-3.5 text-primary cursor-pointer" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* News & Updates */}
+              <div className="bg-card rounded-2xl border border-border p-4">
+                <h3 className="text-sm font-bold text-foreground mb-3">📰 News & Updates</h3>
+                <div className="space-y-2">
+                  {[`${exam.name} 2026 registration opens`, `${exam.name} syllabus updated`, `${exam.name} mock tests available`].map((n) => (
+                    <p key={n} className="text-xs text-muted-foreground py-1 border-b border-border last:border-0">{n}</p>
+                  ))}
+                </div>
+              </div>
+
               <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} interestedExamSlug={exam.slug} />
               <DynamicAdBanner variant="vertical" position="sidebar" page="exams" itemSlug={slug} />
-              <LeadCaptureForm variant="sidebar" title="Exam Alerts" subtitle="Get notified about deadlines" source="exam_alert_sidebar" />
-              <DynamicAdBanner variant="square" position="sidebar" page="exams" itemSlug={slug} />
             </div>
           </aside>
         </div>
