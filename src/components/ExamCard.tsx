@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Globe, Users, Languages, Calendar, FileText, Download } from "lucide-react";
+import { Clock, Globe, Users, Languages, Calendar, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { DbExam } from "@/hooks/useExamsData";
@@ -28,7 +28,7 @@ export function ExamCard({ exam, index }: ExamCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
     >
-      <article className={`rounded-2xl border p-5 hover:shadow-lg transition-shadow ${
+      <article className={`rounded-2xl border p-5 hover:shadow-lg transition-shadow h-full flex flex-col ${
         exam.status === "Applications Open" ? "bg-success/5 border-success/20" :
         exam.status === "Exam Over" ? "bg-destructive/5 border-destructive/20" :
         "bg-card border-border"
@@ -120,14 +120,8 @@ export function ExamCard({ exam, index }: ExamCardProps) {
           </span>
         </div>
 
-        {/* Download Sample Paper */}
-        <Button variant="outline" className="w-full rounded-xl gap-2 h-10 text-sm border-primary/30 text-primary hover:bg-primary/5 mb-3">
-          <Download className="w-4 h-4" />
-          Download Sample Paper
-        </Button>
-
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2 mt-auto pt-3">
           <Link to={`/exams/${exam.slug}`}>
             <Button variant="outline" className="w-full rounded-xl h-10 text-sm">
               View Details

@@ -35,7 +35,7 @@ export function CitySearch() {
 
   return (
     <section className="py-10 md:py-14" aria-labelledby="city-search-heading">
-      <div className="container">
+      <div>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-6">
           <h2 id="city-search-heading" className="text-headline font-bold text-foreground">
             Top <span className="text-gradient">Study Places</span>
@@ -53,9 +53,9 @@ export function CitySearch() {
               transition={{ delay: i * 0.04 }}
               className="snap-start flex-shrink-0"
             >
-              <Link
-                to={`/colleges?state=${encodeURIComponent(place.state)}`}
-                className="group relative block w-48 sm:w-56 h-40 sm:h-44 rounded-2xl overflow-hidden"
+               <Link
+                 to={`/colleges?state=${encodeURIComponent(place.state)}`}
+                 className="group relative block w-44 sm:w-52 h-36 sm:h-40 rounded-2xl overflow-hidden"
               >
                 <img
                   src={place.image_url || `https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400&h=300&fit=crop`}

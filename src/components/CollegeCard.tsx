@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, MapPin, Calendar, Shield, Download, ChevronRight } from "lucide-react";
+import { Star, MapPin, Calendar, Shield, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { DbCollege } from "@/hooks/useCollegesData";
@@ -17,9 +17,9 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
     >
-      <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow">
+      <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
         {/* Image */}
-        <div className="relative h-48">
+        <div className="relative h-44 flex-shrink-0">
           <img
             src={college.image}
             alt={college.name}
@@ -32,7 +32,7 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-3 flex-1 flex flex-col">
           <div>
             <h2 className="text-lg font-bold text-foreground">{college.short_name}</h2>
             <p className="text-sm text-muted-foreground line-clamp-1">
@@ -87,14 +87,8 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
             )}
           </div>
 
-          {/* Brochure Button */}
-          <Button variant="outline" className="w-full rounded-xl gap-2 h-10 text-sm border-primary/30 text-primary hover:bg-primary/5">
-            <Download className="w-4 h-4" />
-            Download Brochure
-          </Button>
-
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 mt-auto pt-3">
             <Link to={`/colleges/${college.slug}`}>
               <Button variant="outline" className="w-full rounded-xl h-10 text-sm">
                 Know More
