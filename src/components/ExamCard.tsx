@@ -28,7 +28,11 @@ export function ExamCard({ exam, index }: ExamCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
     >
-      <article className="bg-card rounded-2xl border border-border p-5 hover:shadow-lg transition-shadow">
+      <article className={`rounded-2xl border p-5 hover:shadow-lg transition-shadow ${
+        exam.status === "Applications Open" ? "bg-success/5 border-success/20" :
+        exam.status === "Exam Over" ? "bg-destructive/5 border-destructive/20" :
+        "bg-card border-border"
+      }`}>
         {/* Header */}
         <div className="flex items-start gap-4 mb-4">
           <div className="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">

@@ -105,7 +105,7 @@ export default function CollegeDetail() {
                     <Badge key={tag} className="bg-primary/90 text-primary-foreground text-xs">{tag}</Badge>
                   ))}
                 </div>
-                <h1 className="text-xl md:text-2xl font-bold text-background md:text-foreground mb-1 line-clamp-2">{college.name}</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-white md:text-foreground mb-1 line-clamp-2">{college.name}</h1>
                 <div className="flex items-center gap-3 flex-wrap text-sm text-muted-foreground">
                   <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{college.location}</span>
                   <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Estd. {college.established}</span>
@@ -510,10 +510,49 @@ export default function CollegeDetail() {
           {/* Sidebar */}
           <aside className="hidden lg:block">
             <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+              {/* Get Started CTA */}
+              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl border border-primary/20 p-4 text-center">
+                <h3 className="text-sm font-bold text-foreground mb-1">Get Started!</h3>
+                <p className="text-xs text-muted-foreground mb-3">Apply to {college.short_name || college.name}</p>
+                <Button size="sm" className="w-full rounded-xl text-xs mb-2">Enquiry Now</Button>
+                <Button size="sm" variant="outline" className="w-full rounded-xl text-xs">Download Brochure</Button>
+              </div>
+
+              {/* Contact Info */}
+              <div className="bg-card rounded-2xl border border-border p-4">
+                <h3 className="text-sm font-bold text-foreground mb-3">📍 Contact Information</h3>
+                <div className="space-y-2 text-xs text-muted-foreground">
+                  <p><span className="font-medium text-foreground">Location:</span> {college.location}</p>
+                  <p><span className="font-medium text-foreground">State:</span> {college.state}</p>
+                  <p><span className="font-medium text-foreground">City:</span> {college.city}</p>
+                  <p><span className="font-medium text-foreground">Established:</span> {college.established}</p>
+                </div>
+              </div>
+
+              {/* Top Courses */}
+              <div className="bg-card rounded-2xl border border-border p-4">
+                <h3 className="text-sm font-bold text-foreground mb-3">📚 Top Courses</h3>
+                <div className="space-y-2">
+                  {popularCourses.slice(0, 5).map((c) => (
+                    <Link key={c.slug} to={`/courses/${c.slug}`} className="block text-xs text-primary hover:underline py-1 border-b border-border last:border-0">{c.name}</Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Similar Colleges */}
+              {(similarColleges ?? []).length > 0 && (
+                <div className="bg-card rounded-2xl border border-border p-4">
+                  <h3 className="text-sm font-bold text-foreground mb-3">🏛️ Similar Colleges</h3>
+                  <div className="space-y-2">
+                    {(similarColleges ?? []).slice(0, 5).map((c) => (
+                      <Link key={c.slug} to={`/colleges/${c.slug}`} className="block text-xs text-primary hover:underline py-1 border-b border-border last:border-0">{c.short_name || c.name}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
               <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" itemSlug={slug} />
-              <LeadCaptureForm variant="sidebar" title="Compare Colleges" subtitle="Not sure? Compare this with similar colleges" source="college_compare_sidebar" />
-              <DynamicAdBanner variant="square" position="sidebar" page="colleges" itemSlug={slug} />
             </div>
           </aside>
         </div>

@@ -33,13 +33,15 @@ export default function AllExams() {
   const { data: dbExams } = useDbExams();
   const exams = dbExams ?? [];
 
-  // Sync filters to URL
+  // Sync filters to URL with SEO-friendly slugs
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
-    if (selectedCategories.length === 1) params.set("category", selectedCategories[0]);
+    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0].toLowerCase().replace(/[\s\/\.]+/g, "-"));
+    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0].toLowerCase().replace(/\s+/g, "-"));
+    if (selectedLevels.length === 1) params.set("level", selectedLevels[0].toLowerCase().replace(/\s+/g, "-"));
+    if (selectedCategories.length === 1) params.set("category", selectedCategories[0].toLowerCase().replace(/\s+/g, "-"));
     setSearchParams(params, { replace: true });
-  }, [selectedStreams, selectedCategories, setSearchParams]);
+  }, [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels, setSearchParams]);
 
   const activeFilters = [...selectedCategories, ...selectedStreams, ...selectedCourseGroups, ...selectedLevels];
 
@@ -54,10 +56,17 @@ export default function AllExams() {
   }, [search, selectedCategories, selectedStreams, selectedCourseGroups, selectedLevels, exams]);
 
   const heading = useMemo(() => {
-    const stream = selectedStreams.length === 1 ? selectedStreams[0] + " " : "";
-    const cat = selectedCategories.length === 1 ? selectedCategories[0] + " " : "";
-    return `Top ${stream}${cat}Exams 2026`;
-  }, [selectedStreams, selectedCategories]);
+    // Course Groups override Streams for heading; level adds qualifier
+    const category = selectedCourseGroups.length === 1
+      ? selectedCourseGroups[0]
+      : selectedStreams.length === 1
+        ? selectedStreams[0]
+        : selectedCategories.length === 1
+          ? selectedCategories[0]
+          : "";
+    const level = selectedLevels.length === 1 ? selectedLevels[0] + " Level " : "";
+    return `Top ${level}${category ? category + " " : ""}Exams in India 2026`;
+  }, [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels]);
 
   const clearAll = () => {
     setSelectedCategories([]); setSelectedStreams([]);

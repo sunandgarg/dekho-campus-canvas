@@ -47,14 +47,15 @@ export default function AllColleges() {
   const category = selectedStreams[0] || "";
   const { data: featuredSlugs } = useFeaturedColleges(category || undefined, selectedState || undefined);
 
-  // Sync filters to URL search params
+  // Sync filters to URL search params with SEO-friendly slugs
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
-    if (selectedState) params.set("state", selectedState);
-    if (selectedCity) params.set("city", selectedCity);
+    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0].toLowerCase().replace(/[\s\/]+/g, "-"));
+    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0].toLowerCase().replace(/\s+/g, "-"));
+    if (selectedCity) params.set("city", selectedCity.toLowerCase().replace(/\s+/g, "-"));
+    else if (selectedState) params.set("state", selectedState.toLowerCase().replace(/\s+/g, "-"));
     setSearchParams(params, { replace: true });
-  }, [selectedStreams, selectedState, selectedCity, setSearchParams]);
+  }, [selectedStreams, selectedCourseGroups, selectedState, selectedCity, setSearchParams]);
 
   const activeFilters = [
     ...selectedStreams, ...selectedTypes, ...selectedApprovals,
@@ -89,15 +90,15 @@ export default function AllColleges() {
   }, [search, selectedStreams, selectedState, selectedCity, selectedTypes, selectedApprovals, selectedNaac, featuredSlugs, colleges]);
 
   const heading = useMemo(() => {
-    const parts: string[] = [];
-    if (selectedStreams.length === 1) parts.push(selectedStreams[0]);
-    parts.push("Colleges");
-    if (selectedCity) parts.push(`in ${selectedCity}`);
-    else if (selectedState) parts.push(`in ${selectedState}`);
-    else parts.push("in India");
-    parts.push("2026");
-    return `Top ${parts.join(" ")}`;
-  }, [selectedStreams, selectedState, selectedCity]);
+    // Course Groups override Streams for heading
+    const category = selectedCourseGroups.length === 1
+      ? selectedCourseGroups[0]
+      : selectedStreams.length === 1
+        ? selectedStreams[0]
+        : "";
+    const location = selectedCity || selectedState || "India";
+    return `Top ${category ? category + " " : ""}Colleges in ${location} 2026`;
+  }, [selectedStreams, selectedCourseGroups, selectedState, selectedCity]);
 
   const description = useMemo(() => {
     const count = filtered.length;

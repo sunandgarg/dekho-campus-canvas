@@ -35,13 +35,14 @@ export default function AllCourses() {
   const { data: dbCourses } = useDbCourses();
   const courses = dbCourses ?? [];
 
-  // Sync filters to URL
+  // Sync filters to URL with SEO-friendly slugs
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
-    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
+    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0].toLowerCase().replace(/[\s\/\.]+/g, "-"));
+    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0].toLowerCase().replace(/\s+/g, "-"));
+    if (selectedModes.length === 1) params.set("mode", selectedModes[0].toLowerCase().replace(/\s+/g, "-"));
     setSearchParams(params, { replace: true });
-  }, [selectedStreams, selectedCourseGroups, setSearchParams]);
+  }, [selectedStreams, selectedCourseGroups, selectedModes, setSearchParams]);
 
   const activeFilters = [
     ...selectedStreams, ...selectedCourseGroups, ...selectedSpecializations,
@@ -60,9 +61,15 @@ export default function AllCourses() {
   }, [search, selectedStreams, selectedCourseGroups, selectedSpecializations, selectedModes, selectedDurations, courses]);
 
   const heading = useMemo(() => {
-    const stream = selectedStreams.length === 1 ? selectedStreams[0] + " " : "";
-    return `Top ${stream}Courses in India 2026`;
-  }, [selectedStreams]);
+    // Course Groups override Streams; Modes add qualifier
+    const category = selectedCourseGroups.length === 1
+      ? selectedCourseGroups[0]
+      : selectedStreams.length === 1
+        ? selectedStreams[0]
+        : "";
+    const mode = selectedModes.length === 1 ? selectedModes[0] + " " : "";
+    return `Top ${mode}${category ? category + " " : ""}Courses in India 2026`;
+  }, [selectedStreams, selectedCourseGroups, selectedModes]);
 
   const clearAll = () => {
     setSelectedStreams([]); setSelectedCourseGroups([]);
