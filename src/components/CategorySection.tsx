@@ -184,8 +184,8 @@ export function CategorySection() {
   const data = categoryData[activeCategory];
 
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background" aria-labelledby="explore-heading">
-      <div className="container">
+    <section className="py-10 md:py-14 bg-gradient-to-b from-primary/5 to-background" aria-labelledby="explore-heading">
+      <div>
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
           <h2 id="explore-heading" className="text-headline font-bold text-foreground">

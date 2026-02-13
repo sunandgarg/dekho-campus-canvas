@@ -33,7 +33,16 @@ const ToolPage = lazy(() => import("./pages/ToolPage"));
 const AllTools = lazy(() => import("./pages/AllTools"));
 const AdminPartners = lazy(() => import("./pages/AdminPartners"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function PageLoader() {
   return (

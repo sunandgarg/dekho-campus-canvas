@@ -145,23 +145,20 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
 
           {/* Rotating headline */}
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.15] tracking-tight">
-              Discover Your Ideal
-              <br />
-              <span className="relative inline-flex items-baseline gap-3">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={rotatingWords[wordIndex]}
-                    initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -30, filter: "blur(8px)" }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className={wordColors[wordIndex]}
-                  >
-                    {rotatingWords[wordIndex]}
-                  </motion.span>
-                </AnimatePresence>
-              </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.15] tracking-tight">
+              Discover Your Ideal{" "}
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={rotatingWords[wordIndex]}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className={`inline-block ${wordColors[wordIndex]}`}
+                >
+                  {rotatingWords[wordIndex]}
+                </motion.span>
+              </AnimatePresence>
             </h1>
             <p className="text-muted-foreground mt-3 text-sm md:text-base max-w-xl mx-auto">
               Search colleges, courses & exams — or ask our AI counselor anything

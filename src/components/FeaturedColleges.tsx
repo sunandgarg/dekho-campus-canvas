@@ -62,17 +62,17 @@ export function FeaturedColleges() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.08 }}
-                className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-lg transition-all"
+                transition={{ delay: index * 0.06 }}
+                className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-lg transition-all h-full flex flex-col"
               >
-                <div className="relative h-44 overflow-hidden">
+                <div className="relative h-40 overflow-hidden flex-shrink-0">
                   <img src={college.image} alt={college.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
                   <Badge className="absolute top-3 left-3 bg-foreground/80 text-background border-0 text-xs">
                     {college.type}
                   </Badge>
                 </div>
 
-                <div className="p-4 space-y-3">
+                <div className="p-4 space-y-3 flex-1 flex flex-col">
                   <div>
                     <h3 className="text-lg font-bold text-foreground">{college.short_name}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-1">{college.name}, {college.city || college.location.split(",")[0]}</p>
@@ -107,7 +107,7 @@ export function FeaturedColleges() {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div className="grid grid-cols-2 gap-2 pt-1 mt-auto">
                     <Link to={`/colleges/${college.slug}`}>
                       <Button variant="outline" size="sm" className="w-full rounded-xl text-xs h-9">Know More</Button>
                     </Link>

@@ -6,7 +6,7 @@ import { TopRankedColleges } from "@/components/TopRankedColleges";
 import { CategorySection } from "@/components/CategorySection";
 import { CitySearch } from "@/components/CitySearch";
 import { OnlineEducationSection } from "@/components/OnlineEducationSection";
-import { StudyAbroadSection } from "@/components/StudyAbroadSection";
+
 import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ToolsSection } from "@/components/ToolsSection";
@@ -51,7 +51,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden max-w-full">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg">
         Skip to main content
       </a>
@@ -62,7 +62,7 @@ const Index = () => {
         <HeroBannerCarousel />
 
         {/* Main content with sticky right sidebar */}
-        <div className="px-3 md:container flex gap-6">
+        <div className="container flex gap-6">
           <div className="flex-1 min-w-0">
             <TopRankedColleges />
             <UpcomingExams />
@@ -89,9 +89,8 @@ const Index = () => {
         </div>
 
         <OnlineEducationSection />
-        <StudyAbroadSection />
 
-        <div className="px-3 md:container">
+        <div className="container">
           <ToolsSection />
 
           <section className="py-4">

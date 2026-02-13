@@ -18,7 +18,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
     >
       <Link to={`/courses/${course.slug}`} className="block h-full">
         <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-          <img src={course.image} alt={course.name} className="w-full h-36 object-cover" loading="lazy" />
+          <img src={course.image} alt={course.name} className="w-full h-40 object-cover flex-shrink-0" loading="lazy" />
           <div className="p-4 flex-1 flex flex-col">
             {/* Tags */}
             <div className="flex items-center gap-2 mb-2 flex-wrap">

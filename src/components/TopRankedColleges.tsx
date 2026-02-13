@@ -42,8 +42,8 @@ export function TopRankedColleges() {
   };
 
   return (
-    <section className="py-10 md:py-14 bg-background" aria-labelledby="top-colleges-heading">
-      <div className="container">
+    <section className="py-8 md:py-12 bg-background" aria-labelledby="top-colleges-heading">
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -92,9 +92,9 @@ export function TopRankedColleges() {
             >
               <Link
                 to={`/colleges/${college.slug}`}
-                className="group block bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-all h-full"
+                className="group block bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-all h-full flex flex-col"
               >
-                <div className="relative h-36 overflow-hidden">
+                <div className="relative h-36 overflow-hidden flex-shrink-0">
                   <img
                     src={college.image}
                     alt={college.name}

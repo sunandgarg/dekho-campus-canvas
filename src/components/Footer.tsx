@@ -47,7 +47,7 @@ export function Footer() {
     <footer className="bg-foreground text-background" role="contentinfo">
       {/* Lead Capture Section */}
       <div className="border-b border-background/10">
-        <div className="px-3 md:container py-8 md:py-12">
+        <div className="container py-8 md:py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ export function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="px-4 md:container py-10 md:py-16">
+      <div className="container py-10 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
           {/* Brand */}
           <div className="col-span-2">
@@ -140,7 +140,7 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-background/10">
-        <div className="px-4 md:container py-4 md:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="container py-4 md:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs md:text-sm text-background/70">
             © 2026 DekhoCampus. Made with ❤️ for students in India
           </p>

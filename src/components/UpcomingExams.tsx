@@ -20,8 +20,8 @@ export function UpcomingExams() {
   if (!topExams.length) return null;
 
   return (
-    <section className="py-10 md:py-14 bg-background" aria-labelledby="top-exams-heading">
-      <div className="container">
+    <section className="py-8 md:py-12 bg-background" aria-labelledby="top-exams-heading">
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
