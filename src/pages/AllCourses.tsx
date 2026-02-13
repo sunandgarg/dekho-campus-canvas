@@ -6,23 +6,29 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
-import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CourseCard } from "@/components/CourseCard";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
+import { MobileBottomFilter } from "@/components/MobileBottomFilter";
 import { useDbCourses } from "@/hooks/useCoursesData";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import {
   courseStreams, courseCourseGroups, courseSpecializations,
   courseModes, courseDurations,
 } from "@/data/indianLocations";
 
+const topSearches = [
+  "B.Tech", "MBA", "MBBS", "B.Sc", "BBA", "MCA", "B.Com", "LLB",
+];
+
 export default function AllCourses() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
   const [selectedStreams, setSelectedStreams] = useState<string[]>(() => {
     const s = searchParams.get("stream"); return s ? [s] : [];
   });
@@ -35,7 +41,6 @@ export default function AllCourses() {
   const { data: dbCourses } = useDbCourses();
   const courses = dbCourses ?? [];
 
-  // Sync filters to URL
   useEffect(() => {
     const params = new URLSearchParams();
     if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
@@ -61,12 +66,7 @@ export default function AllCourses() {
   }, [search, selectedStreams, selectedCourseGroups, selectedSpecializations, selectedModes, selectedDurations, courses]);
 
   const heading = useMemo(() => {
-    // Course Groups override Streams; Modes add qualifier
-    const category = selectedCourseGroups.length === 1
-      ? selectedCourseGroups[0]
-      : selectedStreams.length === 1
-        ? selectedStreams[0]
-        : "";
+    const category = selectedCourseGroups.length === 1 ? selectedCourseGroups[0] : selectedStreams.length === 1 ? selectedStreams[0] : "";
     const mode = selectedModes.length === 1 ? selectedModes[0] + " " : "";
     return `Top ${mode}${category ? category + " " : ""}Courses in India 2026`;
   }, [selectedStreams, selectedCourseGroups, selectedModes]);
@@ -110,7 +110,24 @@ export default function AllCourses() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search courses (e.g. B.Tech, MBA, MBBS...)" className="pl-10 rounded-xl h-10" />
           </div>
-          <MobileFilterSheet filters={filterConfigs} activeCount={activeFilters.length} onClearAll={clearAll} />
+        </div>
+
+        {/* Top Searches - mobile only */}
+        <div className="lg:hidden mb-4">
+          <p className="text-xs font-semibold text-muted-foreground mb-2">Top Searches</p>
+          <div className="flex flex-wrap gap-1.5">
+            {topSearches.map(s => (
+              <button
+                key={s}
+                onClick={() => setSearch(s)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                  search === s ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
 
         {activeFilters.length > 0 && (
@@ -127,13 +144,9 @@ export default function AllCourses() {
             <div className="sticky top-20 space-y-3 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-foreground">Filter by</span>
-                {activeFilters.length > 0 && (
-                  <button onClick={clearAll} className="text-xs text-destructive hover:underline">Reset all</button>
-                )}
+                {activeFilters.length > 0 && <button onClick={clearAll} className="text-xs text-destructive hover:underline">Reset all</button>}
               </div>
-              {filterConfigs.map((fc) => (
-                <FilterSection key={fc.title} {...fc} />
-              ))}
+              {filterConfigs.map(fc => <FilterSection key={fc.title} {...fc} />)}
               <LeadCaptureForm variant="sidebar" title="Confused About Courses?" subtitle="Get free career counseling" source="courses_sidebar" />
               <DynamicAdBanner variant="vertical" position="sidebar" page="courses" />
             </div>
@@ -165,7 +178,9 @@ export default function AllCourses() {
       </main>
       <Footer />
       <FloatingBot />
-      <FixedCounsellingCTA />
+      <WhatsAppButton />
+      <MobileBottomFilter activeCount={activeFilters.length} onOpen={() => setFilterOpen(true)} />
+      <MobileFilterSheet filters={filterConfigs} activeCount={activeFilters.length} onClearAll={clearAll} open={filterOpen} onOpenChange={setFilterOpen} />
     </div>
   );
 }
@@ -174,10 +189,7 @@ function FilterSection({ title, items, selected, onChange }: { title: string; it
   const [expanded, setExpanded] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const [filterSearch, setFilterSearch] = useState("");
-
-  const filteredItems = filterSearch
-    ? items.filter(i => i.toLowerCase().includes(filterSearch.toLowerCase()))
-    : items;
+  const filteredItems = filterSearch ? items.filter(i => i.toLowerCase().includes(filterSearch.toLowerCase())) : items;
   const displayItems = showAll ? filteredItems : filteredItems.slice(0, 4);
 
   const toggle = (item: string) => {
@@ -193,14 +205,7 @@ function FilterSection({ title, items, selected, onChange }: { title: string; it
       </button>
       {expanded && (
         <div className="mt-2">
-          {items.length > 10 && (
-            <Input
-              value={filterSearch}
-              onChange={e => setFilterSearch(e.target.value)}
-              placeholder={`Search ${title.toLowerCase()}...`}
-              className="h-8 text-xs mb-2 rounded-lg"
-            />
-          )}
+          {items.length > 10 && <Input value={filterSearch} onChange={e => setFilterSearch(e.target.value)} placeholder={`Search ${title.toLowerCase()}...`} className="h-8 text-xs mb-2 rounded-lg" />}
           <div className="space-y-1.5 max-h-48 overflow-y-auto">
             {displayItems.map(item => (
               <label key={item} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted rounded px-1 py-0.5">

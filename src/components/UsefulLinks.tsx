@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 import type { ScrollSection } from "@/components/ScrollSpy";
 
 interface UsefulLinksProps {
@@ -22,13 +21,13 @@ export function UsefulLinks({
   const displayName = shortName || name;
   const location = city || state || "India";
 
-  // Generate "Know more about" links from page sections
+  // "Know more about" links — scroll to sections on same page
   const knowMoreLinks = sections.slice(0, 8).map((s) => ({
     label: s.label,
-    href: `/${type}s/${slug}/${s.id}`,
+    sectionId: s.id,
   }));
 
-  // Generate course group links dynamically
+  // Course group links for college pages
   const courseGroupLinks = (courseGroups || [
     "B.Tech", "B.Sc.", "M.Sc.", "MBA", "M.Des", "B.Des", "M.A.", "Ph.D.",
     "Executive MBA", "BBA", "MCA", "BCA",
@@ -37,38 +36,47 @@ export function UsefulLinks({
     href: `/courses?group=${encodeURIComponent(cg)}`,
   }));
 
-  // Generate top courses dynamically
+  // Top courses at this college
   const topCourseLinks = (topCourses || []).slice(0, 8).map((c) => ({
     label: c.name,
     href: `/courses/${c.slug}`,
   }));
 
-  // Generate location-based course links
+  // Location-based course links — navigate to colleges with filters
   const locationCourseLinks = location !== "India" ? [
     "B.Sc.", "M.Sc.", "Ph.D.", "MBA", "M.A.", "B.Des", "B.Tech", "M.Tech",
   ].slice(0, 8).map((c) => ({
     label: `${c} in ${location}`,
-    href: `/courses?location=${encodeURIComponent(location)}`,
+    href: `/colleges?city=${encodeURIComponent(location)}&stream=${encodeURIComponent(c)}`,
   })) : [];
+
+  const scrollToSection = (sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 120;
+      window.scrollTo({ top: y, behavior: "smooth" });
+      window.history.replaceState(null, "", `/${type}s/${slug}/${sectionId}`);
+    }
+  };
 
   return (
     <section className="bg-card rounded-2xl border border-border p-5 mt-6">
       <h2 className="text-lg font-bold text-foreground mb-5">Useful Links</h2>
       <div className="grid sm:grid-cols-2 gap-6">
-        {/* Know more about */}
+        {/* Know more about — in-page scroll */}
         <div>
           <h3 className="text-sm font-semibold text-foreground mb-3">
             Know more about {displayName}
           </h3>
           <div className="flex flex-wrap gap-2">
             {knowMoreLinks.map((l) => (
-              <Link
-                key={l.href}
-                to={l.href}
-                className="text-xs text-primary hover:underline bg-primary/5 px-2.5 py-1.5 rounded-lg"
+              <button
+                key={l.sectionId}
+                onClick={() => scrollToSection(l.sectionId)}
+                className="text-xs text-primary hover:underline bg-primary/5 px-2.5 py-1.5 rounded-lg cursor-pointer"
               >
                 {l.label}
-              </Link>
+              </button>
             ))}
           </div>
         </div>
@@ -113,7 +121,7 @@ export function UsefulLinks({
           </div>
         )}
 
-        {/* Location courses */}
+        {/* Location courses - navigate to colleges page with filters */}
         {locationCourseLinks.length > 0 && (
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-3">

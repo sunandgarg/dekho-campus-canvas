@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 export interface ScrollSection {
@@ -15,7 +15,6 @@ interface ScrollSpyProps {
 
 export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
   const { tab } = useParams<{ tab?: string }>();
-  const navigate = useNavigate();
   const initialTab = tab || sections[0]?.id || "";
   const [activeId, setActiveId] = useState(initialTab);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -46,12 +45,13 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
         if (visible.length > 0) {
           const newId = visible[0].target.id;
           setActiveId(newId);
+          // Update URL hash without causing navigation
           if (baseUrl) {
             window.history.replaceState(null, "", `${baseUrl}/${newId}`);
           }
         }
       },
-      { rootMargin: "-100px 0px -60% 0px", threshold: 0.1 }
+      { rootMargin: "-80px 0px -60% 0px", threshold: 0.05 }
     );
 
     sections.forEach(({ id }) => {
@@ -66,9 +66,9 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
     isUserClick.current = true;
     setActiveId(id);
     
-    // Use navigate for proper URL update
+    // Update URL
     if (baseUrl) {
-      navigate(`${baseUrl}/${id}`, { replace: true });
+      window.history.replaceState(null, "", `${baseUrl}/${id}`);
     }
     
     const el = document.getElementById(id);
@@ -79,9 +79,9 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
     setTimeout(() => {
       isUserClick.current = false;
     }, 1200);
-  }, [baseUrl, navigate]);
+  }, [baseUrl]);
 
-  // Auto-scroll active tab into view
+  // Auto-scroll active tab into view in nav bar
   useEffect(() => {
     if (!navRef.current) return;
     const activeBtn = navRef.current.querySelector(`[data-id="${activeId}"]`);
@@ -95,7 +95,7 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
       ref={navRef}
       className={cn(
         "sticky top-14 md:top-16 z-30 bg-background/95 backdrop-blur-md border-b border-border",
-        "flex overflow-x-auto scrollbar-hide gap-0.5 px-1 py-1.5",
+        "flex overflow-x-auto scrollbar-hide gap-0.5 px-1 py-2",
         className
       )}
     >
@@ -105,7 +105,7 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
           data-id={id}
           onClick={() => scrollTo(id)}
           className={cn(
-            "whitespace-nowrap px-3 py-1.5 rounded-lg text-sm font-medium transition-all shrink-0",
+            "whitespace-nowrap px-3.5 py-2 rounded-lg text-sm font-medium transition-all shrink-0",
             activeId === id
               ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground hover:bg-muted"

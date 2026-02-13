@@ -18,15 +18,21 @@ interface MobileFilterSheetProps {
   filters: FilterConfig[];
   activeCount: number;
   onClearAll: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function MobileFilterSheet({ filters, activeCount, onClearAll }: MobileFilterSheetProps) {
-  const [open, setOpen] = useState(false);
+export function MobileFilterSheet({ filters, activeCount, onClearAll, open, onOpenChange }: MobileFilterSheetProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const setOpen = isControlled ? (onOpenChange || (() => {})) : setInternalOpen;
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={isOpen} onOpenChange={setOpen}>
+      {/* Only show trigger button on desktop-like inline usage; mobile uses bottom bar */}
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="lg:hidden rounded-xl gap-2 h-9 text-xs">
+        <Button variant="outline" size="sm" className="hidden lg:flex rounded-xl gap-2 h-9 text-xs">
           <Filter className="w-3.5 h-3.5" />
           Filters
           {activeCount > 0 && (
@@ -34,7 +40,7 @@ export function MobileFilterSheet({ filters, activeCount, onClearAll }: MobileFi
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[85vw] max-w-sm p-0 overflow-y-auto">
+      <SheetContent side="bottom" className="max-h-[80vh] rounded-t-2xl p-0 overflow-y-auto lg:max-w-sm lg:rounded-xl">
         <SheetHeader className="p-4 border-b border-border sticky top-0 bg-background z-10">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-base">Filters</SheetTitle>

@@ -20,7 +20,7 @@ import { AILeadForm } from "@/components/AILeadForm";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
-import { HomeMobileBottomNav } from "@/components/HomeMobileBottomNav";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -117,7 +117,7 @@ const Index = () => {
         onRequestLeadForm={handleRequestLeadForm}
       />
       <FloatingBot />
-      <HomeMobileBottomNav />
+      <WhatsAppButton />
     </div>
   );
 };
