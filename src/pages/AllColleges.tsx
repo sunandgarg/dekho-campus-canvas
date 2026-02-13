@@ -47,15 +47,16 @@ export default function AllColleges() {
   const category = selectedStreams[0] || "";
   const { data: featuredSlugs } = useFeaturedColleges(category || undefined, selectedState || undefined);
 
-  // Sync filters to URL search params with SEO-friendly slugs
+  // Sync filters to URL search params
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0].toLowerCase().replace(/[\s\/]+/g, "-"));
-    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0].toLowerCase().replace(/\s+/g, "-"));
-    if (selectedCity) params.set("city", selectedCity.toLowerCase().replace(/\s+/g, "-"));
-    else if (selectedState) params.set("state", selectedState.toLowerCase().replace(/\s+/g, "-"));
+    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
+    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
+    if (selectedCity) params.set("city", selectedCity);
+    else if (selectedState) params.set("state", selectedState);
+    if (selectedExams.length === 1) params.set("exam", selectedExams[0]);
     setSearchParams(params, { replace: true });
-  }, [selectedStreams, selectedCourseGroups, selectedState, selectedCity, setSearchParams]);
+  }, [selectedStreams, selectedCourseGroups, selectedState, selectedCity, selectedExams, setSearchParams]);
 
   const activeFilters = [
     ...selectedStreams, ...selectedTypes, ...selectedApprovals,

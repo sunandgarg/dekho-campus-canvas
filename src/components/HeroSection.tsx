@@ -84,8 +84,8 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
 
   const handleAskAI = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim() && onOpenChat) {
-      onOpenChat(searchQuery.trim());
+    if (onOpenChat) {
+      onOpenChat(searchQuery.trim() || undefined);
       setSearchQuery("");
     }
   };

@@ -33,13 +33,13 @@ export default function AllExams() {
   const { data: dbExams } = useDbExams();
   const exams = dbExams ?? [];
 
-  // Sync filters to URL with SEO-friendly slugs
+  // Sync filters to URL
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0].toLowerCase().replace(/[\s\/\.]+/g, "-"));
-    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0].toLowerCase().replace(/\s+/g, "-"));
-    if (selectedLevels.length === 1) params.set("level", selectedLevels[0].toLowerCase().replace(/\s+/g, "-"));
-    if (selectedCategories.length === 1) params.set("category", selectedCategories[0].toLowerCase().replace(/\s+/g, "-"));
+    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
+    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
+    if (selectedLevels.length === 1) params.set("level", selectedLevels[0]);
+    if (selectedCategories.length === 1) params.set("category", selectedCategories[0]);
     setSearchParams(params, { replace: true });
   }, [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels, setSearchParams]);
 

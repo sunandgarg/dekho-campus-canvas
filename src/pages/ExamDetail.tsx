@@ -85,7 +85,7 @@ export default function ExamDetail() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0">
           <div className="relative">
             <img src={exam.image} alt={exam.name} className="w-full h-48 md:h-56 object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
           </div>
           <div className="p-4 md:p-6 -mt-14 relative z-10">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -93,7 +93,7 @@ export default function ExamDetail() {
               <Badge className="bg-accent/90 text-accent-foreground text-xs">{exam.level}</Badge>
               <Badge className={`text-xs ${exam.status === "Applications Open" ? "bg-success/90 text-success-foreground" : "bg-muted text-muted-foreground"}`}>{exam.status}</Badge>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-white md:text-foreground mb-1">{exam.name} 2026</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-foreground mb-1">{exam.name} 2026</h1>
             <p className="text-sm text-muted-foreground mb-3">{exam.full_name}</p>
             <div className="flex items-center gap-2 flex-wrap">
               {exam.registration_url && exam.registration_url !== "#" && (
@@ -117,14 +117,11 @@ export default function ExamDetail() {
 
         <ScrollSpy sections={EXAM_SECTIONS} baseUrl={`/exams/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <WhatsNewSection entityName={exam.name} entityType="exam" category={exam.category} />
-          </div>
-          <div className="hidden lg:block" />
+        <div className="mb-6">
+          <WhatsNewSection entityName={exam.name} entityType="exam" category={exam.category} />
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -408,7 +405,9 @@ export default function ExamDetail() {
           </div>
 
           <aside className="hidden lg:block">
-            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+            <div className="space-y-4">
+              <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} interestedExamSlug={exam.slug} />
+
               {/* Upcoming Exams */}
               <div className="bg-card rounded-2xl border border-border p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3">📅 Upcoming Exams</h3>
@@ -454,7 +453,6 @@ export default function ExamDetail() {
                 </div>
               </div>
 
-              <LeadCaptureForm variant="card" title={`Prepare for ${exam.name}`} subtitle="Get free expert preparation strategy" source={`exam_detail_sidebar_${exam.slug}`} interestedExamSlug={exam.slug} />
               <DynamicAdBanner variant="vertical" position="sidebar" page="exams" itemSlug={slug} />
             </div>
           </aside>

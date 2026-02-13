@@ -92,7 +92,7 @@ export default function CollegeDetail() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0">
           <div className="relative">
             <img src={college.image} alt={college.name} className="w-full h-48 md:h-64 object-cover" loading="eager" />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
           </div>
           <div className="p-4 md:p-6 -mt-16 relative z-10">
             <div className="flex items-start gap-4">
@@ -105,7 +105,7 @@ export default function CollegeDetail() {
                     <Badge key={tag} className="bg-primary/90 text-primary-foreground text-xs">{tag}</Badge>
                   ))}
                 </div>
-                <h1 className="text-xl md:text-2xl font-bold text-white md:text-foreground mb-1 line-clamp-2">{college.name}</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-foreground mb-1 line-clamp-2">{college.name}</h1>
                 <div className="flex items-center gap-3 flex-wrap text-sm text-muted-foreground">
                   <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{college.location}</span>
                   <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Estd. {college.established}</span>
@@ -128,14 +128,11 @@ export default function CollegeDetail() {
 
         <ScrollSpy sections={COLLEGE_SECTIONS} baseUrl={`/colleges/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <WhatsNewSection entityName={college.short_name || college.name} entityType="college" category={college.category} />
-          </div>
-          <div className="hidden lg:block" /> {/* spacer for grid alignment */}
+        <div className="mb-6">
+          <WhatsNewSection entityName={college.short_name || college.name} entityType="college" category={college.category} />
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -507,9 +504,11 @@ export default function CollegeDetail() {
             />
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar - flows naturally, lead form first */}
           <aside className="hidden lg:block">
-            <div className="sticky top-20 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
+            <div className="space-y-4">
+              <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
+
               {/* Get Started CTA */}
               <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl border border-primary/20 p-4 text-center">
                 <h3 className="text-sm font-bold text-foreground mb-1">Get Started!</h3>
@@ -551,7 +550,6 @@ export default function CollegeDetail() {
                 </div>
               )}
 
-              <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
               <DynamicAdBanner variant="vertical" position="sidebar" page="colleges" itemSlug={slug} />
             </div>
           </aside>
