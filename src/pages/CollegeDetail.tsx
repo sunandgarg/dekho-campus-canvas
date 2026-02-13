@@ -90,22 +90,25 @@ export default function CollegeDetail() {
 
         {/* Hero Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0">
+          {/* Banner Image */}
           <div className="relative">
-            <img src={college.image} alt={college.name} className="w-full h-48 md:h-64 object-cover" loading="eager" />
+            <img src={college.image} alt={college.name} className="w-full h-48 md:h-64 object-cover object-center" loading="eager" />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
           </div>
-          <div className="p-4 md:p-6 -mt-16 relative z-10">
+          
+          {/* Content Below Image */}
+          <div className="p-4 md:p-6">
             <div className="flex items-start gap-4">
               {college.logo && (
-                <img src={college.logo} alt={college.short_name} className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-background bg-background object-cover shadow-lg" />
+                <img src={college.logo} alt={college.short_name} className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-border bg-background object-cover shadow-lg -mt-12 relative z-10" />
               )}
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 pt-1">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   {college.tags.slice(0, 3).map((tag) => (
                     <Badge key={tag} className="bg-primary/90 text-primary-foreground text-xs">{tag}</Badge>
                   ))}
                 </div>
-                <h1 className="text-xl md:text-2xl font-bold text-foreground mb-1 line-clamp-2">{college.name}</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-foreground mb-1">{college.name}</h1>
                 <div className="flex items-center gap-3 flex-wrap text-sm text-muted-foreground">
                   <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{college.location}</span>
                   <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Estd. {college.established}</span>

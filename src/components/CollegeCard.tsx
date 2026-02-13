@@ -18,12 +18,12 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
       transition={{ delay: index * 0.04 }}
     >
       <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image */}
-        <div className="relative h-44 flex-shrink-0">
+        {/* Image - fixed height with zoom-in crop */}
+        <div className="relative h-48 flex-shrink-0 overflow-hidden">
           <img
             src={college.image}
             alt={college.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center scale-110"
             loading="lazy"
           />
           <Badge className="absolute top-3 left-3 bg-foreground/80 text-background border-0 text-xs">

@@ -105,7 +105,7 @@ export function ScrollSpy({ sections, className, baseUrl }: ScrollSpyProps) {
           data-id={id}
           onClick={() => scrollTo(id)}
           className={cn(
-            "whitespace-nowrap px-3.5 py-2 rounded-lg text-sm font-medium transition-all shrink-0",
+            "whitespace-nowrap px-4 py-2.5 rounded-lg text-sm md:text-base font-semibold transition-all shrink-0",
             activeId === id
               ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground hover:bg-muted"

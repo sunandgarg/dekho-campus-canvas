@@ -81,10 +81,10 @@ export default function CourseDetail() {
         {/* Hero Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0">
           <div className="relative">
-            <img src={course.image} alt={course.name} className="w-full h-48 md:h-56 object-cover" />
+            <img src={course.image} alt={course.name} className="w-full h-48 md:h-56 object-cover object-center" />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
           </div>
-          <div className="p-4 md:p-6 -mt-14 relative z-10">
+          <div className="p-4 md:p-6">
             <div className="flex items-center gap-2 mb-2">
               <Badge className="bg-primary/90 text-primary-foreground text-xs">{course.category}</Badge>
               <Badge className="bg-accent/90 text-accent-foreground text-xs">{course.level}</Badge>
