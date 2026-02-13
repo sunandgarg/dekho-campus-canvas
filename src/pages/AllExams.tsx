@@ -6,22 +6,28 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FloatingBot } from "@/components/FloatingBot";
-import { FixedCounsellingCTA } from "@/components/FixedCounsellingCTA";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ExamCard } from "@/components/ExamCard";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
+import { MobileBottomFilter } from "@/components/MobileBottomFilter";
 import { useDbExams } from "@/hooks/useExamsData";
 import { useSearchParams } from "react-router-dom";
 import {
   examCategories, examStreams, examCourseGroups, examLevels,
 } from "@/data/indianLocations";
 
+const topSearches = [
+  "JEE Main", "NEET", "CAT", "GATE", "CLAT", "CUET", "JEE Advanced", "NEET PG",
+];
+
 export default function AllExams() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(() => {
     const c = searchParams.get("category"); return c ? [c] : [];
   });
@@ -33,7 +39,6 @@ export default function AllExams() {
   const { data: dbExams } = useDbExams();
   const exams = dbExams ?? [];
 
-  // Sync filters to URL
   useEffect(() => {
     const params = new URLSearchParams();
     if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
@@ -56,14 +61,7 @@ export default function AllExams() {
   }, [search, selectedCategories, selectedStreams, selectedCourseGroups, selectedLevels, exams]);
 
   const heading = useMemo(() => {
-    // Course Groups override Streams for heading; level adds qualifier
-    const category = selectedCourseGroups.length === 1
-      ? selectedCourseGroups[0]
-      : selectedStreams.length === 1
-        ? selectedStreams[0]
-        : selectedCategories.length === 1
-          ? selectedCategories[0]
-          : "";
+    const category = selectedCourseGroups.length === 1 ? selectedCourseGroups[0] : selectedStreams.length === 1 ? selectedStreams[0] : selectedCategories.length === 1 ? selectedCategories[0] : "";
     const level = selectedLevels.length === 1 ? selectedLevels[0] + " Level " : "";
     return `Top ${level}${category ? category + " " : ""}Exams in India 2026`;
   }, [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels]);
@@ -87,7 +85,6 @@ export default function AllExams() {
     { title: "Level of Exams", items: examLevels, selected: selectedLevels, onChange: setSelectedLevels },
   ];
 
-  // Chunk filtered items into groups of 4 for inserting ads
   const ITEMS_PER_AD = 4;
 
   return (
@@ -106,7 +103,24 @@ export default function AllExams() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search exams (e.g. JEE, NEET, CAT...)" className="pl-10 rounded-xl h-10" />
           </div>
-          <MobileFilterSheet filters={filterConfigs} activeCount={activeFilters.length} onClearAll={clearAll} />
+        </div>
+
+        {/* Top Searches - mobile only */}
+        <div className="lg:hidden mb-4">
+          <p className="text-xs font-semibold text-muted-foreground mb-2">Top Searches</p>
+          <div className="flex flex-wrap gap-1.5">
+            {topSearches.map(s => (
+              <button
+                key={s}
+                onClick={() => setSearch(s)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                  search === s ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
 
         {activeFilters.length > 0 && (
@@ -123,13 +137,9 @@ export default function AllExams() {
             <div className="sticky top-20 space-y-3 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-foreground">Filter By</span>
-                {activeFilters.length > 0 && (
-                  <button onClick={clearAll} className="text-xs text-destructive hover:underline">Reset</button>
-                )}
+                {activeFilters.length > 0 && <button onClick={clearAll} className="text-xs text-destructive hover:underline">Reset</button>}
               </div>
-              {filterConfigs.map((fc) => (
-                <FilterSection key={fc.title} {...fc} />
-              ))}
+              {filterConfigs.map(fc => <FilterSection key={fc.title} {...fc} />)}
               <LeadCaptureForm variant="sidebar" title="Need Exam Guidance?" subtitle="Get free preparation strategy" source="exams_sidebar" />
               <DynamicAdBanner variant="vertical" position="sidebar" page="exams" />
             </div>
@@ -161,7 +171,9 @@ export default function AllExams() {
       </main>
       <Footer />
       <FloatingBot />
-      <FixedCounsellingCTA />
+      <WhatsAppButton />
+      <MobileBottomFilter activeCount={activeFilters.length} onOpen={() => setFilterOpen(true)} />
+      <MobileFilterSheet filters={filterConfigs} activeCount={activeFilters.length} onClearAll={clearAll} open={filterOpen} onOpenChange={setFilterOpen} />
     </div>
   );
 }

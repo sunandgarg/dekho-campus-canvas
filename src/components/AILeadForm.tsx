@@ -34,8 +34,8 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone) {
-      toast.error("Please fill name and phone number");
+    if (!formData.name || !formData.phone || !formData.email || !formData.course || !formData.state || !formData.city) {
+      toast.error("Please fill all required fields");
       return;
     }
     setIsLoading(true);
@@ -122,15 +122,16 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
             />
           </div>
 
-          {/* Email */}
+          {/* Email - required */}
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={formData.email}
               onChange={(e) => update("email", e.target.value)}
-              placeholder="Email (optional)"
+              placeholder="Email *"
               type="email"
               className="pl-10 rounded-xl h-10 text-sm"
+              required
             />
           </div>
 
@@ -144,15 +145,16 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
             {educationStatus.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
 
-          {/* Course select */}
+          {/* Course select - required */}
           <div className="relative">
             <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <select
               value={formData.course}
               onChange={(e) => update("course", e.target.value)}
               className={`${selectCls} pl-10`}
+              required
             >
-              <option value="">Interested Course</option>
+              <option value="">Interested Course *</option>
               {courseOptions.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
