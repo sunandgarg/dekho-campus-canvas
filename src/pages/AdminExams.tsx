@@ -3,6 +3,7 @@ import { AdminLayout } from "@/components/AdminLayout";
 import { useAllDbExams, useSaveExam, useDeleteExam, type DbExam, type ExamImportantDate } from "@/hooks/useExamsData";
 import { AdminFormSection } from "@/components/AdminFormSection";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { ImageUpload } from "@/components/ImageUpload";
 import { ArrayFieldEditor } from "@/components/ArrayFieldEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -173,8 +174,8 @@ export default function AdminExams() {
                       {FREQUENCIES.map((f) => <option key={f}>{f}</option>)}
                     </select>
                   </div>
-                  <div><label className="text-xs font-medium text-muted-foreground">Logo URL</label><Input value={editing.logo || ""} onChange={(e) => update("logo", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
-                  <div><label className="text-xs font-medium text-muted-foreground">Image URL</label><Input value={editing.image || ""} onChange={(e) => update("image", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
+                  <ImageUpload value={editing.logo || ""} onChange={(v) => update("logo", v)} label="Logo" folder="exams/logos" />
+                  <ImageUpload value={editing.image || ""} onChange={(v) => update("image", v)} label="Image" folder="exams" />
                   <div><label className="text-xs font-medium text-muted-foreground">Website</label><Input value={editing.website || ""} onChange={(e) => update("website", e.target.value)} placeholder="https://..." className="rounded-lg h-9 text-sm" /></div>
                   <div><label className="text-xs font-medium text-muted-foreground">Registration URL</label><Input value={editing.registration_url || ""} onChange={(e) => update("registration_url", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
                 </div>

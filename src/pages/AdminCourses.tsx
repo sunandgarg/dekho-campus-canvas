@@ -3,6 +3,7 @@ import { AdminLayout } from "@/components/AdminLayout";
 import { useAllDbCourses, useSaveCourse, useDeleteCourse, type DbCourse } from "@/hooks/useCoursesData";
 import { AdminFormSection } from "@/components/AdminFormSection";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { ImageUpload } from "@/components/ImageUpload";
 import { ArrayFieldEditor } from "@/components/ArrayFieldEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -148,7 +149,7 @@ export default function AdminCourses() {
                   </div>
                   <div><label className="text-xs font-medium text-muted-foreground">Rating</label><Input type="number" step="0.1" min="0" max="5" value={editing.rating ?? 0} onChange={(e) => update("rating", parseFloat(e.target.value) || 0)} className="rounded-lg h-9 text-sm" /></div>
                   <div><label className="text-xs font-medium text-muted-foreground">Colleges Count</label><Input type="number" value={editing.colleges_count ?? 0} onChange={(e) => update("colleges_count", parseInt(e.target.value) || 0)} className="rounded-lg h-9 text-sm" /></div>
-                  <div><label className="text-xs font-medium text-muted-foreground">Image URL</label><Input value={editing.image || ""} onChange={(e) => update("image", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
+                  <ImageUpload value={editing.image || ""} onChange={(v) => update("image", v)} label="Image" folder="courses" />
                 </div>
                 <div><label className="text-xs font-medium text-muted-foreground">Description</label>
                   <textarea value={editing.description || ""} onChange={(e) => update("description", e.target.value)} rows={3} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-sm resize-none" />
