@@ -16,8 +16,8 @@ import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
 import { useInfiniteData } from "@/hooks/useInfiniteData";
-import { getCourseHeading, courseSeoRoutes } from "@/lib/seoSlugs";
-import { useSearchParams, Link } from "react-router-dom";
+import { getCourseHeading, courseSeoRoutes, filtersToSlug } from "@/lib/seoSlugs";
+import { Link } from "react-router-dom";
 import {
   courseStreams, courseCourseGroups, courseSpecializations,
   courseModes, courseDurations,
@@ -26,15 +26,10 @@ import {
 const topSearches = ["B.Tech", "MBA", "MBBS", "B.Sc", "BBA", "MCA", "B.Com", "LLB"];
 
 export default function AllCourses() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedStreams, setSelectedStreams] = useState<string[]>(() => {
-    const s = searchParams.get("stream"); return s ? [s] : [];
-  });
-  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>(() => {
-    const g = searchParams.get("group"); return g ? [g] : [];
-  });
+  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
+  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
   const [selectedSpecializations, setSelectedSpecializations] = useState<string[]>([]);
   const [selectedModes, setSelectedModes] = useState<string[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
@@ -57,12 +52,18 @@ export default function AllCourses() {
   });
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
-    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
-    if (selectedModes.length === 1) params.set("mode", selectedModes[0]);
-    setSearchParams(params, { replace: true });
-  }, [selectedStreams, selectedCourseGroups, selectedModes, setSearchParams]);
+    const slug = filtersToSlug("courses", {
+      courseGroup: selectedCourseGroups[0],
+      stream: selectedStreams[0],
+      mode: selectedModes[0],
+    });
+    const hasFilters = selectedCourseGroups.length > 0 || selectedStreams.length > 0 || selectedModes.length > 0;
+    if (hasFilters) {
+      window.history.replaceState(null, "", `/courses/${slug}`);
+    } else {
+      window.history.replaceState(null, "", "/courses");
+    }
+  }, [selectedStreams, selectedCourseGroups, selectedModes]);
 
   const activeFilters = [...selectedStreams, ...selectedCourseGroups, ...selectedSpecializations, ...selectedModes, ...selectedDurations];
 
@@ -124,12 +125,15 @@ export default function AllCourses() {
 
         {/* SEO Quick Links */}
         <div className="mb-4 flex flex-wrap gap-1.5">
-          {courseSeoRoutes.slice(0, 6).map(route => (
-            <Link key={route.label} to={`/courses?${new URLSearchParams(route.params).toString()}`}
-              className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
-              {route.label}
-            </Link>
-          ))}
+          {courseSeoRoutes.slice(0, 6).map(route => {
+            const slug = filtersToSlug("courses", route.params as Record<string, string>);
+            return (
+              <Link key={route.label} to={`/courses/${slug}`}
+                className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
+                {route.label}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Top Searches - mobile only */}

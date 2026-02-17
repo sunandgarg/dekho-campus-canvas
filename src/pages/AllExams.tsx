@@ -16,8 +16,8 @@ import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
 import { useInfiniteData } from "@/hooks/useInfiniteData";
-import { getExamHeading, examSeoRoutes } from "@/lib/seoSlugs";
-import { useSearchParams, Link } from "react-router-dom";
+import { getExamHeading, examSeoRoutes, filtersToSlug } from "@/lib/seoSlugs";
+import { Link } from "react-router-dom";
 import {
   examCategories, examStreams, examCourseGroups, examLevels,
 } from "@/data/indianLocations";
@@ -25,15 +25,10 @@ import {
 const topSearches = ["JEE Main", "NEET", "CAT", "GATE", "CLAT", "CUET", "JEE Advanced", "NEET PG"];
 
 export default function AllExams() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(() => {
-    const c = searchParams.get("category"); return c ? [c] : [];
-  });
-  const [selectedStreams, setSelectedStreams] = useState<string[]>(() => {
-    const s = searchParams.get("stream"); return s ? [s] : [];
-  });
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
   const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
 
@@ -55,13 +50,18 @@ export default function AllExams() {
   });
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
-    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
-    if (selectedLevels.length === 1) params.set("level", selectedLevels[0]);
-    if (selectedCategories.length === 1) params.set("category", selectedCategories[0]);
-    setSearchParams(params, { replace: true });
-  }, [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels, setSearchParams]);
+    const slug = filtersToSlug("exams", {
+      courseGroup: selectedCourseGroups[0],
+      stream: selectedStreams[0],
+      category: selectedCategories[0],
+    });
+    const hasFilters = selectedCourseGroups.length > 0 || selectedStreams.length > 0 || selectedCategories.length > 0 || selectedLevels.length > 0;
+    if (hasFilters) {
+      window.history.replaceState(null, "", `/exams/${slug}`);
+    } else {
+      window.history.replaceState(null, "", "/exams");
+    }
+  }, [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels]);
 
   const activeFilters = [...selectedCategories, ...selectedStreams, ...selectedCourseGroups, ...selectedLevels];
 
@@ -120,12 +120,15 @@ export default function AllExams() {
 
         {/* SEO Quick Links */}
         <div className="mb-4 flex flex-wrap gap-1.5">
-          {examSeoRoutes.map(route => (
-            <Link key={route.label} to={`/exams?${new URLSearchParams(route.params).toString()}`}
-              className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
-              {route.label}
-            </Link>
-          ))}
+          {examSeoRoutes.map(route => {
+            const slug = filtersToSlug("exams", route.params as Record<string, string>);
+            return (
+              <Link key={route.label} to={`/exams/${slug}`}
+                className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
+                {route.label}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Top Searches - mobile only */}

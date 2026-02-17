@@ -1,16 +1,20 @@
 /**
  * SEO Sub-Slug Utilities
- * 
- * Generates SEO-friendly headings and meta titles based on active filters.
- * These are optimized for high-volume search queries in the Indian education space.
- * 
- * Common search patterns:
- * - "Top engineering colleges in Delhi"
- * - "Best MBA courses in India 2026"
- * - "NEET exam preparation tips"
- * - "B.Tech colleges in Maharashtra fees"
- * - "Private medical colleges in Karnataka"
+ * Generates SEO-friendly headings, meta titles, and URL slugs based on active filters.
  */
+
+/** Sanitize a value into a URL-friendly slug segment */
+function slugify(val: string): string {
+  return val
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/** Get current year dynamically */
+function currentYear(): number {
+  return new Date().getFullYear();
+}
 
 /** Generate SEO heading for college listings */
 export function getCollegeHeading(filters: {
@@ -23,28 +27,15 @@ export function getCollegeHeading(filters: {
   approval?: string;
 }) {
   const parts: string[] = ["Top"];
-
-  // Type (Private/Government)
   if (filters.type) parts.push(filters.type);
-
-  // Course group takes priority over stream
   if (filters.courseGroup) parts.push(filters.courseGroup);
   else if (filters.stream) parts.push(filters.stream);
-
-  // Exam acceptance
   if (filters.exam) parts.push(`Accepting ${filters.exam}`);
-
   parts.push("Colleges");
-
-  // Approval
   if (filters.approval) parts.push(`(${filters.approval} Approved)`);
-
-  // Location
   const location = filters.city || filters.state || "India";
   parts.push(`in ${location}`);
-
-  parts.push("2026");
-
+  parts.push(String(currentYear()));
   return parts.join(" ");
 }
 
@@ -56,15 +47,11 @@ export function getCourseHeading(filters: {
   duration?: string;
 }) {
   const parts: string[] = ["Top"];
-
   if (filters.mode) parts.push(filters.mode);
   if (filters.courseGroup) parts.push(filters.courseGroup);
   else if (filters.stream) parts.push(filters.stream);
-
-  parts.push("Courses in India 2026");
-
+  parts.push(`Courses in India ${currentYear()}`);
   if (filters.duration) parts.push(`— ${filters.duration}`);
-
   return parts.join(" ");
 }
 
@@ -76,15 +63,69 @@ export function getExamHeading(filters: {
   level?: string;
 }) {
   const parts: string[] = ["Top"];
-
   if (filters.level) parts.push(filters.level + " Level");
   if (filters.courseGroup) parts.push(filters.courseGroup);
   else if (filters.stream) parts.push(filters.stream);
   else if (filters.category) parts.push(filters.category);
-
-  parts.push("Entrance Exams in India 2026");
-
+  parts.push(`Entrance Exams in India ${currentYear()}`);
   return parts.join(" ");
+}
+
+/** Generate SEO-friendly URL slug from filter state */
+export function filtersToSlug(
+  entity: "colleges" | "courses" | "exams",
+  filters: Record<string, string | undefined>
+): string {
+  const parts: string[] = [];
+
+  if (filters.type) parts.push(slugify(filters.type));
+  if (filters.courseGroup) parts.push(slugify(filters.courseGroup));
+  else if (filters.stream) parts.push(slugify(filters.stream));
+  if (filters.exam) parts.push(`accepting-${slugify(filters.exam)}`);
+  if (filters.mode) parts.push(slugify(filters.mode));
+
+  parts.push(entity);
+
+  if (filters.approval) parts.push(`${slugify(filters.approval)}-approved`);
+
+  const location = filters.city || filters.state;
+  if (location) parts.push(`in-${slugify(location)}`);
+  else parts.push("in-india");
+
+  parts.push(String(currentYear()));
+  return parts.join("-");
+}
+
+/** Parse a SEO slug back into filter parameters */
+export function slugToFilters(slug: string): Record<string, string> {
+  const filters: Record<string, string> = {};
+  // Extract year
+  const yearMatch = slug.match(/-(\d{4})$/);
+  if (yearMatch) slug = slug.replace(/-\d{4}$/, "");
+
+  // Extract location (in-xxx)
+  const locationMatch = slug.match(/in-([a-z-]+)$/);
+  if (locationMatch && locationMatch[1] !== "india") {
+    filters.location = locationMatch[1].replace(/-/g, " ");
+    slug = slug.replace(/in-[a-z-]+$/, "").replace(/-$/, "");
+  }
+
+  // Extract exam (accepting-xxx)
+  const examMatch = slug.match(/accepting-([a-z0-9-]+)/);
+  if (examMatch) {
+    filters.exam = examMatch[1].replace(/-/g, " ").toUpperCase();
+    slug = slug.replace(/accepting-[a-z0-9-]+/, "").replace(/--+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  // Remove entity name
+  slug = slug.replace(/(colleges|courses|exams)/, "").replace(/--+/g, "-").replace(/^-|-$/g, "");
+
+  // What remains is likely the course group or stream
+  if (slug) {
+    filters.group = slug.replace(/-/g, " ");
+  }
+
+  return filters;
 }
 
 /** Generate URL-friendly slug from filter state */
@@ -103,7 +144,6 @@ export function filtersToSearchParams(filters: Record<string, string | string[]>
 
 /** Common SEO sub-slug configurations for colleges */
 export const collegeSeoRoutes = [
-  // By stream
   { label: "Engineering Colleges", params: { stream: "Engineering" } },
   { label: "Medical Colleges", params: { stream: "Medical" } },
   { label: "Management Colleges", params: { stream: "Management" } },
@@ -112,25 +152,17 @@ export const collegeSeoRoutes = [
   { label: "Arts Colleges", params: { stream: "Arts & Humanities" } },
   { label: "Commerce Colleges", params: { stream: "Commerce" } },
   { label: "Design Colleges", params: { stream: "Design" } },
-  // By city
   { label: "Colleges in Delhi", params: { state: "Delhi" } },
   { label: "Colleges in Mumbai", params: { city: "Mumbai", state: "Maharashtra" } },
   { label: "Colleges in Bangalore", params: { city: "Bangalore", state: "Karnataka" } },
   { label: "Colleges in Chennai", params: { city: "Chennai", state: "Tamil Nadu" } },
-  { label: "Colleges in Hyderabad", params: { city: "Hyderabad", state: "Telangana" } },
-  { label: "Colleges in Pune", params: { city: "Pune", state: "Maharashtra" } },
-  { label: "Colleges in Kolkata", params: { city: "Kolkata", state: "West Bengal" } },
-  // By course group
   { label: "B.Tech Colleges", params: { group: "B.Tech" } },
   { label: "MBA Colleges", params: { group: "MBA" } },
   { label: "MBBS Colleges", params: { group: "MBBS" } },
   { label: "BBA Colleges", params: { group: "BBA" } },
   { label: "B.Com Colleges", params: { group: "B.Com" } },
-  { label: "B.Sc Colleges", params: { group: "B.Sc" } },
   { label: "LLB Colleges", params: { group: "LLB" } },
-  // Combined
   { label: "Engineering Colleges in Delhi", params: { stream: "Engineering", state: "Delhi" } },
-  { label: "Medical Colleges in Karnataka", params: { stream: "Medical", state: "Karnataka" } },
   { label: "MBA Colleges in Mumbai", params: { group: "MBA", city: "Mumbai", state: "Maharashtra" } },
 ];
 
@@ -144,7 +176,6 @@ export const courseSeoRoutes = [
   { label: "MBBS Courses", params: { group: "MBBS" } },
   { label: "BCA Courses", params: { group: "BCA" } },
   { label: "MCA Courses", params: { group: "MCA" } },
-  { label: "B.Sc Courses", params: { group: "B.Sc" } },
   { label: "Online Courses", params: { mode: "Online" } },
   { label: "Distance Learning Courses", params: { mode: "Distance" } },
 ];
