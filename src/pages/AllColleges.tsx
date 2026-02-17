@@ -1,7 +1,6 @@
 import { useState, useMemo, Fragment, useEffect } from "react";
-import { Search, MapPin, Star, Building, ChevronDown, ChevronUp, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Navbar } from "@/components/Navbar";
@@ -16,18 +15,27 @@ import { CollegeCardSkeleton } from "@/components/SkeletonCards";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
-import { useDbColleges } from "@/hooks/useCollegesData";
-import { useDbArticles } from "@/hooks/useArticlesData";
+import { useInfiniteData } from "@/hooks/useInfiniteData";
 import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
+import { getCollegeHeading, collegeSeoRoutes } from "@/lib/seoSlugs";
 import {
   indianStates, citiesByState, collegeStreams, collegeTypes,
   collegeFeeRanges, collegeCourseGroups, collegeExams,
 } from "@/data/indianLocations";
 import { Link, useSearchParams } from "react-router-dom";
+import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
 
 const collegeApprovals = ["AICTE", "UGC", "NAAC", "MCI", "BCI", "AACSB"] as const;
 const collegeNaacGrades = ["A++", "A+", "A", "B++", "B+"] as const;
 
+/**
+ * AllColleges — College listing page with:
+ * - SEO-optimized dynamic headings based on active filters
+ * - Infinite scroll with cursor-based pagination (12 items per batch)
+ * - Sidebar filters with search, checkboxes, and mobile sheet
+ * - Inline ads every 4 cards
+ * - Featured college priority ordering
+ */
 export default function AllColleges() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
@@ -40,15 +48,38 @@ export default function AllColleges() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedApprovals, setSelectedApprovals] = useState<string[]>([]);
   const [selectedNaac, setSelectedNaac] = useState<string[]>([]);
-  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
+  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>(() => {
+    const g = searchParams.get("group"); return g ? [g] : [];
+  });
   const [selectedFeeRanges, setSelectedFeeRanges] = useState<string[]>([]);
-  const [selectedExams, setSelectedExams] = useState<string[]>([]);
-  const { data: dbColleges } = useDbColleges();
-  const colleges = dbColleges ?? [];
+  const [selectedExams, setSelectedExams] = useState<string[]>(() => {
+    const e = searchParams.get("exam"); return e ? [e] : [];
+  });
+
+  // Build filters for DB query
+  const dbFilters = useMemo(() => {
+    const f: Record<string, string | string[] | undefined> = {};
+    if (selectedStreams.length > 0) f.category = selectedStreams.length === 1 ? selectedStreams[0] : undefined;
+    if (selectedState) f.state = selectedState;
+    if (selectedCity) f.city = selectedCity;
+    if (selectedTypes.length > 0) f.type = selectedTypes.length === 1 ? selectedTypes[0] : undefined;
+    return f;
+  }, [selectedStreams, selectedState, selectedCity, selectedTypes]);
+
+  const { items: colleges, sentinelRef, isLoading, isFetchingMore, hasMore } = useInfiniteData({
+    table: "colleges",
+    queryKey: ["infinite-colleges"],
+    orderBy: "rating",
+    ascending: false,
+    filters: dbFilters,
+    search: search || undefined,
+    searchFields: ["name", "city"],
+  });
 
   const category = selectedStreams[0] || "";
   const { data: featuredSlugs } = useFeaturedColleges(category || undefined, selectedState || undefined);
 
+  // Update URL params
   useEffect(() => {
     const params = new URLSearchParams();
     if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
@@ -69,29 +100,31 @@ export default function AllColleges() {
 
   const cities = selectedState ? (citiesByState[selectedState] || []) : [];
 
+  // Client-side secondary filtering (for filters not in DB query)
   const filtered = useMemo(() => {
-    const base = colleges.filter((c) => {
-      const matchSearch = !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.location.toLowerCase().includes(search.toLowerCase()) || c.city.toLowerCase().includes(search.toLowerCase());
-      const matchStream = selectedStreams.length === 0 || selectedStreams.includes(c.category);
-      const matchState = !selectedState || c.state === selectedState;
-      const matchCity = !selectedCity || c.city === selectedCity;
-      const matchType = selectedTypes.length === 0 || selectedTypes.includes(c.type);
-      const matchApproval = selectedApprovals.length === 0 || selectedApprovals.some(a => c.approvals.includes(a));
+    let base = colleges.filter((c: any) => {
+      const matchApproval = selectedApprovals.length === 0 || selectedApprovals.some(a => c.approvals?.includes(a));
       const matchNaac = selectedNaac.length === 0 || selectedNaac.includes(c.naac_grade);
-      return matchSearch && matchStream && matchState && matchCity && matchType && matchApproval && matchNaac;
+      return matchApproval && matchNaac;
     });
+
     if (featuredSlugs && featuredSlugs.length > 0) {
       const featuredSet = new Set(featuredSlugs);
-      return [...base.filter(c => featuredSet.has(c.slug)), ...base.filter(c => !featuredSet.has(c.slug))];
+      return [...base.filter((c: any) => featuredSet.has(c.slug)), ...base.filter((c: any) => !featuredSet.has(c.slug))];
     }
     return base;
-  }, [search, selectedStreams, selectedState, selectedCity, selectedTypes, selectedApprovals, selectedNaac, featuredSlugs, colleges]);
+  }, [colleges, selectedApprovals, selectedNaac, featuredSlugs]);
 
-  const heading = useMemo(() => {
-    const cat = selectedCourseGroups.length === 1 ? selectedCourseGroups[0] : selectedStreams.length === 1 ? selectedStreams[0] : "";
-    const location = selectedCity || selectedState || "India";
-    return `Top ${cat ? cat + " " : ""}Colleges in ${location} 2026`;
-  }, [selectedStreams, selectedCourseGroups, selectedState, selectedCity]);
+  // SEO-optimized heading
+  const heading = useMemo(() => getCollegeHeading({
+    courseGroup: selectedCourseGroups[0],
+    stream: selectedStreams[0],
+    state: selectedState,
+    city: selectedCity,
+    type: selectedTypes[0],
+    exam: selectedExams[0],
+    approval: selectedApprovals[0],
+  }), [selectedStreams, selectedCourseGroups, selectedState, selectedCity, selectedTypes, selectedExams, selectedApprovals]);
 
   const clearAll = () => {
     setSelectedStreams([]); setSelectedState(""); setSelectedCity("");
@@ -144,6 +177,19 @@ export default function AllColleges() {
           </div>
         </div>
 
+        {/* SEO Quick Links */}
+        <div className="mb-4 flex flex-wrap gap-1.5">
+          {collegeSeoRoutes.slice(0, 8).map(route => (
+            <Link
+              key={route.label}
+              to={`/colleges?${new URLSearchParams(route.params).toString()}`}
+              className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all"
+            >
+              {route.label}
+            </Link>
+          ))}
+        </div>
+
         {activeFilters.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-4">
             {activeFilters.map(f => (
@@ -169,10 +215,10 @@ export default function AllColleges() {
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> colleges</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-              {!dbColleges ? (
+              {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => <CollegeCardSkeleton key={i} />)
               ) : (
-                filtered.map((college, i) => (
+                filtered.map((college: any, i: number) => (
                   <Fragment key={college.slug}>
                     <CollegeCard college={college} index={Math.min(i, 5)} />
                     {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
@@ -182,7 +228,19 @@ export default function AllColleges() {
                 ))
               )}
             </div>
-            {dbColleges && filtered.length === 0 && (
+
+            {/* Infinite scroll sentinel */}
+            <div ref={sentinelRef} className="h-4" />
+            {isFetchingMore && (
+              <div className="flex justify-center py-6">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              </div>
+            )}
+            {!hasMore && filtered.length > 0 && (
+              <p className="text-center text-sm text-muted-foreground py-4">You've seen all colleges</p>
+            )}
+
+            {!isLoading && filtered.length === 0 && (
               <div className="text-center py-12 bg-card rounded-2xl border border-border">
                 <h3 className="font-semibold text-foreground mb-1">No colleges found</h3>
                 <p className="text-sm text-muted-foreground">Try adjusting your filters or search query</p>
