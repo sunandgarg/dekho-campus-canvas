@@ -217,20 +217,17 @@ export function LeadCaptureForm({
         viewport={{ once: true }}
         className="bg-primary rounded-2xl p-4 md:p-8"
       >
-        <div className="flex flex-col lg:flex-row items-center gap-4 md:gap-6">
-          <div className="flex-1 text-center lg:text-left">
-            <h3 className="text-lg md:text-2xl font-bold text-primary-foreground mb-1">{title}</h3>
-            <p className="text-primary-foreground/90 text-sm">{subtitle}</p>
-          </div>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-            <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Your Name" className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60 rounded-xl min-w-[140px] h-10 text-sm" required />
-            <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Phone Number" type="tel" className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60 rounded-xl min-w-[140px] h-10 text-sm" required />
-            <select value={formData.course} onChange={e => update("course", e.target.value)} className="px-3 py-2 rounded-xl bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground text-sm min-w-[140px] focus:outline-none [&>option]:text-foreground">
+      <div className="flex flex-col lg:flex-row items-center gap-3">
+          <h3 className="text-base md:text-lg font-bold text-primary-foreground whitespace-nowrap flex-shrink-0">{title}</h3>
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-2 w-full lg:flex-1">
+            <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Name" className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60 rounded-lg h-9 text-sm min-w-0 flex-1" required />
+            <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Phone" type="tel" className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60 rounded-lg h-9 text-sm min-w-0 flex-1" required />
+            <select value={formData.course} onChange={e => update("course", e.target.value)} className="px-3 py-2 rounded-lg bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground text-sm min-w-[120px] h-9 focus:outline-none [&>option]:text-foreground flex-1">
               <option value="">Course</option>
               {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
-            <Button type="submit" className="bg-card text-foreground hover:bg-card/90 rounded-xl px-5 whitespace-nowrap h-10 text-sm" disabled={isLoading}>
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Get Callback"}
+            <Button type="submit" className="bg-card text-foreground hover:bg-card/90 rounded-lg px-5 whitespace-nowrap h-9 text-sm flex-shrink-0" disabled={isLoading}>
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Get callback"}
             </Button>
           </form>
         </div>
