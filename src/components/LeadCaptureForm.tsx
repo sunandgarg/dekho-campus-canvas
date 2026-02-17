@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, User, Mail, Phone, MapPin, Loader2, CheckCircle, BookOpen } from "lucide-react";
+import { SearchableSelect } from "@/components/SearchableSelect";
+import { indianStates, citiesByState, educationStatus } from "@/data/indianLocations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -49,8 +51,17 @@ export function LeadCaptureForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone) {
-      toast.error("Please fill in required fields");
+    if (!formData.name || !formData.phone || !formData.email || !formData.course || !formData.state || !formData.city) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (formData.phone.length !== 10) {
+      toast.error("Please enter a valid 10-digit mobile number");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address");
       return;
     }
 
@@ -145,28 +156,37 @@ export function LeadCaptureForm({
           </div>
           <div className="relative flex items-center gap-0">
             <span className="flex-shrink-0 px-3 py-2.5 bg-muted rounded-l-xl border border-r-0 border-border text-sm text-muted-foreground font-medium">+91</span>
-            <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Mobile Number *" type="tel" className="rounded-l-none rounded-r-xl h-10 text-sm" required />
+            <Input value={formData.phone} onChange={e => {
+              let val = e.target.value.replace(/\D/g, "");
+              if (val.startsWith("91") && val.length > 10) val = val.slice(2);
+              if (val.startsWith("0")) val = val.slice(1);
+              if (val.length <= 10) update("phone", val);
+            }} placeholder="Mobile Number *" type="tel" maxLength={10} className="rounded-l-none rounded-r-xl h-10 text-sm" required />
           </div>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input value={formData.email} onChange={e => update("email", e.target.value)} placeholder="Email (optional)" type="email" className="pl-10 rounded-xl h-10 text-sm" />
+            <Input value={formData.email} onChange={e => update("email", e.target.value)} placeholder="Email *" type="email" className="pl-10 rounded-xl h-10 text-sm" required />
           </div>
           <div className="relative">
             <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <select value={formData.course} onChange={e => update("course", e.target.value)} className={`${selectCls} pl-10`}>
-              <option value="">Select Course</option>
+            <select value={formData.course} onChange={e => update("course", e.target.value)} className={`${selectCls} pl-10`} required>
+              <option value="">Interested Course *</option>
               {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <select value={formData.state} onChange={e => update("state", e.target.value)} className={selectCls}>
-              <option value="">State</option>
-              {stateOptions.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-              <Input value={formData.city} onChange={e => update("city", e.target.value)} placeholder="City" className="pl-10 rounded-xl h-10 text-sm" />
-            </div>
+            <SearchableSelect
+              options={indianStates}
+              value={formData.state}
+              onChange={(v) => { update("state", v); update("city", ""); }}
+              placeholder="State *"
+            />
+            <SearchableSelect
+              options={formData.state ? (citiesByState[formData.state] || []) : []}
+              value={formData.city}
+              onChange={(v) => update("city", v)}
+              placeholder={formData.state ? "City *" : "Select state first"}
+            />
           </div>
 
           <label className="flex items-start gap-2 cursor-pointer">

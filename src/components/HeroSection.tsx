@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, Brain, Zap, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Search } from "lucide-react";
+import { Send, Sparkles, Zap, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/dekhocampus-logo.png";
+import dcLogo from "@/assets/dc-logo.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
 const wordColors = [
@@ -23,12 +24,12 @@ const suggestedPrompts = [
 ];
 
 const quickCategories = [
-  { label: "13000+ Colleges", icon: GraduationCap, bgColor: "bg-rose-50", iconBg: "bg-rose-100", href: "/colleges" },
-  { label: "840+ Courses", icon: BookOpen, bgColor: "bg-sky-50", iconBg: "bg-sky-100", href: "/courses" },
-  { label: "219+ Exams", icon: FileText, bgColor: "bg-cyan-50", iconBg: "bg-cyan-100", href: "/exams" },
-  { label: "Application Form", icon: ClipboardList, bgColor: "bg-emerald-50", iconBg: "bg-emerald-100", href: "/colleges" },
-  { label: "Review", icon: Star, bgColor: "bg-amber-50", iconBg: "bg-amber-100", href: "/articles" },
-  { label: "News", icon: Newspaper, bgColor: "bg-blue-50", iconBg: "bg-blue-100", href: "/articles" },
+  { label: "13000+ Colleges", icon: GraduationCap, bgColor: "bg-primary/5", iconBg: "bg-primary/10", href: "/colleges" },
+  { label: "840+ Courses", icon: BookOpen, bgColor: "bg-accent/5", iconBg: "bg-accent/10", href: "/courses" },
+  { label: "219+ Exams", icon: FileText, bgColor: "bg-secondary", iconBg: "bg-muted", href: "/exams" },
+  { label: "Application Form", icon: ClipboardList, bgColor: "bg-primary/5", iconBg: "bg-primary/10", href: "/colleges" },
+  { label: "Reviews", icon: Star, bgColor: "bg-accent/5", iconBg: "bg-accent/10", href: "/articles" },
+  { label: "News & Updates", icon: Newspaper, bgColor: "bg-secondary", iconBg: "bg-muted", href: "/articles" },
 ];
 
 interface SearchResult {
@@ -139,7 +140,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
         <div className="max-w-4xl mx-auto text-center space-y-5 md:space-y-8">
           {/* AI Badge */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20">
-            <Brain className="w-4 h-4 text-accent" />
+            <img src={dcLogo} alt="DekhoCampus" className="w-4 h-4 object-contain" />
             <span className="text-xs font-semibold tracking-wide uppercase text-accent">AI-Powered Education Intelligence</span>
           </motion.div>
 
