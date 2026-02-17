@@ -43,7 +43,7 @@ export function CitySearch() {
         </motion.div>
 
         {/* Single-line horizontal scroll carousel with image cards */}
-        <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory">
+        <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory overscroll-x-contain touch-pan-x">
           {cities.map((place, i) => (
             <motion.div
               key={place.id}

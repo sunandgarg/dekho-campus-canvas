@@ -189,7 +189,7 @@ export function FloatingBot() {
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             onClick={handleOpen}
-            className="fixed bottom-20 lg:bottom-6 right-4 md:right-6 z-50 w-14 h-14 rounded-full bg-white shadow-glow flex items-center justify-center hover:scale-110 transition-transform active:scale-95 border-2 border-foreground/10"
+            className="fixed bottom-[4.5rem] lg:bottom-6 right-4 md:right-6 z-40 w-14 h-14 rounded-full bg-white shadow-glow flex items-center justify-center hover:scale-110 transition-transform active:scale-95 border-2 border-foreground/10"
             aria-label="Talk to AI Counselor"
           >
             <img src={aiBotLogo} alt="AI" className="w-10 h-10 object-contain" />

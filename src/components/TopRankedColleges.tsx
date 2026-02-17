@@ -78,7 +78,7 @@ export function TopRankedColleges() {
         <div
           ref={scrollRef}
           onScroll={updateScrollState}
-          className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2"
+          className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 overscroll-x-contain touch-pan-x"
           style={{ scrollSnapType: "x mandatory" }}
         >
           {colleges.map((college: any, index: number) => (

@@ -297,9 +297,9 @@ export function CategorySection() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="font-bold text-foreground flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-primary" /> Upcoming Exams
+                  <FileText className="w-4 h-4 text-primary" /> Top Exams
                 </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Don't miss deadlines!</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Most important entrance exams</p>
               </div>
               <Link to="/exams">
                 <span className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></span>
