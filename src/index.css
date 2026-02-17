@@ -113,14 +113,12 @@
 
   html {
     scroll-behavior: smooth;
-    overscroll-behavior: none;
     background: hsl(var(--background));
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    overscroll-behavior: none;
     overflow-x: hidden;
   }
 
