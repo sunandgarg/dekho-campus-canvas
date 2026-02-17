@@ -82,12 +82,8 @@ export function TopRankedColleges() {
           style={{ scrollSnapType: "x mandatory" }}
         >
           {colleges.map((college: any, index: number) => (
-            <motion.div
+            <div
               key={college.slug}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.04 }}
               className="snap-start flex-shrink-0 w-[260px] sm:w-[280px]"
             >
               <Link
@@ -119,7 +115,7 @@ export function TopRankedColleges() {
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

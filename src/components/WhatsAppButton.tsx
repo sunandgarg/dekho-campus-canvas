@@ -4,7 +4,7 @@ export function WhatsAppButton() {
       href="https://wa.me/919990109393?text=Hi%20DekhoCampus%2C%20I%20need%20help%20with%20college%20admissions"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-[4.5rem] lg:bottom-6 left-4 z-40 w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
+      className="fixed bottom-4 left-4 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
       aria-label="Chat on WhatsApp"
       style={{ backgroundColor: "#25D366" }}
     >

@@ -45,12 +45,8 @@ export function CitySearch() {
         {/* Single-line horizontal scroll carousel with image cards */}
         <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory overscroll-x-contain touch-pan-x">
           {cities.map((place, i) => (
-            <motion.div
+            <div
               key={place.id}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.04 }}
               className="snap-start flex-shrink-0"
             >
                <Link
@@ -71,7 +67,7 @@ export function CitySearch() {
                   <span className="text-[11px] text-card/80">{place.college_count}+ Colleges</span>
                 </div>
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
 
