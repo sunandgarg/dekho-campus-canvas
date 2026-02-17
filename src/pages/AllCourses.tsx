@@ -11,6 +11,7 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CourseCard } from "@/components/CourseCard";
+import { CourseCardSkeleton } from "@/components/SkeletonCards";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
@@ -155,16 +156,20 @@ export default function AllCourses() {
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> courses</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-              {filtered.map((course, i) => (
-                <Fragment key={course.slug}>
-                  <CourseCard course={course} index={i} />
-                  {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
-                    <InlineAdSlot page="courses" index={Math.floor(i / ITEMS_PER_AD)} source={`courses_inline_${i}`} />
-                  )}
-                </Fragment>
-              ))}
+              {!dbCourses ? (
+                Array.from({ length: 6 }).map((_, i) => <CourseCardSkeleton key={i} />)
+              ) : (
+                filtered.map((course, i) => (
+                  <Fragment key={course.slug}>
+                    <CourseCard course={course} index={Math.min(i, 5)} />
+                    {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
+                      <InlineAdSlot page="courses" index={Math.floor(i / ITEMS_PER_AD)} source={`courses_inline_${i}`} />
+                    )}
+                  </Fragment>
+                ))
+              )}
             </div>
-            {filtered.length === 0 && (
+            {dbCourses && filtered.length === 0 && (
               <div className="text-center py-12 bg-card rounded-2xl border border-border">
                 <h3 className="font-semibold text-foreground mb-1">No courses found</h3>
                 <p className="text-sm text-muted-foreground">Try adjusting your filters</p>

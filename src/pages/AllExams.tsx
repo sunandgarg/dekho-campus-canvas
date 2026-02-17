@@ -11,6 +11,7 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { ExamCard } from "@/components/ExamCard";
+import { ExamCardSkeleton } from "@/components/SkeletonCards";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
@@ -148,16 +149,20 @@ export default function AllExams() {
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> exams</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-              {filtered.map((exam, i) => (
-                <Fragment key={exam.slug}>
-                  <ExamCard exam={exam} index={i} />
-                  {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
-                    <InlineAdSlot page="exams" index={Math.floor(i / ITEMS_PER_AD)} source={`exams_inline_${i}`} />
-                  )}
-                </Fragment>
-              ))}
+              {!dbExams ? (
+                Array.from({ length: 6 }).map((_, i) => <ExamCardSkeleton key={i} />)
+              ) : (
+                filtered.map((exam, i) => (
+                  <Fragment key={exam.slug}>
+                    <ExamCard exam={exam} index={Math.min(i, 5)} />
+                    {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
+                      <InlineAdSlot page="exams" index={Math.floor(i / ITEMS_PER_AD)} source={`exams_inline_${i}`} />
+                    )}
+                  </Fragment>
+                ))
+              )}
             </div>
-            {filtered.length === 0 && (
+            {dbExams && filtered.length === 0 && (
               <div className="text-center py-12 bg-card rounded-2xl border border-border">
                 <h3 className="font-semibold text-foreground mb-1">No exams found</h3>
                 <p className="text-sm text-muted-foreground">Try adjusting your filters</p>

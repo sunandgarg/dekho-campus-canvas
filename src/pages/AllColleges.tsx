@@ -12,6 +12,7 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { CollegeCard } from "@/components/CollegeCard";
+import { CollegeCardSkeleton } from "@/components/SkeletonCards";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
@@ -168,16 +169,20 @@ export default function AllColleges() {
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> colleges</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-              {filtered.map((college, i) => (
-                <Fragment key={college.slug}>
-                  <CollegeCard college={college} index={i} />
-                  {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
-                    <InlineAdSlot page="colleges" index={Math.floor(i / ITEMS_PER_AD)} source={`colleges_inline_${i}`} />
-                  )}
-                </Fragment>
-              ))}
+              {!dbColleges ? (
+                Array.from({ length: 6 }).map((_, i) => <CollegeCardSkeleton key={i} />)
+              ) : (
+                filtered.map((college, i) => (
+                  <Fragment key={college.slug}>
+                    <CollegeCard college={college} index={Math.min(i, 5)} />
+                    {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
+                      <InlineAdSlot page="colleges" index={Math.floor(i / ITEMS_PER_AD)} source={`colleges_inline_${i}`} />
+                    )}
+                  </Fragment>
+                ))
+              )}
             </div>
-            {filtered.length === 0 && (
+            {dbColleges && filtered.length === 0 && (
               <div className="text-center py-12 bg-card rounded-2xl border border-border">
                 <h3 className="font-semibold text-foreground mb-1">No colleges found</h3>
                 <p className="text-sm text-muted-foreground">Try adjusting your filters or search query</p>
