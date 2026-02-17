@@ -80,6 +80,45 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_providers: {
+        Row: {
+          api_key_encrypted: string
+          base_url: string
+          created_at: string
+          default_model: string
+          display_name: string
+          icon_emoji: string
+          id: string
+          is_active: boolean
+          provider_name: string
+          updated_at: string
+        }
+        Insert: {
+          api_key_encrypted?: string
+          base_url?: string
+          created_at?: string
+          default_model?: string
+          display_name: string
+          icon_emoji?: string
+          id?: string
+          is_active?: boolean
+          provider_name: string
+          updated_at?: string
+        }
+        Update: {
+          api_key_encrypted?: string
+          base_url?: string
+          created_at?: string
+          default_model?: string
+          display_name?: string
+          icon_emoji?: string
+          id?: string
+          is_active?: boolean
+          provider_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           author: string
