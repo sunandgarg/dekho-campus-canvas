@@ -141,7 +141,7 @@ export function FeaturesSection() {
         >
           <p className="text-muted-foreground mb-4">Ready to start your journey?</p>
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-base">
-            Try DC Educational AI Free
+            Try DekhoCampus Educational AI Free
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </motion.div>

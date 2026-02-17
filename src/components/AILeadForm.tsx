@@ -38,6 +38,15 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
       toast.error("Please fill all required fields");
       return;
     }
+    if (formData.phone.length !== 10) {
+      toast.error("Please enter a valid 10-digit mobile number");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     setIsLoading(true);
     const courseValue = formData.course === "Other" ? formData.otherCourse : formData.course;
     try {
@@ -72,14 +81,14 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] bg-foreground/40 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] bg-foreground/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
       onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
-        className="bg-card rounded-2xl shadow-elevated w-full max-w-sm overflow-hidden"
+        className="bg-card rounded-2xl shadow-elevated w-full max-w-sm overflow-visible my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header - more human, less AI */}
@@ -114,9 +123,17 @@ export function AILeadForm({ isOpen, onClose, onSubmit }: AILeadFormProps) {
             <span className="flex-shrink-0 px-3 py-2.5 bg-muted rounded-l-xl border border-r-0 border-border text-sm text-muted-foreground font-medium">+91</span>
             <Input
               value={formData.phone}
-              onChange={(e) => update("phone", e.target.value)}
+              onChange={(e) => {
+                let val = e.target.value.replace(/\D/g, "");
+                // Remove leading 0 or +91 prefix
+                if (val.startsWith("91") && val.length > 10) val = val.slice(2);
+                if (val.startsWith("0")) val = val.slice(1);
+                if (val.length <= 10) update("phone", val);
+              }}
               placeholder="Mobile Number *"
               type="tel"
+              maxLength={10}
+              pattern="[0-9]{10}"
               className="rounded-l-none rounded-r-xl h-10 text-sm"
               required
             />

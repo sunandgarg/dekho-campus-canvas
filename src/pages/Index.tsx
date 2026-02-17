@@ -10,6 +10,7 @@ import { OnlineEducationSection } from "@/components/OnlineEducationSection";
 import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ToolsSection } from "@/components/ToolsSection";
+import { TrendingPrograms } from "@/components/TrendingPrograms";
 import { TrustedBySection } from "@/components/TrustedBySection";
 import { UpcomingExams } from "@/components/UpcomingExams";
 import { FAQSection } from "@/components/FAQSection";
@@ -86,6 +87,7 @@ const Index = () => {
         <OnlineEducationSection />
 
         <div className="container">
+          <TrendingPrograms />
           <ToolsSection />
 
           <section className="py-4">
