@@ -80,7 +80,7 @@ export function FeaturesSection() {
         {/* Features Grid Carousel */}
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0"
+          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
         >
           {features.map((feature, index) => (
             <motion.article
