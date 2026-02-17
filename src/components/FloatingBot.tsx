@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Bot, User, Loader2 } from "lucide-react";
+import dcLogo from "@/assets/dc-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ReactMarkdown from "react-markdown";
@@ -190,7 +191,7 @@ export function FloatingBot() {
             className="fixed bottom-20 lg:bottom-6 right-4 md:right-6 z-50 w-14 h-14 rounded-full bg-primary shadow-glow flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
             aria-label="Talk to AI Counselor"
           >
-            <Bot className="w-7 h-7 text-primary-foreground" />
+            <img src={dcLogo} alt="AI" className="w-8 h-8 rounded-full object-contain" />
             <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-[10px] text-accent-foreground font-bold flex items-center justify-center animate-bounce-gentle">
               AI
             </span>
@@ -217,8 +218,8 @@ export function FloatingBot() {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-primary text-primary-foreground">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-                  <Bot className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-full bg-primary-foreground/20 flex items-center justify-center overflow-hidden">
+                  <img src={dcLogo} alt="DekhoCampus AI" className="w-7 h-7 object-contain" />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm">DekhoCampus AI</h3>

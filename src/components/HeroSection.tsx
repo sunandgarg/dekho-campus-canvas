@@ -27,9 +27,9 @@ const quickCategories = [
   { label: "13000+ Colleges", icon: GraduationCap, bgColor: "bg-primary/5", iconBg: "bg-primary/10", href: "/colleges" },
   { label: "840+ Courses", icon: BookOpen, bgColor: "bg-accent/5", iconBg: "bg-accent/10", href: "/courses" },
   { label: "219+ Exams", icon: FileText, bgColor: "bg-secondary", iconBg: "bg-muted", href: "/exams" },
-  { label: "Application Form", icon: ClipboardList, bgColor: "bg-primary/5", iconBg: "bg-primary/10", href: "/colleges" },
-  { label: "Reviews", icon: Star, bgColor: "bg-accent/5", iconBg: "bg-accent/10", href: "/articles" },
-  { label: "News & Updates", icon: Newspaper, bgColor: "bg-secondary", iconBg: "bg-muted", href: "/articles" },
+  { label: "Apply Now", icon: ClipboardList, bgColor: "bg-primary/5", iconBg: "bg-primary/10", href: "/colleges" },
+  { label: "Student Reviews", icon: Star, bgColor: "bg-accent/5", iconBg: "bg-accent/10", href: "/articles" },
+  { label: "Latest News", icon: Newspaper, bgColor: "bg-secondary", iconBg: "bg-muted", href: "/articles" },
 ];
 
 interface SearchResult {
@@ -136,7 +136,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container relative z-10 py-8 md:py-16 lg:py-20">
+      <div className="container relative z-10 px-4 py-8 md:py-16 lg:py-20">
         <div className="max-w-4xl mx-auto text-center space-y-5 md:space-y-8">
           {/* AI Badge */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20">
@@ -147,7 +147,8 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
           {/* Rotating headline */}
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.15] tracking-tight">
-              Discover Your Ideal{" "}
+              Discover Your Ideal
+              <br />
               <AnimatePresence mode="wait">
                 <motion.span
                   key={rotatingWords[wordIndex]}
@@ -268,8 +269,8 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
           </motion.div>
 
           {/* Quick Category Cards */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="max-w-3xl mx-auto pt-2">
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="max-w-3xl mx-auto pt-2 -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
               {quickCategories.map((cat, index) => (
                 <motion.a
                   key={cat.label}
