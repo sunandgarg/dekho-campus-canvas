@@ -22,6 +22,7 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { PeriodicLeadPopup } from "@/components/PeriodicLeadPopup";
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -120,6 +121,7 @@ const Index = () => {
       />
       <FloatingBot />
       <WhatsAppButton />
+      <PeriodicLeadPopup />
     </div>
   );
 };
