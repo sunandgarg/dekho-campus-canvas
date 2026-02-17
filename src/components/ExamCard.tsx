@@ -24,9 +24,9 @@ export function ExamCard({ exam, index }: ExamCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04 }}
+      transition={{ delay: Math.min(index, 5) * 0.04, duration: 0.3 }}
     >
       <article className={`rounded-2xl border p-5 hover:shadow-lg transition-shadow h-full flex flex-col ${
         exam.status === "Applications Open" ? "bg-success/5 border-success/20" :

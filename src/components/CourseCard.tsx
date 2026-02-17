@@ -12,9 +12,9 @@ interface CourseCardProps {
 export function CourseCard({ course, index }: CourseCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04 }}
+      transition={{ delay: Math.min(index, 5) * 0.04, duration: 0.3 }}
     >
       <Link to={`/courses/${course.slug}`} className="block h-full">
         <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
