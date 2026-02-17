@@ -82,12 +82,12 @@ export const collegeFeeRanges = [
 ];
 
 export const collegeCourseGroups = [
-  "B.E. / B.Tech", "B.Sc.", "MBA/PGDM", "BBA", "BCA", "M.Sc.", "MCA",
-  "B.Com", "M.E./M.Tech", "B.A.", "UG Diploma", "Diploma", "Certificate",
+  "B.E.", "B.Tech", "B.Sc.", "MBA", "PGDM", "BBA", "BCA", "M.Sc.", "MCA",
+  "B.Com", "M.E.", "M.Tech", "B.A.", "UG Diploma", "Diploma", "Certificate",
   "PG Diploma", "M.A.", "Ph.D.", "B.Pharma", "M.Com", "B.Ed",
   "LL.M.", "LL.B.", "MBBS", "B.Des", "B.Arch", "MD", "BDS",
-  "GNM", "MSW", "BPT", "PGDM", "BHM", "M.Des", "BFA",
-  "Executive MBA/PGDM", "B.J.M.C.", "MCA", "D.Pharma",
+  "GNM", "MSW", "BPT", "BHM", "M.Des", "BFA",
+  "Executive MBA", "Executive PGDM", "B.J.M.C.", "D.Pharma",
 ];
 
 export const examCategories = [
@@ -101,8 +101,8 @@ export const examStreams = [
 ];
 
 export const examCourseGroups = [
-  "B.E. / B.Tech", "MBA/PGDM", "LL.B.", "M.E./M.Tech", "PGPM",
-  "MBA", "MBBS", "MD", "A.M.E.",
+  "B.E.", "B.Tech", "MBA", "PGDM", "LL.B.", "M.E.", "M.Tech", "PGPM",
+  "MBBS", "MD", "A.M.E.",
 ];
 
 export const examLevels = ["UG", "PG", "12th", "10th"];
@@ -116,12 +116,12 @@ export const courseStreams = [
 ];
 
 export const courseCourseGroups = [
-  "B.E. / B.Tech", "B.Sc.", "Ph.D.", "M.Sc.", "MBA/PGDM", "B.A.",
-  "M.E./M.Tech", "UG Diploma", "PG Diploma", "M.A.", "Certificate",
-  "M.Tech", "BBA", "B.Com", "B.Tech", "MBA", "MD", "M.Phil",
+  "B.E.", "B.Tech", "B.Sc.", "Ph.D.", "M.Sc.", "MBA", "PGDM", "B.A.",
+  "M.E.", "M.Tech", "UG Diploma", "PG Diploma", "M.A.", "Certificate",
+  "BBA", "B.Com", "MD", "M.Phil",
   "After 10th Diploma", "B.Ed", "B.Sc(Hons.)", "M.Com", "Diploma",
   "LL.M.", "M.Pharma", "B.A. (Hons)", "MS", "B.Des", "BFA", "BCA",
-  "PGDM", "B.Pharma", "LL.B.", "MCA", "Other",
+  "B.Pharma", "LL.B.", "MCA", "Other",
 ];
 
 export const courseSpecializations = [

@@ -17,12 +17,12 @@ import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
 import { useInfiniteData } from "@/hooks/useInfiniteData";
 import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
-import { getCollegeHeading, collegeSeoRoutes } from "@/lib/seoSlugs";
+import { getCollegeHeading, collegeSeoRoutes, filtersToSlug } from "@/lib/seoSlugs";
 import {
   indianStates, citiesByState, collegeStreams, collegeTypes,
   collegeFeeRanges, collegeCourseGroups, collegeExams,
 } from "@/data/indianLocations";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
 
 const collegeApprovals = ["AICTE", "UGC", "NAAC", "MCI", "BCI", "AACSB"] as const;
@@ -37,24 +37,17 @@ const collegeNaacGrades = ["A++", "A+", "A", "B++", "B+"] as const;
  * - Featured college priority ordering
  */
 export default function AllColleges() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedStreams, setSelectedStreams] = useState<string[]>(() => {
-    const s = searchParams.get("stream"); return s ? [s] : [];
-  });
-  const [selectedState, setSelectedState] = useState(() => searchParams.get("state") || "");
-  const [selectedCity, setSelectedCity] = useState(() => searchParams.get("city") || "");
+  const [selectedStreams, setSelectedStreams] = useState<string[]>([]);
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedApprovals, setSelectedApprovals] = useState<string[]>([]);
   const [selectedNaac, setSelectedNaac] = useState<string[]>([]);
-  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>(() => {
-    const g = searchParams.get("group"); return g ? [g] : [];
-  });
+  const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
   const [selectedFeeRanges, setSelectedFeeRanges] = useState<string[]>([]);
-  const [selectedExams, setSelectedExams] = useState<string[]>(() => {
-    const e = searchParams.get("exam"); return e ? [e] : [];
-  });
+  const [selectedExams, setSelectedExams] = useState<string[]>([]);
 
   // Build filters for DB query
   const dbFilters = useMemo(() => {
@@ -79,16 +72,26 @@ export default function AllColleges() {
   const category = selectedStreams[0] || "";
   const { data: featuredSlugs } = useFeaturedColleges(category || undefined, selectedState || undefined);
 
-  // Update URL params
+  // Update URL with SEO-friendly slug
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (selectedCourseGroups.length === 1) params.set("group", selectedCourseGroups[0]);
-    else if (selectedStreams.length === 1) params.set("stream", selectedStreams[0]);
-    if (selectedCity) params.set("city", selectedCity);
-    else if (selectedState) params.set("state", selectedState);
-    if (selectedExams.length === 1) params.set("exam", selectedExams[0]);
-    setSearchParams(params, { replace: true });
-  }, [selectedStreams, selectedCourseGroups, selectedState, selectedCity, selectedExams, setSearchParams]);
+    const slug = filtersToSlug("colleges", {
+      courseGroup: selectedCourseGroups[0],
+      stream: selectedStreams[0],
+      state: selectedState,
+      city: selectedCity,
+      exam: selectedExams[0],
+      type: selectedTypes[0],
+      approval: selectedApprovals[0],
+    });
+    const hasFilters = selectedCourseGroups.length > 0 || selectedStreams.length > 0 ||
+      selectedState || selectedCity || selectedExams.length > 0 ||
+      selectedTypes.length > 0 || selectedApprovals.length > 0;
+    if (hasFilters) {
+      window.history.replaceState(null, "", `/colleges/${slug}`);
+    } else {
+      window.history.replaceState(null, "", "/colleges");
+    }
+  }, [selectedStreams, selectedCourseGroups, selectedState, selectedCity, selectedExams, selectedTypes, selectedApprovals]);
 
   const activeFilters = [
     ...selectedStreams, ...selectedTypes, ...selectedApprovals,
@@ -179,15 +182,18 @@ export default function AllColleges() {
 
         {/* SEO Quick Links */}
         <div className="mb-4 flex flex-wrap gap-1.5">
-          {collegeSeoRoutes.slice(0, 8).map(route => (
-            <Link
-              key={route.label}
-              to={`/colleges?${new URLSearchParams(route.params).toString()}`}
-              className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all"
-            >
-              {route.label}
-            </Link>
-          ))}
+          {collegeSeoRoutes.slice(0, 8).map(route => {
+            const slug = filtersToSlug("colleges", route.params as Record<string, string>);
+            return (
+              <Link
+                key={route.label}
+                to={`/colleges/${slug}`}
+                className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all"
+              >
+                {route.label}
+              </Link>
+            );
+          })}
         </div>
 
         {activeFilters.length > 0 && (
