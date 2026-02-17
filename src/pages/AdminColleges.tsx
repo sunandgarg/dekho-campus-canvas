@@ -3,6 +3,7 @@ import { AdminLayout } from "@/components/AdminLayout";
 import { useAllDbColleges, useSaveCollege, useDeleteCollege, type DbCollege } from "@/hooks/useCollegesData";
 import { AdminFormSection } from "@/components/AdminFormSection";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { ImageUpload } from "@/components/ImageUpload";
 import { ArrayFieldEditor } from "@/components/ArrayFieldEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -106,7 +107,7 @@ export default function AdminColleges() {
                   <div><label className="text-xs font-medium text-muted-foreground">Name *</label><Input value={editing.name || ""} onChange={(e) => update("name", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
                   <div><label className="text-xs font-medium text-muted-foreground">Slug *</label><Input value={editing.slug || ""} onChange={(e) => update("slug", e.target.value)} placeholder="iit-delhi" className="rounded-lg h-9 text-sm" /></div>
                   <div><label className="text-xs font-medium text-muted-foreground">Short Name</label><Input value={editing.short_name || ""} onChange={(e) => update("short_name", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
-                  <div><label className="text-xs font-medium text-muted-foreground">Logo URL</label><Input value={editing.logo || ""} onChange={(e) => update("logo", e.target.value)} placeholder="https://..." className="rounded-lg h-9 text-sm" /></div>
+                  <div><label className="text-xs font-medium text-muted-foreground">Logo URL</label><ImageUpload value={editing.logo || ""} onChange={(v) => update("logo", v)} label="" folder="colleges/logos" /></div>
                   <div>
                     <label className="text-xs font-medium text-muted-foreground">Type</label>
                     <select value={editing.type || ""} onChange={(e) => update("type", e.target.value)} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-sm h-9">
@@ -164,7 +165,7 @@ export default function AdminColleges() {
               {/* ── Images & Media ── */}
               <AdminFormSection title="Images & Media" icon={<Image className="w-4 h-4 text-primary" />}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div><label className="text-xs font-medium text-muted-foreground">Featured Image URL</label><Input value={editing.image || ""} onChange={(e) => update("image", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
+                  <ImageUpload value={editing.image || ""} onChange={(v) => update("image", v)} label="Featured Image" folder="colleges/images" />
                   <div><label className="text-xs font-medium text-muted-foreground">Brochure URL</label><Input value={editing.brochure_url || ""} onChange={(e) => update("brochure_url", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
                 </div>
                 <ArrayFieldEditor label="Carousel Images" values={editing.carousel_images || []} onChange={(v) => update("carousel_images", v)} placeholder="Add image URL..." />

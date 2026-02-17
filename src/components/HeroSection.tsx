@@ -6,6 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/dekhocampus-logo.png";
 import dcLogo from "@/assets/dc-logo.png";
+import iconCollege from "@/assets/icon-college.png";
+import iconCourse from "@/assets/icon-course.png";
+import iconExam from "@/assets/icon-exam.png";
+import iconApplication from "@/assets/icon-application.png";
+import iconDocument from "@/assets/icon-document.png";
+import iconNews from "@/assets/icon-news.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
 const wordColors = [
@@ -24,12 +30,12 @@ const suggestedPrompts = [
 ];
 
 const quickCategories = [
-  { label: "13000+ Colleges", icon: GraduationCap, bgColor: "bg-primary/5", iconBg: "bg-primary/10", href: "/colleges" },
-  { label: "840+ Courses", icon: BookOpen, bgColor: "bg-accent/5", iconBg: "bg-accent/10", href: "/courses" },
-  { label: "219+ Exams", icon: FileText, bgColor: "bg-secondary", iconBg: "bg-muted", href: "/exams" },
-  { label: "Apply Now", icon: ClipboardList, bgColor: "bg-primary/5", iconBg: "bg-primary/10", href: "/colleges" },
-  { label: "Student Reviews", icon: Star, bgColor: "bg-accent/5", iconBg: "bg-accent/10", href: "/articles" },
-  { label: "Latest News", icon: Newspaper, bgColor: "bg-secondary", iconBg: "bg-muted", href: "/articles" },
+  { label: "13000+ Colleges", image: iconCollege, bgColor: "bg-primary/5", href: "/colleges" },
+  { label: "840+ Courses", image: iconCourse, bgColor: "bg-accent/5", href: "/courses" },
+  { label: "219+ Exams", image: iconExam, bgColor: "bg-secondary", href: "/exams" },
+  { label: "Apply Now", image: iconApplication, bgColor: "bg-primary/5", href: "/colleges" },
+  { label: "Student Reviews", image: iconDocument, bgColor: "bg-accent/5", href: "/articles" },
+  { label: "Latest News", image: iconNews, bgColor: "bg-secondary", href: "/articles" },
 ];
 
 interface SearchResult {
@@ -280,9 +286,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                   transition={{ delay: 0.4 + index * 0.04 }}
                   className={`flex flex-col items-center gap-1.5 p-2.5 md:p-4 rounded-2xl ${cat.bgColor} border border-transparent transition-all hover:shadow-md hover:-translate-y-0.5 group`}
                 >
-                  <div className={`w-10 h-10 md:w-14 md:h-14 rounded-2xl ${cat.iconBg} flex items-center justify-center transition-transform group-hover:scale-110`}>
-                    <cat.icon className="w-5 h-5 md:w-7 md:h-7 text-foreground/70" />
-                  </div>
+                  <img src={cat.image} alt={cat.label} className="w-10 h-10 md:w-14 md:h-14 object-contain transition-transform group-hover:scale-110" />
                   <span className="text-[10px] md:text-xs font-semibold text-foreground/80 text-center leading-tight">{cat.label}</span>
                 </motion.a>
               ))}
