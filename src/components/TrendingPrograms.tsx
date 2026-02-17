@@ -1,73 +1,11 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { GraduationCap, Calendar, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { GraduationCap, Calendar, Download, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-
-interface Program {
-  college: string;
-  title: string;
-  badge: string;
-  badgeVariant: "default" | "secondary" | "destructive" | "outline";
-  type: string;
-  duration: string;
-  originalPrice: number;
-  discount: number;
-  slug: string;
-  courseSlug: string;
-}
-
-const programs: Program[] = [
-  {
-    college: "IIT Madras",
-    title: "BS in Data Science & Applications",
-    badge: "Bestseller",
-    badgeVariant: "destructive",
-    type: "Bachelor's Degree",
-    duration: "36 Months",
-    originalPrice: 300000,
-    discount: 15,
-    slug: "iit-madras",
-    courseSlug: "bsc-data-science",
-  },
-  {
-    college: "IIM Bangalore",
-    title: "Executive PG Programme in Management",
-    badge: "New",
-    badgeVariant: "default",
-    type: "Executive PG Program",
-    duration: "12 Months",
-    originalPrice: 1200000,
-    discount: 10,
-    slug: "iim-bangalore",
-    courseSlug: "mba",
-  },
-  {
-    college: "IIT Bombay",
-    title: "M.Tech in AI & Machine Learning",
-    badge: "Trending",
-    badgeVariant: "secondary",
-    type: "Master's Degree",
-    duration: "24 Months",
-    originalPrice: 500000,
-    discount: 12,
-    slug: "iit-bombay",
-    courseSlug: "mtech-ai",
-  },
-  {
-    college: "IIM Ahmedabad",
-    title: "Certificate in Business Analytics",
-    badge: "Popular",
-    badgeVariant: "default",
-    type: "Certification",
-    duration: "6 Months",
-    originalPrice: 250000,
-    discount: 20,
-    slug: "iim-ahmedabad",
-    courseSlug: "business-analytics",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 function formatPrice(price: number) {
   if (price >= 100000) return `₹${(price / 100000).toFixed(price % 100000 === 0 ? 0 : 1)}L`;
@@ -78,94 +16,74 @@ function formatPrice(price: number) {
 export function TrendingPrograms() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const { data: programs, isLoading } = useQuery({
+    queryKey: ["promoted-programs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("promoted_programs")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
-    const amount = scrollRef.current.offsetWidth * 0.8;
-    scrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+    scrollRef.current.scrollBy({ left: dir === "left" ? -280 : 280, behavior: "smooth" });
   };
+
+  if (isLoading) return null;
+  if (!programs || programs.length === 0) return null;
 
   return (
     <section className="py-10 md:py-16" aria-labelledby="trending-programs-heading">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3">
-            <GraduationCap className="w-4 h-4" />
-            Trending Courses
+            <GraduationCap className="w-4 h-4" /> Trending Courses
           </div>
           <h2 id="trending-programs-heading" className="text-headline font-bold text-foreground">
             Explore our <span className="text-gradient">most popular programs</span>
           </h2>
-          <p className="text-muted-foreground mt-2 max-w-lg">
-            Premium courses from IITs & IIMs at exclusive prices on DekhoCampus
-          </p>
+          <p className="text-muted-foreground mt-2 max-w-lg">Premium courses from IITs & IIMs at exclusive prices on DekhoCampus</p>
         </div>
-        {/* Desktop scroll arrows */}
         <div className="hidden md:flex items-center gap-2">
-          <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("left")}>
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("right")}>
-            <ChevronRight className="w-4 h-4" />
-          </Button>
+          <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("left")}><ChevronLeft className="w-4 h-4" /></Button>
+          <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("right")}><ChevronRight className="w-4 h-4" /></Button>
         </div>
       </motion.div>
 
-      {/* Horizontal scroll on mobile, grid on desktop */}
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-4 lg:overflow-visible"
-      >
-        {programs.map((prog, i) => {
-          const discountedPrice = prog.originalPrice * (1 - prog.discount / 100);
+      <div ref={scrollRef} className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-4 lg:overflow-visible">
+        {programs.map((prog: any, i: number) => {
+          const discountedPrice = prog.original_price * (1 - prog.discount_percent / 100);
           return (
-            <motion.article
-              key={prog.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="min-w-[280px] snap-start lg:min-w-0 bg-card rounded-2xl border border-border p-5 flex flex-col hover:shadow-lg transition-all card-elevated"
-            >
-              {/* College + Badge */}
+            <motion.article key={prog.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              className="min-w-[280px] snap-start lg:min-w-0 bg-card rounded-2xl border border-border p-5 flex flex-col hover:shadow-lg transition-all card-elevated">
               <div className="flex items-start justify-between mb-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                   <GraduationCap className="w-6 h-6 text-primary" />
                 </div>
-                <Badge variant={prog.badgeVariant} className="text-[10px] font-bold px-2">{prog.badge}</Badge>
+                <Badge variant={prog.badge_variant as any} className="text-[10px] font-bold px-2">{prog.badge}</Badge>
               </div>
-
-              <p className="text-xs text-muted-foreground font-medium mb-1">{prog.college}</p>
+              <p className="text-xs text-muted-foreground font-medium mb-1">{prog.college_name}</p>
               <h3 className="text-sm font-bold text-foreground mb-3 line-clamp-2 min-h-[2.5rem]">{prog.title}</h3>
-
-              {/* Tags */}
               <div className="space-y-1.5 mb-4">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <GraduationCap className="w-3.5 h-3.5" />
-                  <span>{prog.type}</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>{prog.duration}</span>
-                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground"><GraduationCap className="w-3.5 h-3.5" /><span>{prog.program_type}</span></div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground"><Calendar className="w-3.5 h-3.5" /><span>{prog.duration}</span></div>
               </div>
-
-              {/* Price */}
               <div className="mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm line-through text-muted-foreground">{formatPrice(prog.originalPrice)}</span>
-                  <Badge variant="outline" className="text-[10px] border-accent/30 text-accent font-bold">{prog.discount}% OFF</Badge>
+                  <span className="text-sm line-through text-muted-foreground">{formatPrice(prog.original_price)}</span>
+                  <Badge variant="outline" className="text-[10px] border-accent/30 text-accent font-bold">{prog.discount_percent}% OFF</Badge>
                 </div>
                 <p className="text-lg font-bold text-foreground">{formatPrice(discountedPrice)} <span className="text-xs font-normal text-muted-foreground">only on DekhoCampus</span></p>
               </div>
-
-              {/* Actions */}
               <div className="flex gap-2 mt-auto">
-                <Link to={`/colleges/${prog.slug}`} className="flex-1">
+                <Link to={`/colleges/${prog.college_slug}`} className="flex-1">
                   <Button variant="outline" className="w-full rounded-xl h-9 text-xs">View Program</Button>
                 </Link>
                 <Button className="rounded-xl h-9 text-xs gradient-accent text-white border-0 btn-accent-glow px-3">

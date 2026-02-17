@@ -1,5 +1,5 @@
 import { useState, useMemo, Fragment, useEffect } from "react";
-import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,16 +15,15 @@ import { CourseCardSkeleton } from "@/components/SkeletonCards";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
-import { useDbCourses } from "@/hooks/useCoursesData";
+import { useInfiniteData } from "@/hooks/useInfiniteData";
+import { getCourseHeading, courseSeoRoutes } from "@/lib/seoSlugs";
 import { useSearchParams, Link } from "react-router-dom";
 import {
   courseStreams, courseCourseGroups, courseSpecializations,
   courseModes, courseDurations,
 } from "@/data/indianLocations";
 
-const topSearches = [
-  "B.Tech", "MBA", "MBBS", "B.Sc", "BBA", "MCA", "B.Com", "LLB",
-];
+const topSearches = ["B.Tech", "MBA", "MBBS", "B.Sc", "BBA", "MCA", "B.Com", "LLB"];
 
 export default function AllCourses() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,8 +38,23 @@ export default function AllCourses() {
   const [selectedSpecializations, setSelectedSpecializations] = useState<string[]>([]);
   const [selectedModes, setSelectedModes] = useState<string[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
-  const { data: dbCourses } = useDbCourses();
-  const courses = dbCourses ?? [];
+
+  const dbFilters = useMemo(() => {
+    const f: Record<string, string | string[] | undefined> = {};
+    if (selectedStreams.length === 1) f.category = selectedStreams[0];
+    if (selectedModes.length === 1) f.mode = selectedModes[0];
+    return f;
+  }, [selectedStreams, selectedModes]);
+
+  const { items: courses, sentinelRef, isLoading, isFetchingMore, hasMore } = useInfiniteData({
+    table: "courses",
+    queryKey: ["infinite-courses"],
+    orderBy: "name",
+    ascending: true,
+    filters: dbFilters,
+    search: search || undefined,
+    searchFields: ["name", "full_name"],
+  });
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -50,27 +64,22 @@ export default function AllCourses() {
     setSearchParams(params, { replace: true });
   }, [selectedStreams, selectedCourseGroups, selectedModes, setSearchParams]);
 
-  const activeFilters = [
-    ...selectedStreams, ...selectedCourseGroups, ...selectedSpecializations,
-    ...selectedModes, ...selectedDurations,
-  ];
+  const activeFilters = [...selectedStreams, ...selectedCourseGroups, ...selectedSpecializations, ...selectedModes, ...selectedDurations];
 
   const filtered = useMemo(() => {
-    return courses.filter((c) => {
-      const matchSearch = !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.full_name.toLowerCase().includes(search.toLowerCase());
-      const matchStream = selectedStreams.length === 0 || selectedStreams.includes(c.category);
+    return courses.filter((c: any) => {
       const matchCourseGroup = selectedCourseGroups.length === 0 || selectedCourseGroups.includes(c.name);
-      const matchMode = selectedModes.length === 0 || selectedModes.includes(c.mode);
       const matchDuration = selectedDurations.length === 0 || selectedDurations.includes(c.duration);
-      return matchSearch && matchStream && matchCourseGroup && matchMode && matchDuration;
+      return matchCourseGroup && matchDuration;
     });
-  }, [search, selectedStreams, selectedCourseGroups, selectedSpecializations, selectedModes, selectedDurations, courses]);
+  }, [courses, selectedCourseGroups, selectedDurations]);
 
-  const heading = useMemo(() => {
-    const category = selectedCourseGroups.length === 1 ? selectedCourseGroups[0] : selectedStreams.length === 1 ? selectedStreams[0] : "";
-    const mode = selectedModes.length === 1 ? selectedModes[0] + " " : "";
-    return `Top ${mode}${category ? category + " " : ""}Courses in India 2026`;
-  }, [selectedStreams, selectedCourseGroups, selectedModes]);
+  const heading = useMemo(() => getCourseHeading({
+    courseGroup: selectedCourseGroups[0],
+    stream: selectedStreams[0],
+    mode: selectedModes[0],
+    duration: selectedDurations[0],
+  }), [selectedStreams, selectedCourseGroups, selectedModes, selectedDurations]);
 
   const clearAll = () => {
     setSelectedStreams([]); setSelectedCourseGroups([]);
@@ -113,20 +122,25 @@ export default function AllCourses() {
           </div>
         </div>
 
+        {/* SEO Quick Links */}
+        <div className="mb-4 flex flex-wrap gap-1.5">
+          {courseSeoRoutes.slice(0, 6).map(route => (
+            <Link key={route.label} to={`/courses?${new URLSearchParams(route.params).toString()}`}
+              className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
+              {route.label}
+            </Link>
+          ))}
+        </div>
+
         {/* Top Searches - mobile only */}
         <div className="lg:hidden mb-4">
           <p className="text-xs font-semibold text-muted-foreground mb-2">Top Searches</p>
           <div className="flex flex-wrap gap-1.5">
             {topSearches.map(s => (
-              <button
-                key={s}
-                onClick={() => setSearch(s)}
+              <button key={s} onClick={() => setSearch(s)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   search === s ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"
-                }`}
-              >
-                {s}
-              </button>
+                }`}>{s}</button>
             ))}
           </div>
         </div>
@@ -156,10 +170,10 @@ export default function AllCourses() {
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> courses</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-              {!dbCourses ? (
+              {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => <CourseCardSkeleton key={i} />)
               ) : (
-                filtered.map((course, i) => (
+                filtered.map((course: any, i: number) => (
                   <Fragment key={course.slug}>
                     <CourseCard course={course} index={Math.min(i, 5)} />
                     {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
@@ -169,7 +183,16 @@ export default function AllCourses() {
                 ))
               )}
             </div>
-            {dbCourses && filtered.length === 0 && (
+
+            <div ref={sentinelRef} className="h-4" />
+            {isFetchingMore && (
+              <div className="flex justify-center py-6"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
+            )}
+            {!hasMore && filtered.length > 0 && (
+              <p className="text-center text-sm text-muted-foreground py-4">You've seen all courses</p>
+            )}
+
+            {!isLoading && filtered.length === 0 && (
               <div className="text-center py-12 bg-card rounded-2xl border border-border">
                 <h3 className="font-semibold text-foreground mb-1">No courses found</h3>
                 <p className="text-sm text-muted-foreground">Try adjusting your filters</p>

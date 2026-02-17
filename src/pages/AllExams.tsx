@@ -1,5 +1,5 @@
 import { useState, useMemo, Fragment, useEffect } from "react";
-import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,15 +15,14 @@ import { ExamCardSkeleton } from "@/components/SkeletonCards";
 import { InlineAdSlot } from "@/components/InlineAdSlot";
 import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
-import { useDbExams } from "@/hooks/useExamsData";
-import { useSearchParams } from "react-router-dom";
+import { useInfiniteData } from "@/hooks/useInfiniteData";
+import { getExamHeading, examSeoRoutes } from "@/lib/seoSlugs";
+import { useSearchParams, Link } from "react-router-dom";
 import {
   examCategories, examStreams, examCourseGroups, examLevels,
 } from "@/data/indianLocations";
 
-const topSearches = [
-  "JEE Main", "NEET", "CAT", "GATE", "CLAT", "CUET", "JEE Advanced", "NEET PG",
-];
+const topSearches = ["JEE Main", "NEET", "CAT", "GATE", "CLAT", "CUET", "JEE Advanced", "NEET PG"];
 
 export default function AllExams() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,8 +36,23 @@ export default function AllExams() {
   });
   const [selectedCourseGroups, setSelectedCourseGroups] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-  const { data: dbExams } = useDbExams();
-  const exams = dbExams ?? [];
+
+  const dbFilters = useMemo(() => {
+    const f: Record<string, string | string[] | undefined> = {};
+    if (selectedStreams.length === 1) f.category = selectedStreams[0];
+    if (selectedLevels.length === 1) f.level = selectedLevels[0];
+    return f;
+  }, [selectedStreams, selectedLevels]);
+
+  const { items: exams, sentinelRef, isLoading, isFetchingMore, hasMore } = useInfiniteData({
+    table: "exams",
+    queryKey: ["infinite-exams"],
+    orderBy: "name",
+    ascending: true,
+    filters: dbFilters,
+    search: search || undefined,
+    searchFields: ["name", "full_name"],
+  });
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -52,20 +66,18 @@ export default function AllExams() {
   const activeFilters = [...selectedCategories, ...selectedStreams, ...selectedCourseGroups, ...selectedLevels];
 
   const filtered = useMemo(() => {
-    return exams.filter((e) => {
-      const matchSearch = !search || e.name.toLowerCase().includes(search.toLowerCase()) || e.full_name.toLowerCase().includes(search.toLowerCase());
+    return exams.filter((e: any) => {
       const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(e.exam_type);
-      const matchStream = selectedStreams.length === 0 || selectedStreams.includes(e.category);
-      const matchLevel = selectedLevels.length === 0 || selectedLevels.includes(e.level);
-      return matchSearch && matchCategory && matchStream && matchLevel;
+      return matchCategory;
     });
-  }, [search, selectedCategories, selectedStreams, selectedCourseGroups, selectedLevels, exams]);
+  }, [exams, selectedCategories]);
 
-  const heading = useMemo(() => {
-    const category = selectedCourseGroups.length === 1 ? selectedCourseGroups[0] : selectedStreams.length === 1 ? selectedStreams[0] : selectedCategories.length === 1 ? selectedCategories[0] : "";
-    const level = selectedLevels.length === 1 ? selectedLevels[0] + " Level " : "";
-    return `Top ${level}${category ? category + " " : ""}Exams in India 2026`;
-  }, [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels]);
+  const heading = useMemo(() => getExamHeading({
+    category: selectedCategories[0],
+    stream: selectedStreams[0],
+    courseGroup: selectedCourseGroups[0],
+    level: selectedLevels[0],
+  }), [selectedStreams, selectedCategories, selectedCourseGroups, selectedLevels]);
 
   const clearAll = () => {
     setSelectedCategories([]); setSelectedStreams([]);
@@ -106,20 +118,25 @@ export default function AllExams() {
           </div>
         </div>
 
+        {/* SEO Quick Links */}
+        <div className="mb-4 flex flex-wrap gap-1.5">
+          {examSeoRoutes.map(route => (
+            <Link key={route.label} to={`/exams?${new URLSearchParams(route.params).toString()}`}
+              className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
+              {route.label}
+            </Link>
+          ))}
+        </div>
+
         {/* Top Searches - mobile only */}
         <div className="lg:hidden mb-4">
           <p className="text-xs font-semibold text-muted-foreground mb-2">Top Searches</p>
           <div className="flex flex-wrap gap-1.5">
             {topSearches.map(s => (
-              <button
-                key={s}
-                onClick={() => setSearch(s)}
+              <button key={s} onClick={() => setSearch(s)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   search === s ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"
-                }`}
-              >
-                {s}
-              </button>
+                }`}>{s}</button>
             ))}
           </div>
         </div>
@@ -149,10 +166,10 @@ export default function AllExams() {
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> exams</p>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-              {!dbExams ? (
+              {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => <ExamCardSkeleton key={i} />)
               ) : (
-                filtered.map((exam, i) => (
+                filtered.map((exam: any, i: number) => (
                   <Fragment key={exam.slug}>
                     <ExamCard exam={exam} index={Math.min(i, 5)} />
                     {(i + 1) % ITEMS_PER_AD === 0 && i < filtered.length - 1 && (
@@ -162,7 +179,16 @@ export default function AllExams() {
                 ))
               )}
             </div>
-            {dbExams && filtered.length === 0 && (
+
+            <div ref={sentinelRef} className="h-4" />
+            {isFetchingMore && (
+              <div className="flex justify-center py-6"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
+            )}
+            {!hasMore && filtered.length > 0 && (
+              <p className="text-center text-sm text-muted-foreground py-4">You've seen all exams</p>
+            )}
+
+            {!isLoading && filtered.length === 0 && (
               <div className="text-center py-12 bg-card rounded-2xl border border-border">
                 <h3 className="font-semibold text-foreground mb-1">No exams found</h3>
                 <p className="text-sm text-muted-foreground">Try adjusting your filters</p>

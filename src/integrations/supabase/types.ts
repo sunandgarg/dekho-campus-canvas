@@ -860,6 +860,60 @@ export type Database = {
         }
         Relationships: []
       }
+      promoted_programs: {
+        Row: {
+          badge: string
+          badge_variant: string
+          college_name: string
+          college_slug: string
+          course_slug: string
+          created_at: string
+          discount_percent: number
+          display_order: number
+          duration: string
+          id: string
+          is_active: boolean
+          original_price: number
+          program_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          badge?: string
+          badge_variant?: string
+          college_name: string
+          college_slug?: string
+          course_slug?: string
+          created_at?: string
+          discount_percent?: number
+          display_order?: number
+          duration?: string
+          id?: string
+          is_active?: boolean
+          original_price?: number
+          program_type?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          badge?: string
+          badge_variant?: string
+          college_name?: string
+          college_slug?: string
+          course_slug?: string
+          created_at?: string
+          discount_percent?: number
+          display_order?: number
+          duration?: string
+          id?: string
+          is_active?: boolean
+          original_price?: number
+          program_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       trusted_partners: {
         Row: {
           college_slug: string
