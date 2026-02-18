@@ -35,7 +35,7 @@ export function OnlineEducationSection() {
   return (
     <>
       <section className="py-12 md:py-20 relative overflow-hidden" aria-labelledby="online-edu-heading">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-background to-primary/5" />
+        <div className="absolute inset-0 bg-background" />
         
         <div className="container relative z-10">
           <div className="grid lg:grid-cols-2 gap-6 md:gap-8">

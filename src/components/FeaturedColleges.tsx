@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, MapPin, ArrowRight, GraduationCap, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
+import { LeadGateDialog } from "@/components/LeadGateDialog";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
 import { useDbColleges } from "@/hooks/useCollegesData";
 import { useFeaturedColleges } from "@/hooks/useFeaturedColleges";
@@ -12,6 +14,8 @@ import { useMemo } from "react";
 export function FeaturedColleges() {
   const { data: dbColleges } = useDbColleges();
   const { data: featuredSlugs } = useFeaturedColleges();
+  const [showLead, setShowLead] = useState(false);
+  const [leadSlug, setLeadSlug] = useState("");
 
   const topColleges = useMemo(() => {
     const allColleges = dbColleges ?? [];
@@ -65,12 +69,12 @@ export function FeaturedColleges() {
                 transition={{ delay: index * 0.06 }}
                 className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-lg transition-all h-full flex flex-col"
               >
-                <div className="relative h-40 overflow-hidden flex-shrink-0">
+                <Link to={`/colleges/${college.slug}`} className="relative h-40 overflow-hidden flex-shrink-0 block">
                   <img src={college.image} alt={college.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
                   <Badge className="absolute top-3 left-3 bg-foreground/80 text-background border-0 text-xs">
                     {college.type}
                   </Badge>
-                </div>
+                </Link>
 
                 <div className="p-4 space-y-3 flex-1 flex flex-col">
                   <div>
@@ -111,7 +115,7 @@ export function FeaturedColleges() {
                     <Link to={`/colleges/${college.slug}`}>
                       <Button variant="outline" size="sm" className="w-full rounded-xl text-xs h-9">Know More</Button>
                     </Link>
-                    <Button size="sm" className="w-full rounded-xl text-xs h-9 gradient-accent text-white border-0">Apply Now</Button>
+                    <Button size="sm" className="w-full rounded-xl text-xs h-9 gradient-accent text-white border-0" onClick={() => { setLeadSlug(college.slug); setShowLead(true); }}>Apply Now</Button>
                   </div>
                 </div>
               </motion.article>
@@ -128,6 +132,13 @@ export function FeaturedColleges() {
           <DynamicAdBanner variant="horizontal" position="mid-page" />
         </div>
       </div>
+      <LeadGateDialog
+        open={showLead}
+        onOpenChange={setShowLead}
+        title="🎓 Apply Now — Get Free Counseling!"
+        subtitle="Fill the form & get expert admission guidance"
+        source={`featured_college_apply_${leadSlug}`}
+      />
     </section>
   );
 }

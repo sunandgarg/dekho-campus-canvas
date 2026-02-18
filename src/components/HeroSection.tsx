@@ -132,14 +132,14 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-background via-secondary/30 to-background" aria-label="Hero">
+    <section className="relative overflow-hidden bg-background" aria-label="Hero">
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-muted/30 rounded-full blur-[120px]" />
       </div>
 
       <div className="container relative z-10 px-4 py-8 md:py-16 lg:py-20">

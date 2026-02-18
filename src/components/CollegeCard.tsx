@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, MapPin, Calendar, Shield, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { LeadGateDialog } from "@/components/LeadGateDialog";
 import type { DbCollege } from "@/hooks/useCollegesData";
 
 interface CollegeCardProps {
@@ -11,15 +13,18 @@ interface CollegeCardProps {
 }
 
 export function CollegeCard({ college, index }: CollegeCardProps) {
+  const [showLead, setShowLead] = useState(false);
+
   return (
+    <>
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index, 5) * 0.04, duration: 0.3 }}
     >
       <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image - fixed height with zoom-in crop */}
-        <div className="relative h-48 flex-shrink-0 overflow-hidden">
+        {/* Image - clickable to open college details */}
+        <Link to={`/colleges/${college.slug}`} className="relative h-48 flex-shrink-0 overflow-hidden block">
           <img
             src={college.image}
             alt={college.name}
@@ -29,7 +34,7 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
           <Badge className="absolute top-3 left-3 bg-foreground/80 text-background border-0 text-xs">
             {college.type}
           </Badge>
-        </div>
+        </Link>
 
         {/* Content */}
         <div className="p-4 space-y-3 flex-1 flex flex-col">
@@ -94,12 +99,20 @@ export function CollegeCard({ college, index }: CollegeCardProps) {
                 Know More
               </Button>
             </Link>
-            <Button className="w-full rounded-xl h-10 text-sm gradient-accent text-white border-0">
+            <Button className="w-full rounded-xl h-10 text-sm gradient-accent text-white border-0" onClick={() => setShowLead(true)}>
               Apply Now
             </Button>
           </div>
         </div>
       </article>
     </motion.div>
+    <LeadGateDialog
+      open={showLead}
+      onOpenChange={setShowLead}
+      title={`🎓 Apply to ${college.short_name || college.name}`}
+      subtitle="Get free counseling and admission support"
+      source={`college_card_apply_${college.slug}`}
+    />
+    </>
   );
 }
