@@ -36,6 +36,7 @@ const ToolPage = lazy(() => import("./pages/ToolPage"));
 const AllTools = lazy(() => import("./pages/AllTools"));
 const AdminPartners = lazy(() => import("./pages/AdminPartners"));
 const AdminAIProviders = lazy(() => import("./pages/AdminAIProviders"));
+const AdminSEO = lazy(() => import("./pages/AdminSEO"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,6 +93,7 @@ const App = () => (
               <Route path="/admin/banners" element={<AdminBanners />} />
               <Route path="/admin/partners" element={<AdminPartners />} />
               <Route path="/admin/ai-providers" element={<AdminAIProviders />} />
+              <Route path="/admin/seo" element={<AdminSEO />} />
               <Route path="/tools" element={<AllTools />} />
               <Route path="/tools/:slug" element={<ToolPage />} />
               <Route path="*" element={<NotFound />} />

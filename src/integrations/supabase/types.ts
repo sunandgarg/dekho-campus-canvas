@@ -794,6 +794,69 @@ export type Database = {
         }
         Relationships: []
       }
+      page_seo: {
+        Row: {
+          canonical_url: string
+          created_at: string
+          id: string
+          is_active: boolean
+          meta_description: string
+          meta_keywords: string
+          meta_title: string
+          og_description: string
+          og_image: string
+          og_title: string
+          page_name: string
+          page_path: string
+          robots: string
+          structured_data: string
+          twitter_description: string
+          twitter_image: string
+          twitter_title: string
+          updated_at: string
+        }
+        Insert: {
+          canonical_url?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
+          og_description?: string
+          og_image?: string
+          og_title?: string
+          page_name?: string
+          page_path: string
+          robots?: string
+          structured_data?: string
+          twitter_description?: string
+          twitter_image?: string
+          twitter_title?: string
+          updated_at?: string
+        }
+        Update: {
+          canonical_url?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          meta_description?: string
+          meta_keywords?: string
+          meta_title?: string
+          og_description?: string
+          og_image?: string
+          og_title?: string
+          page_name?: string
+          page_path?: string
+          robots?: string
+          structured_data?: string
+          twitter_description?: string
+          twitter_image?: string
+          twitter_title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       popular_places: {
         Row: {
           college_count: number
