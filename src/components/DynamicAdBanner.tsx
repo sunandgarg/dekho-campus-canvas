@@ -35,7 +35,7 @@ export function DynamicAdBanner({
   if (variant === "leaderboard") {
     return (
       <div
-        className={`relative bg-gradient-to-r ${bg_gradient} h-14 md:h-16 flex items-center justify-center px-4 overflow-hidden ${className}`}
+        className={`relative bg-gradient-to-r ${bg_gradient} h-14 md:h-16 flex items-center justify-center px-4 overflow-hidden max-w-full ${className}`}
         style={bgStyle}
       >
         {image_url && <div className={`absolute inset-0 ${overlayClass}`} />}

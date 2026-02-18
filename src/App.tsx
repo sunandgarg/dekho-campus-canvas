@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { FloatingBot } from "@/components/FloatingBot";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { HomeMobileBottomNav } from "@/components/HomeMobileBottomNav";
 
 const AllColleges = lazy(() => import("./pages/AllColleges"));
 const AllCourses = lazy(() => import("./pages/AllCourses"));
@@ -97,6 +98,7 @@ const App = () => (
             </Routes>
             <FloatingBot />
             <WhatsAppButton />
+            <HomeMobileBottomNav />
           </Suspense>
         </BrowserRouter>
       </TooltipProvider>

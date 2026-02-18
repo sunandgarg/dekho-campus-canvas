@@ -11,7 +11,7 @@ export function MobileBottomFilter({ activeCount, onOpen }: MobileBottomFilterPr
     <>
       <button
         onClick={onOpen}
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 lg:hidden flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-semibold"
+        className="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 lg:hidden lg:bottom-4 flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-semibold"
       >
         <Filter className="w-4 h-4" />
         Filters

@@ -5,8 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { FloatingBot } from "@/components/FloatingBot";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
@@ -100,7 +98,7 @@ export default function AllExams() {
   const ITEMS_PER_AD = 4;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden max-w-[100vw]">
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="exams" />
       <main className="px-3 md:container py-4 md:py-6">
@@ -217,8 +215,7 @@ export default function AllExams() {
         </div>
       </main>
       <Footer />
-      <FloatingBot />
-      <WhatsAppButton />
+      
       <MobileBottomFilter activeCount={activeFilters.length} onOpen={() => setFilterOpen(true)} />
       <MobileFilterSheet filters={filterConfigs} activeCount={activeFilters.length} onClearAll={clearAll} open={filterOpen} onOpenChange={setFilterOpen} />
     </div>
