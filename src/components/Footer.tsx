@@ -70,7 +70,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <img src={logo} alt="DekhoCampus" className="h-8 md:h-10" />
+              <img src={logo} alt="DekhoCampus" width={229} height={63} className="h-8 md:h-10" />
             </Link>
             <p className="text-background/70 text-sm mb-6 max-w-xs">
               India's #1 AI-powered education platform helping students find their perfect career path.

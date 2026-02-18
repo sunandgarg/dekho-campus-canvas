@@ -97,7 +97,7 @@ export function CategorySection() {
                 <Link key={college.slug} to={`/colleges/${college.slug}`} className="group flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/50 transition-colors">
                   <div className="relative flex-shrink-0">
                     <span className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center z-10">#{idx + 1}</span>
-                    <img src={college.logo || college.image || "https://images.unsplash.com/photo-1562774053-701939374585?w=100&h=100&fit=crop"} alt={college.name} className="w-12 h-12 rounded-lg object-cover" loading="lazy" />
+                    <img src={college.logo || college.image || "https://images.unsplash.com/photo-1562774053-701939374585?w=80&h=80&fit=crop&fm=webp&q=75"} alt="" width={48} height={48} className="w-12 h-12 rounded-lg object-cover" loading="lazy" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">{college.name}</h4>
@@ -139,7 +139,7 @@ export function CategorySection() {
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-[11px] text-muted-foreground flex items-center gap-1"><Users className="w-3 h-3" />{course.colleges_count}+ colleges</span>
                     <div className="flex items-center gap-1.5">
-                      {course.growth && <Badge className="bg-accent/10 text-accent hover:bg-accent/10 text-[10px] px-1.5 py-0"><TrendingUp className="w-3 h-3 mr-0.5" />{course.growth}</Badge>}
+                      {course.growth && <Badge className="bg-accent/15 text-foreground hover:bg-accent/15 text-[10px] px-1.5 py-0 font-bold"><TrendingUp className="w-3 h-3 mr-0.5" />{course.growth}</Badge>}
                       {course.avg_salary && <Badge className="bg-primary/10 text-primary hover:bg-primary/10 text-[10px] px-1.5 py-0">{course.avg_salary}</Badge>}
                     </div>
                   </div>

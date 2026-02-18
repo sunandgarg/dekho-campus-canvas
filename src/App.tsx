@@ -8,6 +8,8 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { FloatingBot } from "@/components/FloatingBot";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const AllColleges = lazy(() => import("./pages/AllColleges"));
 const AllCourses = lazy(() => import("./pages/AllCourses"));
@@ -93,6 +95,8 @@ const App = () => (
               <Route path="/tools/:slug" element={<ToolPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <FloatingBot />
+            <WhatsAppButton />
           </Suspense>
         </BrowserRouter>
       </TooltipProvider>

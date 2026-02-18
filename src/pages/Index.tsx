@@ -16,12 +16,10 @@ import { UpcomingExams } from "@/components/UpcomingExams";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
-import { FloatingBot } from "@/components/FloatingBot";
 import { AILeadForm } from "@/components/AILeadForm";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { HeroBannerCarousel } from "@/components/HeroBannerCarousel";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PeriodicLeadPopup } from "@/components/PeriodicLeadPopup";
 
 const Index = () => {
@@ -119,8 +117,6 @@ const Index = () => {
         leadData={leadInfo}
         onRequestLeadForm={handleRequestLeadForm}
       />
-      <FloatingBot />
-      <WhatsAppButton />
       <PeriodicLeadPopup />
     </div>
   );

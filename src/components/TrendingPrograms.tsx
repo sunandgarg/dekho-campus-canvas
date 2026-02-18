@@ -54,8 +54,8 @@ export function TrendingPrograms() {
             <p className="text-muted-foreground mt-2 max-w-lg">Premium courses from IITs & IIMs at exclusive prices on DekhoCampus</p>
           </div>
           <div className="hidden md:flex items-center gap-2">
-            <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("left")}><ChevronLeft className="w-4 h-4" /></Button>
-            <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("right")}><ChevronRight className="w-4 h-4" /></Button>
+            <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("left")} aria-label="Scroll programs left"><ChevronLeft className="w-4 h-4" /></Button>
+            <Button variant="outline" size="icon" className="rounded-xl h-9 w-9" onClick={() => scroll("right")} aria-label="Scroll programs right"><ChevronRight className="w-4 h-4" /></Button>
           </div>
         </motion.div>
 
