@@ -23,8 +23,8 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full">
-      <nav className="glass border-b border-border">
-        <div className="container flex items-center justify-between h-14 md:h-16 lg:h-18">
+      <nav className="bg-background/95 backdrop-blur-md border-b border-border">
+        <div className="container flex items-center justify-between h-14 md:h-16 lg:h-18 px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center" aria-label="DekhoCampus Home">
             <img src={logo} alt="DekhoCampus" width={229} height={63} className="h-7 md:h-8 w-auto" />
