@@ -272,7 +272,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
           </motion.div>
 
           {/* Quick Category Cards */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="max-w-3xl mx-auto pt-2 -mx-4 px-4 md:mx-0 md:px-0">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="max-w-3xl mx-auto pt-2">
             <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
               {quickCategories.map((cat, index) => (
                 <motion.a
