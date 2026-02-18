@@ -1,6 +1,17 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { Target, Check, ArrowRight, ArrowLeft, Heart, BookOpen, MessageCircle, Users, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Target,
+  Check,
+  ArrowRight,
+  ArrowLeft,
+  Heart,
+  BookOpen,
+  MessageCircle,
+  Users,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 
@@ -68,10 +79,18 @@ export function FeaturesSection() {
           </div>
           {/* Desktop nav arrows */}
           <div className="hidden md:flex items-center gap-2">
-            <button onClick={() => scroll("left")} className="w-10 h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors" aria-label="Scroll left">
+            <button
+              onClick={() => scroll("left")}
+              className="w-10 h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors"
+              aria-label="Scroll left"
+            >
               <ChevronLeft className="w-5 h-5 text-foreground" />
             </button>
-            <button onClick={() => scroll("right")} className="w-10 h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors" aria-label="Scroll right">
+            <button
+              onClick={() => scroll("right")}
+              className="w-10 h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors"
+              aria-label="Scroll right"
+            >
               <ChevronRight className="w-5 h-5 text-foreground" />
             </button>
           </div>
@@ -92,17 +111,15 @@ export function FeaturesSection() {
               className="group flex-shrink-0 w-[280px] md:w-[320px] snap-start bg-card rounded-2xl border border-border p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow"
             >
               {/* Icon */}
-              <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+              <div
+                className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+              >
                 <feature.icon className="w-6 h-6 md:w-7 md:h-7 text-primary-foreground" />
               </div>
 
               {/* Content */}
-              <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                {feature.description}
-              </p>
+              <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">{feature.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{feature.description}</p>
               <ul className="space-y-2">
                 {feature.items.map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm">
@@ -141,7 +158,7 @@ export function FeaturesSection() {
         >
           <p className="text-muted-foreground mb-4">Ready to start your journey?</p>
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-base">
-            Try DekhoCampus Educational AI Free
+            Try Educational AI Free
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </motion.div>
