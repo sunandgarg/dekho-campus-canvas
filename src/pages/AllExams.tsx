@@ -98,7 +98,7 @@ export default function AllExams() {
   const ITEMS_PER_AD = 4;
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden max-w-[100vw]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="exams" />
       <main className="px-3 md:container py-4 md:py-6">

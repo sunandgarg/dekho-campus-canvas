@@ -35,27 +35,27 @@ export function DynamicAdBanner({
   if (variant === "leaderboard") {
     return (
       <div
-        className={`relative bg-accent h-14 md:h-16 flex items-center justify-center px-4 overflow-hidden max-w-[100vw] ${className}`}
+        className={`relative bg-muted h-14 md:h-16 flex items-center justify-center px-4 overflow-hidden ${className}`}
         style={bgStyle}
       >
         {image_url && <div className={`absolute inset-0 ${overlayClass}`} />}
         <div className="relative flex items-center gap-4 overflow-hidden">
-          <p className="text-white text-sm md:text-base font-medium truncate animate-marquee">
+          <p className="text-foreground text-sm md:text-base font-medium truncate animate-marquee">
             {title}
           </p>
           <a
             href={link_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 px-4 py-1.5 bg-white text-foreground text-sm font-semibold rounded-full hover:bg-white/90 transition-colors"
+            className="flex-shrink-0 px-4 py-1.5 bg-primary text-primary-foreground text-sm font-semibold rounded-full hover:bg-primary/90 transition-colors"
           >
             {cta_text}
           </a>
         </div>
-        <button onClick={() => setIsVisible(false)} className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-white/70 hover:text-white z-10" aria-label="Close ad">
+        <button onClick={() => setIsVisible(false)} className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground z-10" aria-label="Close ad">
           <X className="w-4 h-4" />
         </button>
-        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-white/50 uppercase tracking-wider z-10">Ad</span>
+        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground/50 uppercase tracking-wider z-10">Ad</span>
       </div>
     );
   }

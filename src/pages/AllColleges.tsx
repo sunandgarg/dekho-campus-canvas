@@ -160,7 +160,7 @@ export default function AllColleges() {
   const ITEMS_PER_AD = 4;
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden max-w-[100vw]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="colleges" />
 
