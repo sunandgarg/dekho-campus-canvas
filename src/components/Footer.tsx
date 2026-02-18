@@ -13,7 +13,7 @@ const footerLinks = {
     { label: "Compare", href: "#" },
   ],
   resources: [
-    { label: "Blog", href: "#" },
+    { label: "News", href: "/articles" },
     { label: "Career Guide", href: "#" },
     { label: "Scholarships", href: "#" },
     { label: "Study Abroad", href: "#" },
