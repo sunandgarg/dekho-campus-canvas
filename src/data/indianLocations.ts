@@ -1,14 +1,22 @@
-export const indianStates = [
+// Priority states shown first in all dropdowns
+const PRIORITY_STATES = [
+  "Delhi", "Delhi NCR", "Haryana", "Chandigarh", "Rajasthan",
+  "Uttar Pradesh", "Uttarakhand", "Punjab", "Himachal Pradesh",
+];
+
+const REMAINING_STATES = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+  "Goa", "Gujarat", "Jharkhand",
   "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
-  "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
-  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
-  "Uttar Pradesh", "Uttarakhand", "West Bengal",
-  "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli",
-  "Daman and Diu", "Delhi", "Delhi NCR", "Jammu and Kashmir", "Ladakh",
+  "Meghalaya", "Mizoram", "Nagaland", "Odisha",
+  "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+  "West Bengal",
+  "Andaman and Nicobar Islands", "Dadra and Nagar Haveli",
+  "Daman and Diu", "Jammu and Kashmir", "Ladakh",
   "Lakshadweep", "Puducherry",
 ];
+
+export const indianStates = [...PRIORITY_STATES, ...REMAINING_STATES];
 
 export const citiesByState: Record<string, string[]> = {
   "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Rajahmundry", "Kakinada", "Kadapa", "Anantapur", "Eluru", "Ongole", "Chittoor", "Srikakulam", "Vizianagaram", "Bhimavaram", "Narasaraopet", "Rajampet", "Tadepalligudem", "Nuzvid", "Rajam", "East Godavari", "West Godavari", "Prakasam", "Amaravati"],

@@ -17,7 +17,6 @@ import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
 import { useInfiniteData } from "@/hooks/useInfiniteData";
 import { getCourseHeading, courseSeoRoutes, filtersToSlug } from "@/lib/seoSlugs";
-import { Link } from "react-router-dom";
 import {
   courseStreams, courseCourseGroups, courseSpecializations,
   courseModes, courseDurations,
@@ -123,15 +122,34 @@ export default function AllCourses() {
           </div>
         </div>
 
-        {/* SEO Quick Links */}
+        {/* Category Quick Filters */}
         <div className="mb-4 flex flex-wrap gap-1.5">
           {courseSeoRoutes.slice(0, 6).map(route => {
-            const slug = filtersToSlug("courses", route.params as Record<string, string>);
+            const streamParam = (route.params as any).stream;
+            const groupParam = (route.params as any).group;
+            const modeParam = (route.params as any).mode;
+            const filterKey = streamParam || groupParam || modeParam;
+            const isActive = (streamParam && selectedStreams.includes(streamParam)) ||
+              (groupParam && selectedCourseGroups.includes(groupParam)) ||
+              (modeParam && selectedModes.includes(modeParam));
             return (
-              <Link key={route.label} to={`/courses/${slug}`}
-                className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
+              <button key={route.label}
+                onClick={() => {
+                  if (streamParam) {
+                    setSelectedStreams(prev => prev.includes(streamParam) ? prev.filter(s => s !== streamParam) : [...prev, streamParam]);
+                  } else if (groupParam) {
+                    setSelectedCourseGroups(prev => prev.includes(groupParam) ? prev.filter(s => s !== groupParam) : [...prev, groupParam]);
+                  } else if (modeParam) {
+                    setSelectedModes(prev => prev.includes(modeParam) ? prev.filter(s => s !== modeParam) : [...prev, modeParam]);
+                  }
+                }}
+                className={`px-2.5 py-1 text-[11px] rounded-full font-medium border transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5"
+                }`}>
                 {route.label}
-              </Link>
+              </button>
             );
           })}
         </div>
@@ -173,7 +191,7 @@ export default function AllCourses() {
 
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> courses</p>
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => <CourseCardSkeleton key={i} />)
               ) : (

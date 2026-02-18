@@ -17,7 +17,6 @@ import { MobileFilterSheet } from "@/components/MobileFilterSheet";
 import { MobileBottomFilter } from "@/components/MobileBottomFilter";
 import { useInfiniteData } from "@/hooks/useInfiniteData";
 import { getExamHeading, examSeoRoutes, filtersToSlug } from "@/lib/seoSlugs";
-import { Link } from "react-router-dom";
 import {
   examCategories, examStreams, examCourseGroups, examLevels,
 } from "@/data/indianLocations";
@@ -118,15 +117,29 @@ export default function AllExams() {
           </div>
         </div>
 
-        {/* SEO Quick Links */}
+        {/* Category Quick Filters */}
         <div className="mb-4 flex flex-wrap gap-1.5">
           {examSeoRoutes.map(route => {
-            const slug = filtersToSlug("exams", route.params as Record<string, string>);
+            const streamParam = (route.params as any).stream;
+            const levelParam = (route.params as any).level;
+            const isActive = (streamParam && selectedStreams.includes(streamParam)) ||
+              (levelParam && selectedLevels.includes(levelParam));
             return (
-              <Link key={route.label} to={`/exams/${slug}`}
-                className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
+              <button key={route.label}
+                onClick={() => {
+                  if (streamParam) {
+                    setSelectedStreams(prev => prev.includes(streamParam) ? prev.filter(s => s !== streamParam) : [...prev, streamParam]);
+                  } else if (levelParam) {
+                    setSelectedLevels(prev => prev.includes(levelParam) ? prev.filter(s => s !== levelParam) : [...prev, levelParam]);
+                  }
+                }}
+                className={`px-2.5 py-1 text-[11px] rounded-full font-medium border transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5"
+                }`}>
                 {route.label}
-              </Link>
+              </button>
             );
           })}
         </div>
@@ -168,7 +181,7 @@ export default function AllExams() {
 
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> exams</p>
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => <ExamCardSkeleton key={i} />)
               ) : (
