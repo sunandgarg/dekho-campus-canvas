@@ -61,10 +61,10 @@ export function TopRankedColleges() {
             <p className="text-muted-foreground mt-1">Handpicked top institutions from across India</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("left")} disabled={!canScrollLeft}>
+            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("left")} disabled={!canScrollLeft} aria-label="Scroll colleges left">
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("right")} disabled={!canScrollRight}>
+            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("right")} disabled={!canScrollRight} aria-label="Scroll colleges right">
               <ChevronRight className="w-4 h-4" />
             </Button>
             <Link to="/colleges">
@@ -94,6 +94,8 @@ export function TopRankedColleges() {
                   <img
                     src={college.image}
                     alt={college.name}
+                    width={280}
+                    height={144}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />

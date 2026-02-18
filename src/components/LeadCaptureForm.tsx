@@ -169,7 +169,7 @@ export function LeadCaptureForm({
           </div>
           <div className="relative">
             <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <select value={formData.course} onChange={e => update("course", e.target.value)} className={`${selectCls} pl-10`} required>
+            <select value={formData.course} onChange={e => update("course", e.target.value)} aria-label="Select Course" className={`${selectCls} pl-10`} required>
               <option value="">Interested Course *</option>
               {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -222,7 +222,7 @@ export function LeadCaptureForm({
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:flex-1">
             <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Name" className="bg-primary-foreground/15 border-0 text-primary-foreground placeholder:text-primary-foreground/50 rounded-lg h-9 text-sm flex-1 min-w-0" required />
             <Input value={formData.phone} onChange={e => { let v = e.target.value.replace(/\D/g,""); if(v.length<=10) update("phone",v); }} placeholder="Phone" type="tel" maxLength={10} className="bg-primary-foreground/15 border-0 text-primary-foreground placeholder:text-primary-foreground/50 rounded-lg h-9 text-sm flex-1 min-w-0" required />
-            <select value={formData.course} onChange={e => update("course", e.target.value)} className="px-3 py-2 rounded-lg bg-primary-foreground/15 border-0 text-primary-foreground text-sm h-9 focus:outline-none [&>option]:text-foreground flex-1 min-w-0">
+            <select value={formData.course} onChange={e => update("course", e.target.value)} aria-label="Select Course" className="px-3 py-2 rounded-lg bg-primary-foreground/15 border-0 text-primary-foreground text-sm h-9 focus:outline-none [&>option]:text-foreground flex-1 min-w-0">
               <option value="">Course</option>
               {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
