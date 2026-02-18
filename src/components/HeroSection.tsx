@@ -30,12 +30,12 @@ const suggestedPrompts = [
 ];
 
 const quickCategories = [
-  { label: "13000+ Colleges", image: iconCollege, bgColor: "bg-primary/5", href: "/colleges" },
-  { label: "840+ Courses", image: iconCourse, bgColor: "bg-accent/5", href: "/courses" },
-  { label: "219+ Exams", image: iconExam, bgColor: "bg-secondary", href: "/exams" },
-  { label: "Apply Now", image: iconApplication, bgColor: "bg-primary/5", href: "/colleges" },
-  { label: "Student Reviews", image: iconDocument, bgColor: "bg-accent/5", href: "/articles" },
-  { label: "Latest News", image: iconNews, bgColor: "bg-secondary", href: "/articles" },
+  { label: "13000+ Colleges", image: iconCollege, bgColor: "bg-primary/5", href: "/colleges", alt: "College directory icon" },
+  { label: "840+ Courses", image: iconCourse, bgColor: "bg-accent/5", href: "/courses", alt: "Course catalog icon" },
+  { label: "219+ Exams", image: iconExam, bgColor: "bg-secondary", href: "/exams", alt: "Exam information icon" },
+  { label: "Apply Now", image: iconApplication, bgColor: "bg-primary/5", href: "/colleges", alt: "Application icon" },
+  { label: "Student Reviews", image: iconDocument, bgColor: "bg-accent/5", href: "/articles", alt: "Reviews icon" },
+  { label: "Latest News", image: iconNews, bgColor: "bg-secondary", href: "/articles", alt: "News icon" },
 ];
 
 interface SearchResult {
@@ -118,10 +118,10 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
 
   const getThumb = (item: SearchResult) => {
     if (item.type === "College" && item.logo) {
-      return <img src={item.logo} alt="" className="w-10 h-10 rounded-xl object-cover" />;
+      return <img src={item.logo} alt="" width={40} height={40} className="w-10 h-10 rounded-xl object-cover" />;
     }
     if (item.type === "Exam" && (item.image || item.logo)) {
-      return <img src={item.logo || item.image!} alt="" className="w-10 h-10 rounded-xl object-cover" />;
+      return <img src={item.logo || item.image!} alt="" width={40} height={40} className="w-10 h-10 rounded-xl object-cover" />;
     }
     const Icon = getIcon(item);
     return (
@@ -146,7 +146,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
         <div className="max-w-4xl mx-auto text-center space-y-5 md:space-y-8">
           {/* AI Badge */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20">
-            <img src={dcLogo} alt="DekhoCampus" className="w-4 h-4 object-contain" />
+            <img src={dcLogo} alt="" width={16} height={16} className="w-4 h-4 object-contain" />
             <span className="text-xs font-semibold tracking-wide uppercase text-accent">AI-Powered Education Intelligence</span>
           </motion.div>
 
@@ -196,13 +196,10 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     size="default"
                     className="rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 text-white px-3 md:px-5 shadow-lg h-9 md:h-10 relative"
                     disabled={!searchQuery.trim()}
-                    aria-label="Ask AI"
+                    aria-label="Ask AI counselor"
                   >
                     <Send className="w-4 h-4 md:mr-2" />
                     <span className="hidden md:inline font-semibold text-sm">Ask AI</span>
-                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-accent text-[8px] text-accent-foreground font-bold flex items-center justify-center animate-bounce-gentle">
-                      AI
-                    </span>
                   </Button>
                 </div>
 
@@ -286,7 +283,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                   transition={{ delay: 0.4 + index * 0.04 }}
                   className={`flex flex-col items-center gap-1.5 p-2.5 md:p-4 rounded-2xl ${cat.bgColor} border border-transparent transition-all hover:shadow-md hover:-translate-y-0.5 group`}
                 >
-                  <img src={cat.image} alt={cat.label} className="w-10 h-10 md:w-14 md:h-14 object-contain transition-transform group-hover:scale-110" />
+                  <img src={cat.image} alt={cat.alt} width={56} height={56} className="w-10 h-10 md:w-14 md:h-14 object-contain transition-transform group-hover:scale-110" loading="lazy" />
                   <span className="text-[10px] md:text-xs font-semibold text-foreground/80 text-center leading-tight">{cat.label}</span>
                 </motion.a>
               ))}

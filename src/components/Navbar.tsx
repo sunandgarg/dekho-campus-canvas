@@ -27,7 +27,7 @@ export function Navbar() {
         <div className="container flex items-center justify-between h-14 md:h-16 lg:h-18">
           {/* Logo */}
           <Link to="/" className="flex items-center" aria-label="DekhoCampus Home">
-            <img src={logo} alt="DekhoCampus" className="h-9 md:h-10" />
+            <img src={logo} alt="DekhoCampus" width={229} height={63} className="h-9 md:h-10" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -50,7 +50,7 @@ export function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            <Link to="/admin">
+            <Link to="/admin" aria-label="Admin Panel">
               <Button variant="outline" size="sm" className="hidden md:flex gap-2 rounded-xl border-amber-200 text-amber-600 hover:bg-amber-50">
                 <Shield className="w-4 h-4" />
                 Admin
@@ -70,13 +70,13 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/auth">
+                <Link to="/auth" aria-label="Sign In">
                   <Button variant="outline" className="hidden md:flex gap-2 rounded-xl focus-ring">
                     <User className="w-4 h-4" />
                     Sign In
                   </Button>
                 </Link>
-                <Link to="/auth">
+                <Link to="/auth" aria-label="Get Started">
                   <Button className="hidden md:flex gradient-primary btn-glow rounded-xl text-primary-foreground">
                     Get Started
                   </Button>
