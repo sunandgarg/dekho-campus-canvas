@@ -35,9 +35,13 @@ export function ExamCard({ exam, index }: ExamCardProps) {
       }`}>
         {/* Header */}
         <div className="flex items-start gap-4 mb-4">
-          <div className="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">
-            <FileText className="w-6 h-6 text-white" />
-          </div>
+          {exam.logo || exam.image ? (
+            <img src={exam.logo || exam.image} alt={exam.name} width={56} height={56} className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+          ) : (
+            <div className="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">
+              <FileText className="w-6 h-6 text-white" />
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div>
