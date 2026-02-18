@@ -53,8 +53,10 @@ export function PopularPlaces() {
               >
                 {place.image_url && (
                   <img
-                    src={place.image_url}
+                    src={place.image_url.includes('unsplash.com') ? place.image_url.replace(/w=\d+/, 'w=340').replace(/h=\d+/, 'h=260').replace(/&q=\d+/, '') + '&fm=webp&q=60' : place.image_url}
                     alt={place.name}
+                    width={208}
+                    height={160}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />

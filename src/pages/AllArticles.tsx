@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { optimizeImageUrl } from "@/lib/imageUtils";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Clock, User, Calendar } from "lucide-react";
@@ -47,7 +48,7 @@ export default function AllArticles() {
               <Link to={`/articles/${article.slug}`} className="block">
                 <article className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-shadow flex flex-col sm:flex-row">
                   <div className="sm:w-48 md:w-56 flex-shrink-0">
-                    <img src={article.image} alt={article.title} className="w-full h-40 sm:h-full object-cover" loading="lazy" />
+                    <img src={optimizeImageUrl(article.image, 400, 300)} alt={article.title} className="w-full h-40 sm:h-full object-cover" loading="lazy" />
                   </div>
                   <div className="flex-1 p-4 md:p-5">
                     <div className="flex items-center gap-2 mb-2">
