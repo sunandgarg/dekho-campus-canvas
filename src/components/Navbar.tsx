@@ -27,7 +27,7 @@ export function Navbar() {
         <div className="container flex items-center justify-between h-14 md:h-16 lg:h-18">
           {/* Logo */}
           <Link to="/" className="flex items-center" aria-label="DekhoCampus Home">
-            <img src={logo} alt="DekhoCampus" width={229} height={63} className="h-9 md:h-10" />
+            <img src={logo} alt="DekhoCampus" width={229} height={63} className="h-7 md:h-8 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}

@@ -66,8 +66,12 @@ export function TrendingPrograms() {
               <motion.article key={prog.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 className="min-w-[280px] snap-start lg:min-w-0 bg-card rounded-2xl border border-border p-5 flex flex-col hover:shadow-lg transition-all card-elevated">
                 <div className="flex items-start justify-between mb-3">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <GraduationCap className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden">
+                    {prog.college_slug ? (
+                      <img src={`https://logo.clearbit.com/${prog.college_name.toLowerCase().replace(/\s+/g, '')}.edu`} alt="" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'; }} />
+                    ) : (
+                      <GraduationCap className="w-6 h-6 text-primary" />
+                    )}
                   </div>
                   <Badge variant={prog.badge_variant as any} className="text-[10px] font-bold px-2">{prog.badge}</Badge>
                 </div>

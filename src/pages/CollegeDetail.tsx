@@ -19,7 +19,7 @@ import { WhatsNewSection } from "@/components/WhatsNewSection";
 import { UsefulLinks } from "@/components/UsefulLinks";
 
 const COLLEGE_SECTIONS: ScrollSection[] = [
-  { id: "overview", label: "College Info" },
+  { id: "overview", label: "Overview" },
   { id: "highlights", label: "Highlights" },
   { id: "courses", label: "Courses & Fees" },
   { id: "admissions", label: "Admissions" },
@@ -99,8 +99,12 @@ export default function CollegeDetail() {
           {/* Content Below Image */}
           <div className="p-4 md:p-6">
             <div className="flex items-start gap-4">
-              {college.logo && (
+              {college.logo ? (
                 <img src={college.logo} alt={college.short_name} className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-border bg-background object-cover shadow-lg -mt-12 relative z-10" />
+              ) : (
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-border bg-background shadow-lg -mt-12 relative z-10 flex items-center justify-center">
+                  <GraduationCap className="w-8 h-8 text-primary" />
+                </div>
               )}
               <div className="flex-1 min-w-0 pt-1">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -118,13 +122,22 @@ export default function CollegeDetail() {
             </div>
             {/* Action Buttons */}
             <div className="flex items-center gap-2 mt-4 flex-wrap">
-              <Button size="sm" className="rounded-xl text-xs gap-1"><Phone className="w-3.5 h-3.5" />Get Free Counselling</Button>
+              <Button size="sm" className="rounded-xl text-xs gap-1" onClick={() => {
+                const el = document.getElementById('college-lead-sidebar');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                else window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}><Phone className="w-3.5 h-3.5" />Get Free Counselling</Button>
               {college.brochure_url && college.brochure_url !== '#' && (
                 <a href={college.brochure_url} target="_blank" rel="noopener noreferrer">
                   <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1"><Download className="w-3.5 h-3.5" />Download Brochure</Button>
                 </a>
               )}
-              <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1"><Scale className="w-3.5 h-3.5" />Compare</Button>
+              <Link to={`/colleges/${slug}#compare`}>
+                <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1" onClick={() => {
+                  const el = document.getElementById('compare');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}><Scale className="w-3.5 h-3.5" />Compare</Button>
+              </Link>
             </div>
           </div>
         </motion.div>
@@ -433,24 +446,46 @@ export default function CollegeDetail() {
 
             {/* Compare */}
             <section id="compare" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Compare with Similar Colleges</h2>
-              <div className="grid sm:grid-cols-2 gap-3">
-                {(similarColleges ?? []).slice(0, 4).map((c) => (
-                  <Link key={c.slug} to={`/colleges/${c.slug}`} className="bg-muted rounded-xl p-3 hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-3">
-                      <img src={c.image} alt={c.name} className="w-14 h-14 rounded-lg object-cover" loading="lazy" />
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground truncate">{c.name}</p>
-                        <p className="text-xs text-muted-foreground">{c.location}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-[10px]">{c.ranking}</Badge>
-                          <span className="text-xs text-success font-medium">{c.placement}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              <h2 className="text-lg font-bold text-foreground mb-3">Compare {college.short_name || college.name} with Similar Colleges</h2>
+              {(similarColleges ?? []).length > 0 && (
+                <div className="overflow-x-auto mb-4">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left py-2 text-muted-foreground font-medium">College</th>
+                        <th className="text-left py-2 text-muted-foreground font-medium">Location</th>
+                        <th className="text-left py-2 text-muted-foreground font-medium">Ranking</th>
+                        <th className="text-left py-2 text-muted-foreground font-medium">Fees</th>
+                        <th className="text-left py-2 text-muted-foreground font-medium">Placement</th>
+                        <th className="text-left py-2 text-muted-foreground font-medium">Rating</th>
+                        <th className="text-left py-2 text-muted-foreground font-medium">Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-border bg-primary/5">
+                        <td className="py-2 font-semibold text-foreground">{college.short_name || college.name}</td>
+                        <td className="py-2 text-muted-foreground">{college.city}, {college.state}</td>
+                        <td className="py-2 text-foreground">{college.ranking}</td>
+                        <td className="py-2 text-foreground">{college.fees}</td>
+                        <td className="py-2 text-success font-medium">{college.placement}</td>
+                        <td className="py-2 text-foreground">{college.rating}/5</td>
+                        <td className="py-2 text-muted-foreground">{college.type}</td>
+                      </tr>
+                      {(similarColleges ?? []).slice(0, 4).map((c) => (
+                        <tr key={c.slug} className="border-b border-border last:border-0">
+                          <td className="py-2"><Link to={`/colleges/${c.slug}`} className="text-primary font-medium hover:underline">{c.short_name || c.name}</Link></td>
+                          <td className="py-2 text-muted-foreground">{c.city}, {c.state}</td>
+                          <td className="py-2 text-foreground">{c.ranking}</td>
+                          <td className="py-2 text-foreground">{c.fees}</td>
+                          <td className="py-2 text-success font-medium">{c.placement}</td>
+                          <td className="py-2 text-foreground">{c.rating}/5</td>
+                          <td className="py-2 text-muted-foreground">{c.type}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
               {(sameStateColleges ?? []).length > 0 && (
                 <div className="mt-4">
                   <h3 className="text-sm font-semibold text-foreground mb-2">More colleges in {college.state}</h3>
@@ -510,7 +545,9 @@ export default function CollegeDetail() {
           {/* Sidebar - flows naturally, lead form first */}
           <aside className="hidden lg:block">
             <div className="space-y-4">
-              <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
+              <div id="college-lead-sidebar">
+                <LeadCaptureForm variant="card" title={`Apply to ${college.name}`} subtitle="Get free counseling and application support" source={`college_detail_sidebar_${college.slug}`} interestedCollegeSlug={college.slug} />
+              </div>
 
               {/* Get Started CTA */}
               <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl border border-primary/20 p-4 text-center">
