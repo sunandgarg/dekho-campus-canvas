@@ -6,14 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
 const fallbackCities = [
-  { id: "1", name: "Delhi-NCR", state: "Delhi", college_count: 450, image_url: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400&h=300&fit=crop" },
-  { id: "2", name: "Maharashtra", state: "Maharashtra", college_count: 380, image_url: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&h=300&fit=crop" },
-  { id: "3", name: "Haryana", state: "Haryana", college_count: 310, image_url: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&h=300&fit=crop" },
-  { id: "4", name: "Karnataka", state: "Karnataka", college_count: 420, image_url: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&h=300&fit=crop" },
-  { id: "5", name: "Tamil Nadu", state: "Tamil Nadu", college_count: 350, image_url: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop" },
-  { id: "6", name: "Uttar Pradesh", state: "Uttar Pradesh", college_count: 500, image_url: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" },
-  { id: "7", name: "Rajasthan", state: "Rajasthan", college_count: 270, image_url: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&h=300&fit=crop" },
-  { id: "8", name: "West Bengal", state: "West Bengal", college_count: 290, image_url: "https://images.unsplash.com/photo-1558431382-27e303142255?w=400&h=300&fit=crop" },
+  { id: "1", name: "Delhi-NCR", state: "Delhi", college_count: 450, image_url: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=340&h=260&fit=crop&fm=webp&q=75" },
+  { id: "2", name: "Maharashtra", state: "Maharashtra", college_count: 380, image_url: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=340&h=260&fit=crop&fm=webp&q=75" },
+  { id: "3", name: "Haryana", state: "Haryana", college_count: 310, image_url: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=340&h=260&fit=crop&fm=webp&q=75" },
+  { id: "4", name: "Karnataka", state: "Karnataka", college_count: 420, image_url: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=340&h=260&fit=crop&fm=webp&q=75" },
+  { id: "5", name: "Tamil Nadu", state: "Tamil Nadu", college_count: 350, image_url: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=340&h=260&fit=crop&fm=webp&q=75" },
+  { id: "6", name: "Uttar Pradesh", state: "Uttar Pradesh", college_count: 500, image_url: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=340&h=260&fit=crop&fm=webp&q=75" },
+  { id: "7", name: "Rajasthan", state: "Rajasthan", college_count: 270, image_url: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=340&h=260&fit=crop&fm=webp&q=75" },
+  { id: "8", name: "West Bengal", state: "West Bengal", college_count: 290, image_url: "https://images.unsplash.com/photo-1558431382-27e303142255?w=340&h=260&fit=crop&fm=webp&q=75" },
 ];
 
 export function CitySearch() {
@@ -54,11 +54,13 @@ export function CitySearch() {
                  className="group relative block w-44 sm:w-52 h-36 sm:h-40 rounded-2xl overflow-hidden"
               >
                 <img
-                  src={place.image_url || `https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400&h=300&fit=crop`}
-                  alt={place.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  loading="lazy"
-                />
+                   src={place.image_url || `https://images.unsplash.com/photo-1587474260584-136574528ed5?w=340&h=260&fit=crop&fm=webp&q=75`}
+                   alt={place.name}
+                   width={208}
+                   height={160}
+                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                   loading="lazy"
+                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-3">
                   <h3 className="text-base font-bold text-card uppercase tracking-wide">

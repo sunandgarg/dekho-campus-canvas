@@ -34,9 +34,7 @@ export function DynamicAdBanner({
 
   if (variant === "leaderboard") {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className={`relative bg-gradient-to-r ${bg_gradient} h-14 md:h-16 flex items-center justify-center px-4 overflow-hidden ${className}`}
         style={bgStyle}
       >
@@ -58,7 +56,7 @@ export function DynamicAdBanner({
           <X className="w-4 h-4" />
         </button>
         <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-white/50 uppercase tracking-wider z-10">Ad</span>
-      </motion.div>
+      </div>
     );
   }
 

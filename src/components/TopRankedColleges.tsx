@@ -91,14 +91,14 @@ export function TopRankedColleges() {
                 className="group block bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-all h-full flex flex-col"
               >
                 <div className="relative h-36 overflow-hidden flex-shrink-0">
-                  <img
-                    src={college.image}
-                    alt={college.name}
-                    width={280}
-                    height={144}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
+                    <img
+                     src={college.image?.includes('unsplash.com') ? college.image.replace(/w=\d+/, 'w=300').replace(/h=\d+/, 'h=170') + '&fm=webp&q=75' : college.image}
+                     alt={college.name}
+                     width={280}
+                     height={144}
+                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     loading="lazy"
+                   />
                   <Badge className="absolute top-2 left-2 bg-foreground/70 text-background border-0 text-[10px]">
                     {college.type}
                   </Badge>

@@ -254,12 +254,12 @@ export function LeadCaptureForm({
           <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Name *" className="rounded-xl text-sm h-9" required />
           <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Phone *" type="tel" className="rounded-xl text-sm h-9" required />
           <Input value={formData.email} onChange={e => update("email", e.target.value)} placeholder="Email" type="email" className="rounded-xl text-sm h-9" />
-          <select value={formData.course} onChange={e => update("course", e.target.value)} className={`${selectCls} h-9 text-xs`}>
+        <select value={formData.course} onChange={e => update("course", e.target.value)} aria-label="Select Course" className={`${selectCls} h-9 text-xs`}>
             <option value="">Select Course</option>
             {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
           <div className="grid grid-cols-2 gap-2">
-            <select value={formData.state} onChange={e => update("state", e.target.value)} className={`${selectCls} h-9 text-xs`}>
+            <select value={formData.state} onChange={e => update("state", e.target.value)} aria-label="Select State" className={`${selectCls} h-9 text-xs`}>
               <option value="">State</option>
               {stateOptions.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
@@ -284,7 +284,7 @@ export function LeadCaptureForm({
         <Input value={formData.name} onChange={e => update("name", e.target.value)} placeholder="Name *" className="rounded-lg text-sm h-10" required />
         <Input value={formData.phone} onChange={e => update("phone", e.target.value)} placeholder="Phone *" type="tel" className="rounded-lg text-sm h-10" required />
         <Input value={formData.email} onChange={e => update("email", e.target.value)} placeholder="Email" type="email" className="rounded-lg text-sm h-10" />
-        <select value={formData.course} onChange={e => update("course", e.target.value)} className="px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none h-10">
+        <select value={formData.course} onChange={e => update("course", e.target.value)} aria-label="Select Course" className="px-3 py-2 rounded-lg border border-border bg-card text-sm focus:outline-none h-10">
           <option value="">Course</option>
           {courseOptions.map(c => <option key={c} value={c}>{c}</option>)}
         </select>

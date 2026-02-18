@@ -217,17 +217,17 @@ export function FloatingBot() {
             className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-50 w-full md:w-[380px] md:max-w-[calc(100vw-2rem)] h-[85vh] md:h-[520px] md:max-h-[calc(100vh-4rem)] md:rounded-2xl rounded-t-2xl border border-border bg-card shadow-elevated flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-primary text-primary-foreground">
+            <div className="flex items-center justify-between px-4 py-3 bg-card border-b border-border text-foreground">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-primary-foreground/20 flex items-center justify-center overflow-hidden">
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
                   <img src={dcLogo} alt="DekhoCampus AI" className="w-7 h-7 object-contain" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">DekhoCampus AI</h3>
-                  <p className="text-xs opacity-80">24/7 Career Counselor</p>
+                  <h3 className="font-bold text-sm text-foreground">DekhoCampus AI</h3>
+                  <p className="text-xs text-muted-foreground">24/7 Career Counselor</p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="text-primary-foreground hover:bg-primary-foreground/20 rounded-full w-8 h-8">
+              <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="text-foreground hover:bg-muted rounded-full w-8 h-8">
                 <X className="w-4 h-4" />
               </Button>
             </div>
