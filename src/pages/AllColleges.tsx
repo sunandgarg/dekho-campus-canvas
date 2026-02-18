@@ -22,7 +22,7 @@ import {
   indianStates, citiesByState, collegeStreams, collegeTypes,
   collegeFeeRanges, collegeCourseGroups, collegeExams,
 } from "@/data/indianLocations";
-import { Link } from "react-router-dom";
+
 import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
 
 const collegeApprovals = ["AICTE", "UGC", "NAAC", "MCI", "BCI", "AACSB"] as const;
@@ -180,18 +180,31 @@ export default function AllColleges() {
           </div>
         </div>
 
-        {/* SEO Quick Links */}
+        {/* Category Quick Filters */}
         <div className="mb-4 flex flex-wrap gap-1.5">
           {collegeSeoRoutes.slice(0, 8).map(route => {
-            const slug = filtersToSlug("colleges", route.params as Record<string, string>);
+            const streamParam = (route.params as any).stream;
+            const isActive = streamParam && selectedStreams.includes(streamParam);
             return (
-              <Link
+              <button
                 key={route.label}
-                to={`/colleges/${slug}`}
-                className="px-2.5 py-1 text-[11px] bg-card border border-border/60 rounded-full text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all"
+                onClick={() => {
+                  if (streamParam) {
+                    if (isActive) {
+                      setSelectedStreams(prev => prev.filter(s => s !== streamParam));
+                    } else {
+                      setSelectedStreams(prev => [...prev.filter(s => s !== streamParam), streamParam]);
+                    }
+                  }
+                }}
+                className={`px-2.5 py-1 text-[11px] rounded-full font-medium border transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5"
+                }`}
               >
                 {route.label}
-              </Link>
+              </button>
             );
           })}
         </div>
@@ -220,7 +233,7 @@ export default function AllColleges() {
 
           <div className="flex-1 min-w-0">
             <p className="text-sm text-muted-foreground mb-3">Showing <span className="font-semibold text-foreground">{filtered.length}</span> colleges</p>
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => <CollegeCardSkeleton key={i} />)
               ) : (

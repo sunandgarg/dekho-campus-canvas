@@ -26,9 +26,10 @@ const courseOptions = [
 ];
 
 const stateOptions = [
-  "Andhra Pradesh", "Bihar", "Delhi", "Gujarat", "Haryana", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Punjab", "Rajasthan",
-  "Tamil Nadu", "Telangana", "Uttar Pradesh", "West Bengal", "Other",
+  "Delhi", "Delhi NCR", "Haryana", "Chandigarh", "Rajasthan",
+  "Uttar Pradesh", "Uttarakhand", "Punjab", "Himachal Pradesh",
+  "Bihar", "Gujarat", "Karnataka", "Kerala", "Madhya Pradesh",
+  "Maharashtra", "Tamil Nadu", "Telangana", "West Bengal", "Other",
 ];
 
 export function LeadCaptureForm({ 

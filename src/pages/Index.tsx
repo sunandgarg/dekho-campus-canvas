@@ -7,14 +7,22 @@ import { CategorySection } from "@/components/CategorySection";
 import { CitySearch } from "@/components/CitySearch";
 import { OnlineEducationSection } from "@/components/OnlineEducationSection";
 
-import { NewsSection } from "@/components/NewsSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
-import { ToolsSection } from "@/components/ToolsSection";
-import { TrendingPrograms } from "@/components/TrendingPrograms";
 import { TrustedBySection } from "@/components/TrustedBySection";
 import { UpcomingExams } from "@/components/UpcomingExams";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
+import { lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Lazy load below-the-fold sections
+const TrendingPrograms = lazy(() => import("@/components/TrendingPrograms").then(m => ({ default: m.TrendingPrograms })));
+const ToolsSection = lazy(() => import("@/components/ToolsSection").then(m => ({ default: m.ToolsSection })));
+const NewsSection = lazy(() => import("@/components/NewsSection").then(m => ({ default: m.NewsSection })));
+
+function SectionFallback() {
+  return <div className="py-8"><Skeleton className="h-48 w-full rounded-2xl" /></div>;
+}
 import { AIChatFullScreen } from "@/components/AIChatFullScreen";
 import { AILeadForm } from "@/components/AILeadForm";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
@@ -86,14 +94,14 @@ const Index = () => {
         <OnlineEducationSection />
 
         <div className="container">
-          <TrendingPrograms />
-          <ToolsSection />
+          <Suspense fallback={<SectionFallback />}><TrendingPrograms /></Suspense>
+          <Suspense fallback={<SectionFallback />}><ToolsSection /></Suspense>
 
           <section className="py-4">
             <DynamicAdBanner variant="horizontal" position="mid-page" />
           </section>
 
-          <NewsSection />
+          <Suspense fallback={<SectionFallback />}><NewsSection /></Suspense>
 
           <section className="py-6">
             <LeadCaptureForm
