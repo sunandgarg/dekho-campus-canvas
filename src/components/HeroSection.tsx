@@ -142,7 +142,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-muted/30 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container relative z-10 px-4 py-8 md:py-16 lg:py-20 max-w-full overflow-hidden">
+      <div className="container relative z-10 px-4 py-8 md:py-16 lg:py-20">
         <div className="max-w-4xl mx-auto text-center space-y-5 md:space-y-8">
           {/* AI Badge */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20">

@@ -13,7 +13,7 @@ interface ListingPageLayoutProps {
 
 export function ListingPageLayout({ children, title, description, page }: ListingPageLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background w-full">
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page={page} />
       <main className="container py-4 md:py-6">
