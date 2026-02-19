@@ -50,6 +50,7 @@ export type DbCollege = {
   meta_keywords: string;
   banner_ad_image: string;
   square_ad_image: string;
+  campus_tour_video_url: string;
 };
 
 export function useDbColleges() {

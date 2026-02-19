@@ -28,7 +28,7 @@ const emptyCollege: Partial<DbCollege> = {
   eligibility_criteria: "", admission_process: "", scholarship_details: "", hostel_life: "",
   gallery_images: [], cutoff: "", course_fee_content: "", placement_content: "", rankings_content: "",
   facilities_content: "", meta_title: "", meta_description: "", meta_keywords: "",
-  banner_ad_image: "", square_ad_image: "",
+  banner_ad_image: "", square_ad_image: "", campus_tour_video_url: "",
 };
 
 export default function AdminColleges() {
@@ -167,6 +167,7 @@ export default function AdminColleges() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <ImageUpload value={editing.image || ""} onChange={(v) => update("image", v)} label="Featured Image" folder="colleges/images" />
                   <div><label className="text-xs font-medium text-muted-foreground">Brochure URL</label><Input value={editing.brochure_url || ""} onChange={(e) => update("brochure_url", e.target.value)} className="rounded-lg h-9 text-sm" /></div>
+                  <div><label className="text-xs font-medium text-muted-foreground">Campus Tour Video (YouTube URL)</label><Input value={editing.campus_tour_video_url || ""} onChange={(e) => update("campus_tour_video_url", e.target.value)} placeholder="https://youtube.com/watch?v=..." className="rounded-lg h-9 text-sm" /></div>
                 </div>
                 <ArrayFieldEditor label="Carousel Images" values={editing.carousel_images || []} onChange={(v) => update("carousel_images", v)} placeholder="Add image URL..." />
                 <ArrayFieldEditor label="Gallery Images" values={editing.gallery_images || []} onChange={(v) => update("gallery_images", v)} placeholder="Add image URL..." />

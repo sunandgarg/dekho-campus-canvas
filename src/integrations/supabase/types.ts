@@ -188,6 +188,7 @@ export type Database = {
           approvals: string[]
           banner_ad_image: string
           brochure_url: string
+          campus_tour_video_url: string
           carousel_images: string[]
           category: string
           city: string
@@ -236,6 +237,7 @@ export type Database = {
           approvals?: string[]
           banner_ad_image?: string
           brochure_url?: string
+          campus_tour_video_url?: string
           carousel_images?: string[]
           category?: string
           city?: string
@@ -284,6 +286,7 @@ export type Database = {
           approvals?: string[]
           banner_ad_image?: string
           brochure_url?: string
+          campus_tour_video_url?: string
           carousel_images?: string[]
           category?: string
           city?: string
