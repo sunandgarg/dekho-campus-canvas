@@ -52,7 +52,14 @@ export function LeadCaptureForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !formData.email || !formData.course || !formData.state || !formData.city) {
+    // Banner and inline variants only collect name, phone, course
+    const isCompactForm = variant === "banner" || variant === "inline";
+    
+    if (!formData.name || !formData.phone) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (!isCompactForm && (!formData.email || !formData.course || !formData.state || !formData.city)) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -60,10 +67,12 @@ export function LeadCaptureForm({
       toast.error("Please enter a valid 10-digit mobile number");
       return;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error("Please enter a valid email address");
-      return;
+    if (formData.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
     }
 
     setIsLoading(true);
