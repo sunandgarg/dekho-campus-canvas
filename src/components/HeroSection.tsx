@@ -66,22 +66,25 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
   }, []);
 
   useEffect(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = searchQuery.trim();
     if (!q || q.length < 2) { setDbResults([]); return; }
 
     const timeout = setTimeout(async () => {
       try {
-        const [colleges, courses, exams] = await Promise.all([
-          supabase.from("colleges").select("name, slug, city, logo").eq("is_active", true).ilike("name", `%${q}%`).limit(4),
-          supabase.from("courses").select("name, slug").eq("is_active", true).ilike("name", `%${q}%`).limit(3),
-          supabase.from("exams").select("name, slug, image, logo").eq("is_active", true).ilike("name", `%${q}%`).limit(3),
-        ]);
+        const { data, error } = await supabase.rpc("fuzzy_search", {
+          search_query: q,
+          result_limit: 9,
+        });
 
-        const results: SearchResult[] = [
-          ...(colleges.data || []).map(c => ({ type: "College" as const, name: c.name, slug: c.slug, location: c.city || "", logo: c.logo || "" })),
-          ...(courses.data || []).map(c => ({ type: "Course" as const, name: c.name, slug: c.slug, location: "" })),
-          ...(exams.data || []).map(e => ({ type: "Exam" as const, name: e.name, slug: e.slug, location: "", image: e.image || "", logo: e.logo || "" })),
-        ];
+        if (error) throw error;
+
+        const results: SearchResult[] = (data || []).map((r: any) => ({
+          type: r.type as "College" | "Course" | "Exam",
+          name: r.name,
+          slug: r.slug,
+          location: r.location || "",
+          logo: r.logo || "",
+        }));
         setDbResults(results);
       } catch { /* skip */ }
     }, 250);
