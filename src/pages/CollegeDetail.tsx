@@ -91,60 +91,64 @@ export default function CollegeDetail() {
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="colleges" itemSlug={slug} />
 
-      <main className="container py-4 md:py-6 px-4">
+      <main className="container py-3 md:py-6 px-4">
         <PageBreadcrumb items={[{ label: "Colleges", href: "/colleges" }, { label: college.name }]} />
 
         {/* Hero Card */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl border border-border overflow-hidden mb-0 -mx-4 md:mx-0">
           {/* Banner Image */}
           <div className="relative">
-            <img src={college.image} alt={college.name} className="w-full h-48 md:h-64 object-cover object-center" loading="eager" />
+            <img src={college.image} alt={college.name} className="w-full h-44 sm:h-48 md:h-64 object-cover object-center" loading="eager" />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
           </div>
           
           {/* Content Below Image */}
-          <div className="p-4 md:p-6">
-            <div className="flex items-start gap-4">
+          <div className="px-4 py-4 md:p-6">
+            {/* Logo */}
+            <div className="flex items-center gap-3 -mt-10 relative z-10 mb-3">
               {college.logo ? (
-                <img src={college.logo} alt={college.short_name} className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-border bg-background object-cover shadow-lg -mt-12 relative z-10" />
+                <img src={college.logo} alt={college.short_name} className="w-14 h-14 md:w-16 md:h-16 rounded-xl border-2 border-background bg-background object-contain shadow-lg p-1" />
               ) : (
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-border bg-background shadow-lg -mt-12 relative z-10 flex items-center justify-center">
-                  <GraduationCap className="w-8 h-8 text-primary" />
+                <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl border-2 border-background bg-background shadow-lg flex items-center justify-center p-1">
+                  <GraduationCap className="w-7 h-7 text-primary" />
                 </div>
               )}
-              <div className="flex-1 min-w-0 pt-1">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  {college.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} className="bg-primary/90 text-primary-foreground text-xs">{tag}</Badge>
-                  ))}
-                </div>
-                <h1 className="text-xl md:text-2xl font-bold text-foreground mb-1">{college.name}</h1>
-                <div className="flex items-center gap-3 flex-wrap text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{college.location}</span>
-                  <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Estd. {college.established}</span>
-                  <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5" />NAAC {college.naac_grade}</span>
-                </div>
-              </div>
             </div>
+
+            {/* Tags */}
+            <div className="flex items-center gap-1.5 mb-2 flex-wrap">
+              {college.tags.slice(0, 3).map((tag) => (
+                <Badge key={tag} className="bg-primary/90 text-primary-foreground text-xs px-2 py-0.5">{tag}</Badge>
+              ))}
+            </div>
+
+            {/* College Name */}
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-1 leading-tight">{college.name}</h1>
+            
+            {/* Meta Info */}
+            <div className="flex items-center gap-2 flex-wrap text-xs sm:text-sm text-muted-foreground mb-3">
+              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{college.city}, {college.state}</span>
+              <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Estd. {college.established}</span>
+              {college.naac_grade && <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5" />NAAC {college.naac_grade}</span>}
+            </div>
+
             {/* Action Buttons */}
-            <div className="flex items-center gap-2 mt-4 flex-wrap">
-              <Button size="sm" className="rounded-xl text-xs gap-1" onClick={() => setShowLeadDialog(true)}><Phone className="w-3.5 h-3.5" />Get Free Counselling</Button>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Button size="sm" className="rounded-xl text-xs gap-1.5 h-9" onClick={() => setShowLeadDialog(true)}><Phone className="w-3.5 h-3.5" />Get Free Counselling</Button>
+              <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1.5 h-9" onClick={() => {
+                const el = document.getElementById('compare');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}><Scale className="w-3.5 h-3.5" />Compare</Button>
               {college.brochure_url && college.brochure_url !== '#' && (
                 <a href={college.brochure_url} target="_blank" rel="noopener noreferrer">
-                  <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1"><Download className="w-3.5 h-3.5" />Download Brochure</Button>
+                  <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1.5 h-9"><Download className="w-3.5 h-3.5" />Brochure</Button>
                 </a>
               )}
-              <Link to={`/colleges/${slug}#compare`}>
-                <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1" onClick={() => {
-                  const el = document.getElementById('compare');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}><Scale className="w-3.5 h-3.5" />Compare</Button>
-              </Link>
             </div>
           </div>
         </motion.div>
 
-        <ScrollSpy sections={COLLEGE_SECTIONS} baseUrl={`/colleges/${slug}`} className="mb-6 rounded-xl" />
+        <ScrollSpy sections={COLLEGE_SECTIONS} baseUrl={`/colleges/${slug}`} className="mb-4 -mx-4 md:mx-0 rounded-none md:rounded-xl" />
 
         <div className="mb-6">
           <WhatsNewSection entityName={college.short_name || college.name} entityType="college" category={college.category} />
@@ -153,7 +157,7 @@ export default function CollegeDetail() {
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
               {[
                 { icon: Star, label: "Rating", value: `${college.rating}/5`, color: "text-golden" },
                 { icon: GraduationCap, label: "Courses", value: `${college.courses_count}+`, color: "text-primary" },
