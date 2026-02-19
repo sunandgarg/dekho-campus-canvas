@@ -1,12 +1,25 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, Zap, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Search } from "lucide-react";
+import {
+  Send,
+  Sparkles,
+  Zap,
+  GraduationCap,
+  BookOpen,
+  FileText,
+  ClipboardList,
+  Star,
+  Newspaper,
+  MapPin,
+  ArrowRight,
+  Search,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/dekhocampus-logo.png";
 import dcLogo from "@/assets/dc-logo.png";
-import iconCollege from "@/assets/icon-college.png";
+import iconCollege from "@/assets/icon-college-badge.png";
 import iconCourse from "@/assets/icon-course.png";
 import iconExam from "@/assets/icon-exam.png";
 import iconApplication from "@/assets/icon-application.png";
@@ -14,13 +27,7 @@ import iconDocument from "@/assets/icon-document.png";
 import iconNews from "@/assets/icon-news.png";
 
 const rotatingWords = ["College", "Course", "Career", "Exam", "Future"];
-const wordColors = [
-  "text-gradient",
-  "text-gradient-accent",
-  "text-gradient",
-  "text-gradient-accent",
-  "text-gradient",
-];
+const wordColors = ["text-gradient", "text-gradient-accent", "text-gradient", "text-gradient-accent", "text-gradient"];
 
 const suggestedPrompts = [
   "Best colleges for B.Tech CSE?",
@@ -30,7 +37,13 @@ const suggestedPrompts = [
 ];
 
 const quickCategories = [
-  { label: "13000+ Colleges", image: iconCollege, bgColor: "bg-primary/5", href: "/colleges", alt: "College directory icon" },
+  {
+    label: "13000+ Colleges",
+    image: iconCollege,
+    bgColor: "bg-primary/5",
+    href: "/colleges",
+    alt: "College directory icon",
+  },
   { label: "840+ Courses", image: iconCourse, bgColor: "bg-accent/5", href: "/courses", alt: "Course catalog icon" },
   { label: "219+ Exams", image: iconExam, bgColor: "bg-secondary", href: "/exams", alt: "Exam information icon" },
   { label: "Apply Now", image: iconApplication, bgColor: "bg-primary/5", href: "/colleges", alt: "Application icon" },
@@ -67,7 +80,10 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
 
   useEffect(() => {
     const q = searchQuery.trim();
-    if (!q || q.length < 2) { setDbResults([]); return; }
+    if (!q || q.length < 2) {
+      setDbResults([]);
+      return;
+    }
 
     const timeout = setTimeout(async () => {
       try {
@@ -86,7 +102,9 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
           logo: r.logo || "",
         }));
         setDbResults(results);
-      } catch { /* skip */ }
+      } catch {
+        /* skip */
+      }
     }, 250);
 
     return () => clearTimeout(timeout);
@@ -124,7 +142,15 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
       return <img src={item.logo} alt="" width={40} height={40} className="w-10 h-10 rounded-xl object-cover" />;
     }
     if (item.type === "Exam" && (item.image || item.logo)) {
-      return <img src={item.logo || item.image!} alt="" width={40} height={40} className="w-10 h-10 rounded-xl object-cover" />;
+      return (
+        <img
+          src={item.logo || item.image!}
+          alt=""
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-xl object-cover"
+        />
+      );
     }
     const Icon = getIcon(item);
     return (
@@ -138,19 +164,29 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
     <section className="relative overflow-hidden bg-background" aria-label="Hero">
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
+            backgroundSize: "40px 40px",
+          }}
+        />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-muted/30 rounded-full blur-[120px]" />
       </div>
 
       <div className="container relative z-10 px-4 py-8 md:py-16 lg:py-20">
         <div className="max-w-4xl mx-auto text-center space-y-5 md:space-y-8">
           {/* AI Badge */}
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20"
+          >
             <img src={dcLogo} alt="" width={16} height={16} className="w-4 h-4 object-contain" />
-            <span className="text-xs font-semibold tracking-wide uppercase text-accent">AI-Powered Education Intelligence</span>
+            <span className="text-xs font-semibold tracking-wide uppercase text-accent">
+              AI-Powered Education Intelligence
+            </span>
           </motion.div>
 
           {/* Rotating headline */}
@@ -177,12 +213,23 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
           </motion.div>
 
           {/* Unified Search Bar with AI icon */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="max-w-2xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="max-w-2xl mx-auto"
+          >
             <form onSubmit={handleAskAI}>
               <div className="relative">
-                <div className={`relative flex items-center bg-card/80 backdrop-blur-xl rounded-2xl shadow-xl border p-1.5 transition-all ${isFocused ? "border-primary/40 ring-2 ring-primary/10" : "border-border/60 ring-1 ring-primary/5"}`}>
+                <div
+                  className={`relative flex items-center bg-card/80 backdrop-blur-xl rounded-2xl shadow-xl border p-1.5 transition-all ${isFocused ? "border-primary/40 ring-2 ring-primary/10" : "border-border/60 ring-1 ring-primary/5"}`}
+                >
                   <div className="flex-shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center ml-0.5">
-                    {searchQuery.trim() ? <Search className="w-5 h-5 text-white" /> : <Sparkles className="w-5 h-5 text-white" />}
+                    {searchQuery.trim() ? (
+                      <Search className="w-5 h-5 text-white" />
+                    ) : (
+                      <Sparkles className="w-5 h-5 text-white" />
+                    )}
                   </div>
                   <input
                     type="text"
@@ -275,7 +322,12 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
           </motion.div>
 
           {/* Quick Category Cards */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="max-w-3xl mx-auto pt-2">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="max-w-3xl mx-auto pt-2"
+          >
             <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
               {quickCategories.map((cat, index) => (
                 <motion.a
@@ -286,8 +338,17 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                   transition={{ delay: 0.4 + index * 0.04 }}
                   className={`flex flex-col items-center gap-1.5 p-2.5 md:p-4 rounded-2xl ${cat.bgColor} border border-transparent transition-all hover:shadow-md hover:-translate-y-0.5 group`}
                 >
-                  <img src={cat.image} alt={cat.alt} width={56} height={56} className="w-10 h-10 md:w-14 md:h-14 object-contain transition-transform group-hover:scale-110" loading="lazy" />
-                  <span className="text-[10px] md:text-xs font-semibold text-foreground/80 text-center leading-tight">{cat.label}</span>
+                  <img
+                    src={cat.image}
+                    alt={cat.alt}
+                    width={56}
+                    height={56}
+                    className="w-10 h-10 md:w-14 md:h-14 object-contain transition-transform group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <span className="text-[10px] md:text-xs font-semibold text-foreground/80 text-center leading-tight">
+                    {cat.label}
+                  </span>
                 </motion.a>
               ))}
             </div>
