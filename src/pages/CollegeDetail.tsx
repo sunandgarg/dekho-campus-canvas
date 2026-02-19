@@ -2,13 +2,13 @@ import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
-import { Star, MapPin, Calendar, GraduationCap, TrendingUp, Building, CheckCircle, Briefcase, BookOpen, Image as ImageIcon, Users, Award, Scale, Newspaper, HelpCircle, DollarSign, ExternalLink, Download, Phone, Shield, Globe, Landmark, Search } from "lucide-react";
+import { Star, MapPin, Calendar, GraduationCap, TrendingUp, Building, CheckCircle, Briefcase, BookOpen, Image as ImageIcon, Users, Award, Scale, Newspaper, HelpCircle, DollarSign, ExternalLink, Download, Phone, Shield, Globe, Landmark, Search, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { FloatingBot } from "@/components/FloatingBot";
+
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { DynamicAdBanner } from "@/components/DynamicAdBanner";
@@ -48,6 +48,7 @@ export default function CollegeDetail() {
   const { data: allCourses } = useDbCourses();
   const [showLeadDialog, setShowLeadDialog] = useState(false);
   const [compareSearch, setCompareSearch] = useState("");
+  const [showVideoPopup, setShowVideoPopup] = useState(false);
 
   useSEO({
     title: college ? (college.meta_title || `${college.name} - Admissions, Fees, Placements 2026`) : undefined,
@@ -139,6 +140,9 @@ export default function CollegeDetail() {
                 const el = document.getElementById('compare');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}><Scale className="w-3.5 h-3.5" />Compare</Button>
+              {college.campus_tour_video_url && (
+                <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1.5 h-9" onClick={() => setShowVideoPopup(true)}><Play className="w-3.5 h-3.5" />Campus Tour</Button>
+              )}
               {college.brochure_url && college.brochure_url !== '#' && (
                 <a href={college.brochure_url} target="_blank" rel="noopener noreferrer">
                   <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1.5 h-9"><Download className="w-3.5 h-3.5" />Brochure</Button>
@@ -616,7 +620,6 @@ export default function CollegeDetail() {
       </main>
 
       <Footer />
-      <FloatingBot />
       <MobileBottomBar type="college" slug={college.slug} collegeName={college.short_name || college.name} sections={COLLEGE_SECTIONS} />
       
       {/* Lead Form Dialog */}
@@ -627,6 +630,26 @@ export default function CollegeDetail() {
         subtitle="Expert guidance for admissions, fees & scholarships"
         source={`college_counselling_${college.slug}`}
       />
+
+      {/* Campus Tour Video Popup */}
+      <Dialog open={showVideoPopup} onOpenChange={setShowVideoPopup}>
+        <DialogContent className="max-w-3xl p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-0">
+            <DialogTitle className="text-base">🎬 Campus Tour — {college.short_name || college.name}</DialogTitle>
+          </DialogHeader>
+          <div className="aspect-video w-full">
+            {showVideoPopup && college.campus_tour_video_url && (
+              <iframe
+                src={college.campus_tour_video_url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                title={`${college.name} Campus Tour`}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
