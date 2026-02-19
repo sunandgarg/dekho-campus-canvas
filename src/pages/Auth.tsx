@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import dekhocampusLogo from "@/assets/dekhocampus-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -65,9 +66,7 @@ export default function Auth() {
           className="w-full max-w-md"
         >
           <div className="text-center mb-8">
-            <div className="w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-7 h-7 text-primary-foreground" />
-            </div>
+            <img src={dekhocampusLogo} alt="DekhoCampus" className="h-12 mx-auto mb-4" />
             <h1 className="text-title font-bold text-foreground">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h1>
