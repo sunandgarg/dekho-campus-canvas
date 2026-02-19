@@ -87,7 +87,7 @@ export default function CollegeDetail() {
     .slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background detail-page">
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="colleges" itemSlug={slug} />
 
@@ -127,9 +127,9 @@ export default function CollegeDetail() {
             
             {/* Meta Info */}
             <div className="flex items-center gap-2 flex-wrap text-xs sm:text-sm text-muted-foreground mb-3">
-              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{college.city}, {college.state}</span>
-              <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Estd. {college.established}</span>
-              {college.naac_grade && <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5" />NAAC {college.naac_grade}</span>}
+              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 shrink-0" />{college.city}, {college.state}</span>
+              <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 shrink-0" />Estd. {college.established}</span>
+              {college.naac_grade && <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5 shrink-0" />NAAC {college.naac_grade}</span>}
             </div>
 
             {/* Action Buttons */}
@@ -155,7 +155,7 @@ export default function CollegeDetail() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 min-w-0">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
               {[
@@ -164,19 +164,19 @@ export default function CollegeDetail() {
                 { icon: TrendingUp, label: "Avg Package", value: college.placement, color: "text-success" },
                 { icon: Building, label: "Type", value: college.type, color: "text-accent" },
               ].map((stat) => (
-                <div key={stat.label} className="bg-card rounded-xl border border-border p-3 text-center">
+                <div key={stat.label} className="bg-card rounded-xl border border-border p-3 text-center min-w-0">
                   <stat.icon className={`w-5 h-5 mx-auto mb-1 ${stat.color}`} />
-                  <p className="text-sm font-bold text-foreground">{stat.value}</p>
+                  <p className="text-sm font-bold text-foreground truncate">{stat.value}</p>
                   <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </div>
               ))}
             </div>
 
             {/* Overview */}
-            <section id="overview" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="overview" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">About {college.name}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{college.description}</p>
-              <div className="grid sm:grid-cols-2 gap-3 mt-4">
+              <div className="mt-4 space-y-0">
                 {[
                   { label: "Full Name", value: college.name },
                   { label: "Short Name", value: college.short_name },
@@ -191,16 +191,16 @@ export default function CollegeDetail() {
                   { label: "Fees Range", value: college.fees },
                   { label: "Avg. Placement", value: college.placement },
                 ].map((info) => (
-                  <div key={info.label} className="flex justify-between py-2 border-b border-border last:border-0">
-                    <span className="text-sm text-muted-foreground">{info.label}</span>
-                    <span className="text-sm font-medium text-foreground text-right max-w-[60%]">{info.value}</span>
+                  <div key={info.label} className="flex justify-between items-start py-2.5 border-b border-border last:border-0 gap-4">
+                    <span className="text-sm text-muted-foreground shrink-0">{info.label}</span>
+                    <span className="text-sm font-medium text-foreground text-right break-words min-w-0">{info.value}</span>
                   </div>
                 ))}
               </div>
             </section>
 
             {/* Highlights */}
-            <section id="highlights" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="highlights" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Key Highlights</h2>
               <div className="space-y-2">
                 {college.highlights.map((h, i) => (
@@ -213,19 +213,18 @@ export default function CollegeDetail() {
             </section>
 
             {/* Courses & Fees */}
-            <section id="courses" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="courses" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Courses & Fees at {college.short_name || college.name}</h2>
               {college.course_fee_content && (
                 <p className="text-sm text-muted-foreground mb-4">{college.course_fee_content}</p>
               )}
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+                <table className="w-full text-sm min-w-[400px]">
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-2 text-muted-foreground font-medium">Course</th>
                       <th className="text-left py-2 text-muted-foreground font-medium">Duration</th>
                       <th className="text-left py-2 text-muted-foreground font-medium">Fees</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -234,13 +233,8 @@ export default function CollegeDetail() {
                         <td className="py-3">
                           <Link to={`/courses/${c.slug}`} className="text-primary font-medium hover:underline">{c.name}</Link>
                         </td>
-                        <td className="py-3 text-muted-foreground">{c.duration}</td>
-                        <td className="py-3 text-foreground font-medium">{c.avg_fees}</td>
-                        <td className="py-3 text-right">
-                          <Link to={`/courses/${c.slug}`}>
-                            <Button size="sm" variant="ghost" className="text-xs"><ExternalLink className="w-3 h-3" /></Button>
-                          </Link>
-                        </td>
+                        <td className="py-3 text-muted-foreground whitespace-nowrap">{c.duration}</td>
+                        <td className="py-3 text-foreground font-medium whitespace-nowrap">{c.avg_fees}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -257,7 +251,7 @@ export default function CollegeDetail() {
             <LeadCaptureForm variant="inline" title="📞 Get admission guidance for this college" source={`college_inline_${college.slug}`} interestedCollegeSlug={college.slug} />
 
             {/* Admissions */}
-            <section id="admissions" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="admissions" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">{college.short_name || college.name} Admission Process 2026</h2>
               {college.admission_process && (
                 <p className="text-sm text-muted-foreground mb-4">{college.admission_process}</p>
@@ -272,9 +266,9 @@ export default function CollegeDetail() {
                 ].map((s) => (
                   <div key={s.step} className="flex items-start gap-3">
                     <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0">{s.step}</span>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-semibold text-foreground">{s.title}</p>
-                      <p className="text-sm text-muted-foreground">{s.text}</p>
+                      <p className="text-sm text-muted-foreground break-words">{s.text}</p>
                     </div>
                   </div>
                 ))}
@@ -282,19 +276,19 @@ export default function CollegeDetail() {
             </section>
 
             {/* Placements */}
-            <section id="placements" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="placements" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">{college.short_name || college.name} Placements 2026</h2>
-              <div className="grid grid-cols-3 gap-3 mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-4">
                 <div className="bg-muted rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-foreground">{college.placement}</p>
+                  <p className="text-base sm:text-lg font-bold text-foreground">{college.placement}</p>
                   <p className="text-xs text-muted-foreground">Avg Package</p>
                 </div>
                 <div className="bg-muted rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-foreground">95%+</p>
+                  <p className="text-base sm:text-lg font-bold text-foreground">95%+</p>
                   <p className="text-xs text-muted-foreground">Placement Rate</p>
                 </div>
-                <div className="bg-muted rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-foreground">{college.top_recruiters.length > 0 ? `${college.top_recruiters.length}+` : "200+"}</p>
+                <div className="bg-muted rounded-xl p-3 text-center col-span-2 sm:col-span-1">
+                  <p className="text-base sm:text-lg font-bold text-foreground">{college.top_recruiters.length > 0 ? `${college.top_recruiters.length}+` : "200+"}</p>
                   <p className="text-xs text-muted-foreground">Recruiters</p>
                 </div>
               </div>
@@ -308,13 +302,13 @@ export default function CollegeDetail() {
             </section>
 
             {/* Cut-Offs */}
-            <section id="cutoff" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="cutoff" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">{college.short_name || college.name} Cut-Off 2026</h2>
               {college.cutoff ? (
                 <p className="text-sm text-muted-foreground leading-relaxed">{college.cutoff}</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+                  <table className="w-full text-sm min-w-[350px]">
                     <thead>
                       <tr className="border-b border-border">
                         <th className="text-left py-2 text-muted-foreground font-medium">Exam</th>
@@ -332,7 +326,7 @@ export default function CollegeDetail() {
                         <tr key={i} className="border-b border-border last:border-0">
                           <td className="py-2 text-foreground font-medium">{c.exam}</td>
                           <td className="py-2 text-muted-foreground">{c.cat}</td>
-                          <td className="py-2 text-right text-foreground">{c.cutoff}</td>
+                          <td className="py-2 text-right text-foreground whitespace-nowrap">{c.cutoff}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -344,10 +338,10 @@ export default function CollegeDetail() {
             <DynamicAdBanner variant="horizontal" position="mid-page" page="colleges" itemSlug={slug} />
 
             {/* Rankings */}
-            <section id="rankings" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="rankings" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">{college.short_name || college.name} Rankings</h2>
               <div className="flex items-center gap-3 mb-3">
-                <Award className="w-10 h-10 text-golden" />
+                <Award className="w-10 h-10 text-golden shrink-0" />
                 <div>
                   <p className="text-xl font-bold text-foreground">{college.ranking}</p>
                   <p className="text-xs text-muted-foreground">Overall Ranking</p>
@@ -357,10 +351,10 @@ export default function CollegeDetail() {
             </section>
 
             {/* Reviews */}
-            <section id="reviews" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="reviews" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Reviews & Ratings</h2>
-              <div className="flex items-center gap-4 mb-4">
-                <div className="text-center">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+                <div className="text-center shrink-0">
                   <p className="text-3xl font-bold text-foreground">{college.rating}</p>
                   <div className="flex items-center gap-0.5 mt-1">
                     {[1, 2, 3, 4, 5].map((s) => (
@@ -369,7 +363,7 @@ export default function CollegeDetail() {
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">{college.reviews} reviews</p>
                 </div>
-                <div className="flex-1 space-y-1.5">
+                <div className="flex-1 space-y-1.5 w-full min-w-0">
                   {[
                     { label: "Academics", pct: 85 },
                     { label: "Infrastructure", pct: 78 },
@@ -379,11 +373,11 @@ export default function CollegeDetail() {
                     { label: "Value for Money", pct: 75 },
                   ].map((r) => (
                     <div key={r.label} className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground w-28">{r.label}</span>
-                      <div className="flex-1 bg-muted rounded-full h-2">
+                      <span className="text-xs text-muted-foreground w-24 sm:w-28 shrink-0">{r.label}</span>
+                      <div className="flex-1 bg-muted rounded-full h-2 min-w-0">
                         <div className="bg-primary rounded-full h-2" style={{ width: `${r.pct}%` }} />
                       </div>
-                      <span className="text-xs font-medium text-foreground w-8">{r.pct}%</span>
+                      <span className="text-xs font-medium text-foreground w-8 text-right shrink-0">{r.pct}%</span>
                     </div>
                   ))}
                 </div>
@@ -391,13 +385,13 @@ export default function CollegeDetail() {
             </section>
 
             {/* Infrastructure */}
-            <section id="infrastructure" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="infrastructure" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Infrastructure & Facilities</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
                 {college.facilities.map((f) => (
-                  <div key={f} className="flex items-center gap-2 p-2.5 bg-muted rounded-xl">
+                  <div key={f} className="flex items-center gap-2 p-2.5 bg-muted rounded-xl min-w-0">
                     <CheckCircle className="w-4 h-4 text-success flex-shrink-0" />
-                    <span className="text-sm text-foreground">{f}</span>
+                    <span className="text-sm text-foreground truncate">{f}</span>
                   </div>
                 ))}
               </div>
@@ -405,7 +399,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Gallery */}
-            <section id="gallery" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="gallery" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Campus Gallery</h2>
               {college.gallery_images && college.gallery_images.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -424,7 +418,7 @@ export default function CollegeDetail() {
             <LeadCaptureForm variant="inline" title="Need help with admission?" source={`college_mid_${college.slug}`} interestedCollegeSlug={college.slug} />
 
             {/* Scholarships */}
-            <section id="scholarships" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="scholarships" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Scholarships at {college.short_name || college.name}</h2>
               {college.scholarship_details ? (
                 <p className="text-sm text-muted-foreground leading-relaxed">{college.scholarship_details}</p>
@@ -441,7 +435,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* Hostel */}
-            <section id="hostel" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="hostel" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Hostel Life</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {college.hostel_life || `${college.name} provides comfortable hostel accommodation for both boys and girls with modern amenities including WiFi, mess, laundry, and recreational facilities.`}
@@ -451,7 +445,7 @@ export default function CollegeDetail() {
             <DynamicAdBanner variant="horizontal" position="bottom" page="colleges" itemSlug={slug} />
 
             {/* Compare */}
-            <section id="compare" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="compare" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Compare {college.short_name || college.name} with Other Colleges</h2>
               
               {/* Search to add college for comparison */}
@@ -470,8 +464,8 @@ export default function CollegeDetail() {
                 )}
               </div>
 
-              <div className="overflow-x-auto mb-4">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 mb-4">
+                <table className="w-full text-sm min-w-[550px]">
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-2 text-muted-foreground font-medium">College</th>
@@ -485,21 +479,21 @@ export default function CollegeDetail() {
                   </thead>
                   <tbody>
                     <tr className="border-b border-border bg-primary/5">
-                      <td className="py-2 font-semibold text-foreground">{college.short_name || college.name}</td>
-                      <td className="py-2 text-muted-foreground">{college.city}, {college.state}</td>
-                      <td className="py-2 text-foreground">{college.ranking}</td>
-                      <td className="py-2 text-foreground">{college.fees}</td>
-                      <td className="py-2 text-success font-medium">{college.placement}</td>
+                      <td className="py-2 font-semibold text-foreground whitespace-nowrap">{college.short_name || college.name}</td>
+                      <td className="py-2 text-muted-foreground whitespace-nowrap">{college.city}, {college.state}</td>
+                      <td className="py-2 text-foreground whitespace-nowrap">{college.ranking}</td>
+                      <td className="py-2 text-foreground whitespace-nowrap">{college.fees}</td>
+                      <td className="py-2 text-success font-medium whitespace-nowrap">{college.placement}</td>
                       <td className="py-2 text-foreground">{college.rating}/5</td>
                       <td className="py-2 text-muted-foreground">{college.type}</td>
                     </tr>
                     {(similarColleges ?? []).slice(0, 4).map((c) => (
                       <tr key={c.slug} className="border-b border-border last:border-0">
-                        <td className="py-2"><Link to={`/colleges/${c.slug}`} className="text-primary font-medium hover:underline">{c.short_name || c.name}</Link></td>
-                        <td className="py-2 text-muted-foreground">{c.city}, {c.state}</td>
-                        <td className="py-2 text-foreground">{c.ranking}</td>
-                        <td className="py-2 text-foreground">{c.fees}</td>
-                        <td className="py-2 text-success font-medium">{c.placement}</td>
+                        <td className="py-2 whitespace-nowrap"><Link to={`/colleges/${c.slug}`} className="text-primary font-medium hover:underline">{c.short_name || c.name}</Link></td>
+                        <td className="py-2 text-muted-foreground whitespace-nowrap">{c.city}, {c.state}</td>
+                        <td className="py-2 text-foreground whitespace-nowrap">{c.ranking}</td>
+                        <td className="py-2 text-foreground whitespace-nowrap">{c.fees}</td>
+                        <td className="py-2 text-success font-medium whitespace-nowrap">{c.placement}</td>
                         <td className="py-2 text-foreground">{c.rating}/5</td>
                         <td className="py-2 text-muted-foreground">{c.type}</td>
                       </tr>
@@ -522,7 +516,7 @@ export default function CollegeDetail() {
             </section>
 
             {/* News */}
-            <section id="news" className="bg-card rounded-2xl border border-border p-5 scroll-mt-32">
+            <section id="news" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Latest News & Updates</h2>
               <div className="space-y-3">
                 {[
@@ -533,8 +527,8 @@ export default function CollegeDetail() {
                 ].map((n, i) => (
                   <div key={i} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
                     <Newspaper className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{n.title}</p>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground break-words">{n.title}</p>
                       <p className="text-xs text-muted-foreground">{n.date}</p>
                     </div>
                   </div>

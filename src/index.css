@@ -372,3 +372,10 @@
     @apply text-xl sm:text-2xl;
   }
 }
+
+/* Move floating WhatsApp & AI bot buttons up on detail pages (above MobileBottomBar) */
+@media (max-width: 768px) {
+  .detail-page .fixed.bottom-4 {
+    bottom: 5rem;
+  }
+}
