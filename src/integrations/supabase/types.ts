@@ -1025,6 +1025,60 @@ export type Database = {
         }
         Relationships: []
       }
+      student_reviews: {
+        Row: {
+          batch_year: number
+          college_slug: string
+          cons: string
+          content: string
+          course: string
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          pros: string
+          rating: number
+          reviewer_name: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          batch_year?: number
+          college_slug: string
+          cons?: string
+          content?: string
+          course?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          pros?: string
+          rating?: number
+          reviewer_name?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          batch_year?: number
+          college_slug?: string
+          cons?: string
+          content?: string
+          course?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          pros?: string
+          rating?: number
+          reviewer_name?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       trusted_partners: {
         Row: {
           college_slug: string

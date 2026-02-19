@@ -12,6 +12,7 @@ import { TrustedBySection } from "@/components/TrustedBySection";
 import { UpcomingExams } from "@/components/UpcomingExams";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
+import { HomeCategoryCards } from "@/components/HomeCategoryCards";
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -70,6 +71,7 @@ const Index = () => {
 
         {/* Main content - full width sections */}
         <div className="container">
+          <HomeCategoryCards />
           <TopRankedColleges />
           <UpcomingExams />
 

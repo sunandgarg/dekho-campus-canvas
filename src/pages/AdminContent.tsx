@@ -13,8 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, X, HelpCircle, MapPin, GripVertical, Newspaper, CalendarDays, Megaphone } from "lucide-react";
+import { Plus, Pencil, Trash2, X, HelpCircle, MapPin, GripVertical, Newspaper, CalendarDays, Megaphone, Star } from "lucide-react";
 import { useAllCollegeUpdates, type CollegeUpdate } from "@/hooks/useCollegeUpdates";
+import { ReviewsManager } from "@/components/admin/ReviewsManager";
 
 // ─── FAQ Management ───────────────────────────────────────────────────
 
@@ -507,14 +508,16 @@ export default function AdminContent() {
   return (
     <AdminLayout title="Content Manager">
       <Tabs defaultValue="faqs" className="w-full">
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 flex-wrap">
           <TabsTrigger value="faqs" className="gap-2"><HelpCircle className="w-4 h-4" />FAQs</TabsTrigger>
           <TabsTrigger value="places" className="gap-2"><MapPin className="w-4 h-4" />Popular Places</TabsTrigger>
           <TabsTrigger value="updates" className="gap-2"><Newspaper className="w-4 h-4" />College Updates</TabsTrigger>
+          <TabsTrigger value="reviews" className="gap-2"><Star className="w-4 h-4" />Student Reviews</TabsTrigger>
         </TabsList>
         <TabsContent value="faqs"><FAQManager /></TabsContent>
         <TabsContent value="places"><PlacesManager /></TabsContent>
         <TabsContent value="updates"><CollegeUpdatesManager /></TabsContent>
+        <TabsContent value="reviews"><ReviewsManager /></TabsContent>
       </Tabs>
     </AdminLayout>
   );
