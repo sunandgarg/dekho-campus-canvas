@@ -23,6 +23,7 @@ import { UsefulLinks } from "@/components/UsefulLinks";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCollegeUpdates } from "@/hooks/useCollegeUpdates";
 import { CalendarDays, Megaphone } from "lucide-react";
+import { StudentReviews } from "@/components/StudentReviews";
 
 const COLLEGE_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
@@ -359,7 +360,7 @@ export default function CollegeDetail() {
 
             {/* Reviews */}
             <section id="reviews" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Reviews & Ratings</h2>
+              <h2 className="text-lg font-bold text-foreground mb-3">Student Reviews & Ratings</h2>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
                 <div className="text-center shrink-0">
                   <p className="text-3xl font-bold text-foreground">{college.rating}</p>
@@ -389,6 +390,7 @@ export default function CollegeDetail() {
                   ))}
                 </div>
               </div>
+              <StudentReviews collegeSlug={slug!} />
             </section>
 
             {/* Infrastructure */}
