@@ -78,7 +78,7 @@ export default function ExamDetail() {
       <Navbar />
       <DynamicAdBanner variant="leaderboard" position="leaderboard" page="exams" itemSlug={slug} />
 
-      <main className="container py-4 md:py-6">
+      <main className="container py-4 md:py-6 px-4">
         <PageBreadcrumb items={[{ label: "Exams", href: "/exams" }, { label: exam.name }]} />
 
         {/* Hero Card */}
@@ -115,7 +115,7 @@ export default function ExamDetail() {
           </div>
         </motion.div>
 
-        <ScrollSpy sections={EXAM_SECTIONS} baseUrl={`/exams/${slug}`} className="mb-6 -mx-4 px-4 md:mx-0 md:px-0 rounded-none md:rounded-xl" />
+        <ScrollSpy sections={EXAM_SECTIONS} baseUrl={`/exams/${slug}`} className="mb-6 rounded-xl" />
 
         <div className="mb-6">
           <WhatsNewSection entityName={exam.name} entityType="exam" category={exam.category} />
