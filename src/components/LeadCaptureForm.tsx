@@ -52,19 +52,18 @@ export function LeadCaptureForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Banner and inline variants only collect name, phone, course
-    const isCompactForm = variant === "banner" || variant === "inline";
-    
+    // Only name and phone are universally required
     if (!formData.name || !formData.phone) {
-      toast.error("Please fill all required fields");
-      return;
-    }
-    if (!isCompactForm && (!formData.email || !formData.course || !formData.state || !formData.city)) {
-      toast.error("Please fill all required fields");
+      toast.error("Please enter your name and phone number");
       return;
     }
     if (formData.phone.length !== 10) {
       toast.error("Please enter a valid 10-digit mobile number");
+      return;
+    }
+    // Card variant requires all fields
+    if (variant === "card" && (!formData.email || !formData.course || !formData.state || !formData.city)) {
+      toast.error("Please fill all required fields");
       return;
     }
     if (formData.email) {
