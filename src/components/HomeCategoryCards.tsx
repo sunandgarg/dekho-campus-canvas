@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import iconCollege from "@/assets/icon-college-badge.png";
 import iconCourse from "@/assets/icon-course-badge.png";
 import iconExam from "@/assets/icon-exam-badge.png";
@@ -8,24 +8,70 @@ import iconReview from "@/assets/icon-review-badge.png";
 import iconNews from "@/assets/icon-news-badge.png";
 
 const cards = [
-  { icon: iconCollege, title: "Top Colleges", desc: "Explore 5000+ colleges across India", link: "/colleges", color: "from-primary/10 to-primary/5" },
-  { icon: iconCourse, title: "Courses", desc: "Find the right course for your career", link: "/courses", color: "from-accent/10 to-accent/5" },
-  { icon: iconExam, title: "Entrance Exams", desc: "Dates, syllabus & preparation tips", link: "/exams", color: "from-destructive/10 to-destructive/5" },
-  { icon: iconApply, title: "Apply Now", desc: "Get free counselling & apply easily", link: "/colleges", color: "from-success/10 to-success/5" },
-  { icon: iconReview, title: "Student Reviews", desc: "Real reviews from real students", link: "/colleges", color: "from-golden/10 to-golden/5" },
-  { icon: iconNews, title: "Latest News", desc: "Education news & updates", link: "/articles", color: "from-electric-purple/10 to-electric-purple/5" },
+  {
+    icon: iconCollege,
+    title: "Top Colleges",
+    desc: "Explore 5000+ colleges across India",
+    link: "/colleges",
+    color: "from-primary/10 to-primary/5",
+  },
+  {
+    icon: iconCourse,
+    title: "Courses",
+    desc: "Find the right course for your career",
+    link: "/courses",
+    color: "from-accent/10 to-accent/5",
+  },
+  {
+    icon: iconExam,
+    title: "Entrance Exams",
+    desc: "Dates, syllabus & preparation tips",
+    link: "/exams",
+    color: "from-destructive/10 to-destructive/5",
+  },
+  {
+    icon: iconApply,
+    title: "Apply Now",
+    desc: "Get free counselling & apply easily",
+    link: "/colleges",
+    color: "from-success/10 to-success/5",
+  },
+  {
+    icon: iconReview,
+    title: "Student Reviews",
+    desc: "Real reviews from real students",
+    link: "/colleges",
+    color: "from-golden/10 to-golden/5",
+  },
+  {
+    icon: iconNews,
+    title: "Latest News",
+    desc: "Education news & updates",
+    link: "/articles",
+    color: "from-electric-purple/10 to-electric-purple/5",
+  },
 ];
 
 export function HomeCategoryCards() {
+  const { pathname } = useLocation();
+
+  // 🔴 SECTION DISABLED — will not appear anywhere
+  return null;
+
+  // 👉 If later you want ONLY homepage, remove above return and use this instead:
+  /*
+  if (pathname !== "/") return null;
+  */
+
   return (
-    <section className="py-8 md:py-12" aria-labelledby="quick-categories">
+    <section className="py-8 md:py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="text-center mb-6"
       >
-        <h2 id="quick-categories" className="text-headline font-bold text-foreground">
+        <h2 className="text-headline font-bold text-foreground">
           What are you <span className="text-gradient-accent">looking for?</span>
         </h2>
         <p className="mt-2 text-muted-foreground">Everything you need for your education journey</p>
