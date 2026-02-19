@@ -21,6 +21,8 @@ import { useDbCourses } from "@/hooks/useCoursesData";
 import { WhatsNewSection } from "@/components/WhatsNewSection";
 import { UsefulLinks } from "@/components/UsefulLinks";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useCollegeUpdates } from "@/hooks/useCollegeUpdates";
+import { CalendarDays, Megaphone } from "lucide-react";
 
 const COLLEGE_SECTIONS: ScrollSection[] = [
   { id: "overview", label: "Overview" },
@@ -49,6 +51,7 @@ export default function CollegeDetail() {
   const [showLeadDialog, setShowLeadDialog] = useState(false);
   const [compareSearch, setCompareSearch] = useState("");
   const [showVideoPopup, setShowVideoPopup] = useState(false);
+  const { data: collegeUpdates } = useCollegeUpdates(slug);
 
   useSEO({
     title: college ? (college.meta_title || `${college.name} - Admissions, Fees, Placements 2026`) : undefined,
@@ -519,25 +522,80 @@ export default function CollegeDetail() {
               )}
             </section>
 
-            {/* News */}
-            <section id="news" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
-              <h2 className="text-lg font-bold text-foreground mb-3">Latest News & Updates</h2>
-              <div className="space-y-3">
-                {[
-                  { title: `${college.name} opens admissions for 2026 batch`, date: "Feb 2026" },
-                  { title: `${college.short_name || college.name} placement report shows 15% salary hike`, date: "Jan 2026" },
-                  { title: `New courses launched at ${college.short_name || college.name}`, date: "Dec 2025" },
-                  { title: `${college.short_name || college.name} ranked among top 10 by NIRF`, date: "Nov 2025" },
-                ].map((n, i) => (
-                  <div key={i} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
-                    <Newspaper className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-foreground break-words">{n.title}</p>
-                      <p className="text-xs text-muted-foreground">{n.date}</p>
+            {/* Dynamic News, Events & Announcements */}
+            <section id="news" className="space-y-4 scroll-mt-32">
+              {/* News */}
+              {(() => {
+                const news = (collegeUpdates ?? []).filter(u => u.type === 'news');
+                return news.length > 0 ? (
+                  <div className="bg-card rounded-2xl border border-border p-4 sm:p-5">
+                    <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2"><Newspaper className="w-5 h-5 text-primary" />Latest News</h2>
+                    <div className="space-y-3">
+                      {news.map((n) => (
+                        <div key={n.id} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
+                          <Newspaper className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-foreground break-words">{n.title}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{n.content}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{new Date(n.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
+                ) : null;
+              })()}
+
+              {/* Events */}
+              {(() => {
+                const events = (collegeUpdates ?? []).filter(u => u.type === 'event');
+                return events.length > 0 ? (
+                  <div className="bg-card rounded-2xl border border-border p-4 sm:p-5">
+                    <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2"><CalendarDays className="w-5 h-5 text-primary" />Upcoming Events</h2>
+                    <div className="space-y-3">
+                      {events.map((e) => (
+                        <div key={e.id} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
+                          <CalendarDays className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-foreground break-words">{e.title}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{e.content}</p>
+                            {e.event_date && <p className="text-xs text-primary font-medium mt-1">📅 {new Date(e.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+              })()}
+
+              {/* Announcements */}
+              {(() => {
+                const announcements = (collegeUpdates ?? []).filter(u => u.type === 'announcement');
+                return announcements.length > 0 ? (
+                  <div className="bg-card rounded-2xl border border-border p-4 sm:p-5">
+                    <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2"><Megaphone className="w-5 h-5 text-primary" />Announcements</h2>
+                    <div className="space-y-3">
+                      {announcements.map((a) => (
+                        <div key={a.id} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
+                          <Megaphone className="w-4 h-4 text-destructive mt-0.5 flex-shrink-0" />
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-foreground break-words">{a.title}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{a.content}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+              })()}
+
+              {/* Fallback if no updates */}
+              {(!collegeUpdates || collegeUpdates.length === 0) && (
+                <div className="bg-card rounded-2xl border border-border p-4 sm:p-5">
+                  <h2 className="text-lg font-bold text-foreground mb-3">Latest News & Updates</h2>
+                  <p className="text-sm text-muted-foreground">No updates available at the moment.</p>
+                </div>
+              )}
             </section>
 
             {/* FAQ */}

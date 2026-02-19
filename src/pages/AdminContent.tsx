@@ -13,7 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, X, HelpCircle, MapPin, GripVertical } from "lucide-react";
+import { Plus, Pencil, Trash2, X, HelpCircle, MapPin, GripVertical, Newspaper, CalendarDays, Megaphone } from "lucide-react";
+import { useAllCollegeUpdates, type CollegeUpdate } from "@/hooks/useCollegeUpdates";
 
 // ─── FAQ Management ───────────────────────────────────────────────────
 
@@ -319,6 +320,187 @@ function PlacesManager() {
   );
 }
 
+// ─── College Updates Manager ──────────────────────────────────────────
+
+interface UpdateForm {
+  college_slug: string;
+  type: string;
+  title: string;
+  content: string;
+  image_url: string;
+  event_date: string;
+  link_url: string;
+  display_order: number;
+  is_active: boolean;
+}
+
+const emptyUpdate: UpdateForm = {
+  college_slug: "", type: "news", title: "", content: "", image_url: "", event_date: "", link_url: "", display_order: 0, is_active: true,
+};
+
+function CollegeUpdatesManager() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { data: updates } = useAllCollegeUpdates();
+  const [showForm, setShowForm] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [form, setForm] = useState<UpdateForm>(emptyUpdate);
+  const [filterType, setFilterType] = useState("all");
+
+  const filtered = (updates ?? []).filter(
+    (u) => filterType === "all" || u.type === filterType
+  );
+
+  const openCreate = () => { setForm(emptyUpdate); setEditId(null); setShowForm(true); };
+  const openEdit = (u: CollegeUpdate) => {
+    setForm({
+      college_slug: u.college_slug, type: u.type, title: u.title, content: u.content,
+      image_url: u.image_url || "", event_date: u.event_date ? u.event_date.split("T")[0] : "",
+      link_url: u.link_url, display_order: u.display_order, is_active: u.is_active,
+    });
+    setEditId(u.id); setShowForm(true);
+  };
+
+  const handleSave = async () => {
+    if (!form.college_slug.trim() || !form.title.trim()) {
+      toast({ title: "College slug and title required", variant: "destructive" });
+      return;
+    }
+    const payload = {
+      ...form,
+      image_url: form.image_url.trim() || null,
+      event_date: form.event_date ? new Date(form.event_date).toISOString() : null,
+      link_url: form.link_url.trim(),
+    };
+    if (editId) {
+      await supabase.from("college_updates").update(payload).eq("id", editId);
+      toast({ title: "✅ Update saved" });
+    } else {
+      await supabase.from("college_updates").insert(payload);
+      toast({ title: "✅ Update created" });
+    }
+    queryClient.invalidateQueries({ queryKey: ["admin-college-updates"] });
+    queryClient.invalidateQueries({ queryKey: ["college-updates"] });
+    setShowForm(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this update?")) return;
+    await supabase.from("college_updates").delete().eq("id", id);
+    queryClient.invalidateQueries({ queryKey: ["admin-college-updates"] });
+    queryClient.invalidateQueries({ queryKey: ["college-updates"] });
+    toast({ title: "🗑️ Update deleted" });
+  };
+
+  const typeIcon = (type: string) => {
+    if (type === "event") return <CalendarDays className="w-4 h-4 text-accent" />;
+    if (type === "announcement") return <Megaphone className="w-4 h-4 text-destructive" />;
+    return <Newspaper className="w-4 h-4 text-primary" />;
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <Select value={filterType} onValueChange={setFilterType}>
+            <SelectTrigger className="w-[160px] rounded-xl"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="news">News</SelectItem>
+              <SelectItem value="event">Events</SelectItem>
+              <SelectItem value="announcement">Announcements</SelectItem>
+            </SelectContent>
+          </Select>
+          <span className="text-sm text-muted-foreground">{filtered.length} updates</span>
+        </div>
+        <Button onClick={openCreate} className="rounded-xl gradient-primary text-primary-foreground gap-2">
+          <Plus className="w-4 h-4" /> Add Update
+        </Button>
+      </div>
+
+      {showForm && (
+        <div className="bg-card rounded-2xl border border-border p-5 mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold">{editId ? "Edit Update" : "New Update"}</h3>
+            <button onClick={() => setShowForm(false)}><X className="w-5 h-5 text-muted-foreground" /></button>
+          </div>
+          <div className="space-y-3">
+            <div className="grid sm:grid-cols-3 gap-3">
+              <div>
+                <Label>College Slug *</Label>
+                <Input value={form.college_slug} onChange={(e) => setForm({ ...form, college_slug: e.target.value })} placeholder="e.g. xlri-jamshedpur" className="rounded-xl mt-1" />
+              </div>
+              <div>
+                <Label>Type</Label>
+                <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
+                  <SelectTrigger className="rounded-xl mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="news">News</SelectItem>
+                    <SelectItem value="event">Event</SelectItem>
+                    <SelectItem value="announcement">Announcement</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Order</Label>
+                <Input type="number" value={form.display_order} onChange={(e) => setForm({ ...form, display_order: parseInt(e.target.value) || 0 })} className="rounded-xl mt-1" />
+              </div>
+            </div>
+            <div>
+              <Label>Title *</Label>
+              <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-xl mt-1" />
+            </div>
+            <div>
+              <Label>Content</Label>
+              <Textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="rounded-xl mt-1 min-h-[60px]" />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {form.type === "event" && (
+                <div>
+                  <Label>Event Date</Label>
+                  <Input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} className="rounded-xl mt-1" />
+                </div>
+              )}
+              <div>
+                <Label>Link URL (optional)</Label>
+                <Input value={form.link_url} onChange={(e) => setForm({ ...form, link_url: e.target.value })} placeholder="https://..." className="rounded-xl mt-1" />
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Switch checked={form.is_active} onCheckedChange={(v) => setForm({ ...form, is_active: v })} />
+              <Label>{form.is_active ? "Active" : "Hidden"}</Label>
+            </div>
+            <Button onClick={handleSave} className="rounded-xl gradient-primary text-primary-foreground">
+              {editId ? "Save Changes" : "Create Update"}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        {filtered.map((u) => (
+          <div key={u.id} className={`bg-card rounded-xl border border-border p-3 flex items-start gap-3 ${!u.is_active ? "opacity-50" : ""}`}>
+            {typeIcon(u.type)}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground">{u.title}</p>
+              <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{u.content}</p>
+              <div className="flex items-center gap-1.5 mt-1">
+                <Badge variant="outline" className="text-[10px]">{u.type}</Badge>
+                <Badge variant="secondary" className="text-[10px]">{u.college_slug}</Badge>
+                {u.event_date && <Badge variant="secondary" className="text-[10px]">{new Date(u.event_date).toLocaleDateString()}</Badge>}
+              </div>
+            </div>
+            <div className="flex gap-1 shrink-0">
+              <Button variant="ghost" size="icon" onClick={() => openEdit(u)} className="w-7 h-7"><Pencil className="w-3 h-3" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => handleDelete(u.id)} className="w-7 h-7 text-destructive"><Trash2 className="w-3 h-3" /></Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────
 
 export default function AdminContent() {
@@ -328,9 +510,11 @@ export default function AdminContent() {
         <TabsList className="mb-4">
           <TabsTrigger value="faqs" className="gap-2"><HelpCircle className="w-4 h-4" />FAQs</TabsTrigger>
           <TabsTrigger value="places" className="gap-2"><MapPin className="w-4 h-4" />Popular Places</TabsTrigger>
+          <TabsTrigger value="updates" className="gap-2"><Newspaper className="w-4 h-4" />College Updates</TabsTrigger>
         </TabsList>
         <TabsContent value="faqs"><FAQManager /></TabsContent>
         <TabsContent value="places"><PlacesManager /></TabsContent>
+        <TabsContent value="updates"><CollegeUpdatesManager /></TabsContent>
       </Tabs>
     </AdminLayout>
   );

@@ -182,6 +182,51 @@ export type Database = {
         }
         Relationships: []
       }
+      college_updates: {
+        Row: {
+          college_slug: string
+          content: string
+          created_at: string
+          display_order: number
+          event_date: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          link_url: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          college_slug: string
+          content?: string
+          created_at?: string
+          display_order?: number
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          college_slug?: string
+          content?: string
+          created_at?: string
+          display_order?: number
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       colleges: {
         Row: {
           admission_process: string
