@@ -21,7 +21,7 @@ import logo from "@/assets/dekhocampus-logo.png";
 import dcLogo from "@/assets/dc-logo.png";
 import iconCollege from "@/assets/icon-college-badge.png";
 import iconCourse from "@/assets/icon-course-badge.png";
-import iconExam from "@/assets/icon-exam.png";
+import iconExam from "@/assets/icon-exam-badge.png";
 import iconApplication from "@/assets/icon-application.png";
 import iconDocument from "@/assets/icon-document.png";
 import iconNews from "@/assets/icon-news.png";
