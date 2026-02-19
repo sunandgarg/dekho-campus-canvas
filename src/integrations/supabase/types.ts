@@ -1138,6 +1138,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      fuzzy_search: {
+        Args: { result_limit?: number; search_query: string }
+        Returns: {
+          location: string
+          logo: string
+          name: string
+          similarity_score: number
+          slug: string
+          type: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1145,6 +1156,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
