@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, GraduationCap, BookOpen, FileText, ClipboardList, Star, Newspaper, MapPin, ArrowRight, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { AILeadForm } from "@/components/AILeadForm";
 
 const rotatingWords = ["College", "Course", "Exam"];
 
@@ -32,6 +33,9 @@ export function UniversalSearch({ onOpenChat }: UniversalSearchProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [dbResults, setDbResults] = useState<SearchResult[]>([]);
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [pendingChatQuery, setPendingChatQuery] = useState<string | undefined>();
+  const [leadCompleted, setLeadCompleted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,11 +80,34 @@ export function UniversalSearch({ onOpenChat }: UniversalSearchProps) {
   };
 
   const handleAskAI = () => {
+    if (!leadCompleted) {
+      // Gate behind lead form
+      setPendingChatQuery(query.trim() || undefined);
+      setShowLeadForm(true);
+      setIsFocused(false);
+      return;
+    }
     if (onOpenChat) {
       onOpenChat(query.trim() || undefined);
       setQuery("");
       setIsFocused(false);
     }
+  };
+
+  const handleLeadSubmit = (data: { name: string; course: string; state: string; city: string }) => {
+    setShowLeadForm(false);
+    setLeadCompleted(true);
+    // Now open chat with the pending query
+    if (onOpenChat) {
+      onOpenChat(pendingChatQuery);
+      setQuery("");
+      setPendingChatQuery(undefined);
+    }
+  };
+
+  const handleLeadClose = () => {
+    setShowLeadForm(false);
+    // Don't navigate away - just close the form
   };
 
   const showDropdown = isFocused && query.trim().length >= 2;
@@ -220,6 +247,7 @@ export function UniversalSearch({ onOpenChat }: UniversalSearchProps) {
           </div>
         </div>
       </div>
+      <AILeadForm isOpen={showLeadForm} onClose={handleLeadClose} onSubmit={handleLeadSubmit} />
     </section>
   );
 }

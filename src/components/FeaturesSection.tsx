@@ -1,10 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Target,
   Check,
   ArrowRight,
-  ArrowLeft,
   Heart,
   BookOpen,
   MessageCircle,
@@ -48,11 +47,21 @@ const features = [
 
 export function FeaturesSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+  };
 
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
-    const amount = 300;
+    const amount = scrollRef.current.clientWidth * 0.6;
     scrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+    setTimeout(updateScrollState, 350);
   };
 
   return (
@@ -77,29 +86,22 @@ export function FeaturesSection() {
               We get it — choosing your future is stressful. That's why we built tools that actually help.
             </p>
           </div>
-          {/* Desktop nav arrows */}
           <div className="hidden md:flex items-center gap-2">
-            <button
-              onClick={() => scroll("left")}
-              className="w-10 h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="w-5 h-5 text-foreground" />
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              className="w-10 h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="w-5 h-5 text-foreground" />
-            </button>
+            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("left")} disabled={!canScrollLeft} aria-label="Scroll left">
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scroll("right")} disabled={!canScrollRight} aria-label="Scroll right">
+              <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
         </motion.div>
 
-        {/* Features Grid Carousel */}
+        {/* Features Carousel - stable scroll like TopRankedColleges */}
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
+          onScroll={updateScrollState}
+          className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 overscroll-x-contain touch-pan-x"
+          style={{ scrollSnapType: "x mandatory" }}
         >
           {features.map((feature, index) => (
             <motion.article
@@ -108,16 +110,13 @@ export function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group flex-shrink-0 w-[280px] md:w-[320px] snap-start bg-card rounded-2xl border border-border p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow"
+              className="snap-start flex-shrink-0 w-[280px] md:w-[320px] bg-card rounded-2xl border border-border p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow"
             >
-              {/* Icon */}
               <div
                 className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
               >
                 <feature.icon className="w-6 h-6 md:w-7 md:h-7 text-primary-foreground" />
               </div>
-
-              {/* Content */}
               <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">{feature.title}</h3>
               <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{feature.description}</p>
               <ul className="space-y-2">
