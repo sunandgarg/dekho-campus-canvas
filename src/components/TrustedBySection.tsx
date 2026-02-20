@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Shield, Award, Users, CheckCircle, TrendingUp, ChevronLeft, ChevronRight, ExternalLink, GraduationCap } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useTrustedPartners } from "@/hooks/useTrustedPartners";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { AILeadForm } from "@/components/AILeadForm";
@@ -31,10 +32,21 @@ export function TrustedBySection() {
   const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [leadInfo, setLeadInfo] = useState<{ name: string; course: string; state: string; city: string } | undefined>();
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = () => {
+    if (!reviewScrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = reviewScrollRef.current;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+  };
 
   const scrollReviews = (dir: "left" | "right") => {
     if (!reviewScrollRef.current) return;
-    reviewScrollRef.current.scrollBy({ left: dir === "left" ? -320 : 320, behavior: "smooth" });
+    const amount = reviewScrollRef.current.clientWidth * 0.6;
+    reviewScrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+    setTimeout(updateScrollState, 350);
   };
 
   const avgRating = (googleReviews.reduce((sum, r) => sum + r.rating, 0) / googleReviews.length).toFixed(1);
@@ -81,7 +93,7 @@ export function TrustedBySection() {
           ))}
         </div>
 
-        {/* Partner Logos - Admin Managed */}
+        {/* Partner Logos */}
         {displayPartners && (
           <div className="mb-10 md:mb-14">
             <p className="text-center text-sm font-medium text-muted-foreground mb-4 md:mb-6">
@@ -126,7 +138,7 @@ export function TrustedBySection() {
           </div>
         </motion.div>
 
-        {/* Google Reviews */}
+        {/* Google Reviews - stable carousel */}
         <div>
           <div className="flex items-end justify-between mb-4 md:mb-6">
             <div className="flex items-center gap-3">
@@ -148,34 +160,41 @@ export function TrustedBySection() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => scrollReviews("left")} className="w-9 h-9 md:w-10 md:h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
-                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
-              </button>
-              <button onClick={() => scrollReviews("right")} className="w-9 h-9 md:w-10 md:h-10 rounded-xl border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
-                <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
-              </button>
+              <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scrollReviews("left")} disabled={!canScrollLeft} aria-label="Scroll reviews left">
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="icon" className="rounded-full w-9 h-9" onClick={() => scrollReviews("right")} disabled={!canScrollRight} aria-label="Scroll reviews right">
+                <ChevronRight className="w-4 h-4" />
+              </Button>
             </div>
           </div>
 
-          <div ref={reviewScrollRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+          <div
+            ref={reviewScrollRef}
+            onScroll={updateScrollState}
+            className="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide overscroll-x-contain touch-pan-x"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
             {googleReviews.map((review, i) => (
-              <motion.div key={review.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }} className="flex-shrink-0 w-[280px] md:w-[300px] snap-start bg-card rounded-2xl border border-border p-4 md:p-5 flex flex-col">
-                <div className="flex items-center gap-1 mb-2">
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <Star key={j} className={`w-3.5 h-3.5 ${j < review.rating ? "text-golden fill-golden" : "text-border"}`} />
-                  ))}
-                  <span className="text-xs text-muted-foreground ml-1">{review.date}</span>
-                </div>
-                <p className="text-sm text-foreground mb-3 flex-1 line-clamp-4">"{review.text}"</p>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground">{review.avatar}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate">{review.name}</p>
-                    <p className="text-xs text-muted-foreground">Google Review</p>
+              <div key={review.name} className="snap-start flex-shrink-0 w-[280px] md:w-[300px]">
+                <div className="bg-card rounded-2xl border border-border p-4 md:p-5 flex flex-col h-full">
+                  <div className="flex items-center gap-1 mb-2">
+                    {Array.from({ length: 5 }).map((_, j) => (
+                      <Star key={j} className={`w-3.5 h-3.5 ${j < review.rating ? "text-golden fill-golden" : "text-border"}`} />
+                    ))}
+                    <span className="text-xs text-muted-foreground ml-1">{review.date}</span>
                   </div>
-                  {review.verified && <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />}
+                  <p className="text-sm text-foreground mb-3 flex-1 line-clamp-4">"{review.text}"</p>
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground">{review.avatar}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground truncate">{review.name}</p>
+                      <p className="text-xs text-muted-foreground">Google Review</p>
+                    </div>
+                    {review.verified && <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />}
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 

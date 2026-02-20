@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
 import { Star, MapPin, Calendar, GraduationCap, TrendingUp, Building, CheckCircle, Briefcase, BookOpen, Image as ImageIcon, Users, Award, Scale, Newspaper, HelpCircle, DollarSign, ExternalLink, Download, Phone, Shield, Globe, Landmark, Search, Play } from "lucide-react";
+import { CompareCollegesTool } from "@/components/tools/CompareCollegesTool";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,7 +51,6 @@ export default function CollegeDetail() {
   const { data: similarColleges } = useCollegesByCategory(college?.category, slug);
   const { data: allCourses } = useDbCourses();
   const [showLeadDialog, setShowLeadDialog] = useState(false);
-  const [compareSearch, setCompareSearch] = useState("");
   const [showVideoPopup, setShowVideoPopup] = useState(false);
   const { data: collegeUpdates } = useCollegeUpdates(slug);
 
@@ -144,9 +144,15 @@ export default function CollegeDetail() {
                 const el = document.getElementById('compare');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}><Scale className="w-3.5 h-3.5" />Compare</Button>
-              {college.campus_tour_video_url && (
-                <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1.5 h-9" onClick={() => setShowVideoPopup(true)}><Play className="w-3.5 h-3.5" />Campus Tour</Button>
-              )}
+              <Button
+                size="sm"
+                variant="outline"
+                className={`rounded-xl text-xs gap-1.5 h-9 ${!college.campus_tour_video_url ? "opacity-50 cursor-not-allowed" : ""}`}
+                onClick={() => college.campus_tour_video_url && setShowVideoPopup(true)}
+                disabled={!college.campus_tour_video_url}
+              >
+                <Play className="w-3.5 h-3.5" />Campus Tour
+              </Button>
               {college.brochure_url && college.brochure_url !== '#' && (
                 <a href={college.brochure_url} target="_blank" rel="noopener noreferrer">
                   <Button size="sm" variant="outline" className="rounded-xl text-xs gap-1.5 h-9"><Download className="w-3.5 h-3.5" />Brochure</Button>
@@ -456,60 +462,7 @@ export default function CollegeDetail() {
             {/* Compare */}
             <section id="compare" className="bg-card rounded-2xl border border-border p-4 sm:p-5 scroll-mt-32">
               <h2 className="text-lg font-bold text-foreground mb-3">Compare {college.short_name || college.name} with Other Colleges</h2>
-              
-              {/* Search to add college for comparison */}
-              <div className="mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    value={compareSearch}
-                    onChange={(e) => setCompareSearch(e.target.value)}
-                    placeholder="Search a college to compare..."
-                    className="pl-10 rounded-xl h-10"
-                  />
-                </div>
-                {compareSearch.length >= 2 && (
-                  <CompareSearchResults search={compareSearch} currentSlug={slug!} onSelect={() => setCompareSearch("")} />
-                )}
-              </div>
-
-              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 mb-4">
-                <table className="w-full text-sm min-w-[550px]">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-2 text-muted-foreground font-medium">College</th>
-                      <th className="text-left py-2 text-muted-foreground font-medium">Location</th>
-                      <th className="text-left py-2 text-muted-foreground font-medium">Ranking</th>
-                      <th className="text-left py-2 text-muted-foreground font-medium">Fees</th>
-                      <th className="text-left py-2 text-muted-foreground font-medium">Placement</th>
-                      <th className="text-left py-2 text-muted-foreground font-medium">Rating</th>
-                      <th className="text-left py-2 text-muted-foreground font-medium">Type</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-border bg-primary/5">
-                      <td className="py-2 font-semibold text-foreground whitespace-nowrap">{college.short_name || college.name}</td>
-                      <td className="py-2 text-muted-foreground whitespace-nowrap">{college.city}, {college.state}</td>
-                      <td className="py-2 text-foreground whitespace-nowrap">{college.ranking}</td>
-                      <td className="py-2 text-foreground whitespace-nowrap">{college.fees}</td>
-                      <td className="py-2 text-success font-medium whitespace-nowrap">{college.placement}</td>
-                      <td className="py-2 text-foreground">{college.rating}/5</td>
-                      <td className="py-2 text-muted-foreground">{college.type}</td>
-                    </tr>
-                    {(similarColleges ?? []).slice(0, 4).map((c) => (
-                      <tr key={c.slug} className="border-b border-border last:border-0">
-                        <td className="py-2 whitespace-nowrap"><Link to={`/colleges/${c.slug}`} className="text-primary font-medium hover:underline">{c.short_name || c.name}</Link></td>
-                        <td className="py-2 text-muted-foreground whitespace-nowrap">{c.city}, {c.state}</td>
-                        <td className="py-2 text-foreground whitespace-nowrap">{c.ranking}</td>
-                        <td className="py-2 text-foreground whitespace-nowrap">{c.fees}</td>
-                        <td className="py-2 text-success font-medium whitespace-nowrap">{c.placement}</td>
-                        <td className="py-2 text-foreground">{c.rating}/5</td>
-                        <td className="py-2 text-muted-foreground">{c.type}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <CompareCollegesTool preSelectedSlug={slug} />
               {(sameStateColleges ?? []).length > 0 && (
                 <div className="mt-4">
                   <h3 className="text-sm font-semibold text-foreground mb-2">More colleges in {college.state}</h3>
@@ -710,42 +663,6 @@ export default function CollegeDetail() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
-
-/** Compare search results dropdown */
-function CompareSearchResults({ search, currentSlug, onSelect }: { search: string; currentSlug: string; onSelect: () => void }) {
-  const { data: allColleges } = useDbColleges();
-  const results = useMemo(() => {
-    if (!allColleges || search.length < 2) return [];
-    const q = search.toLowerCase();
-    return allColleges
-      .filter((c) => c.slug !== currentSlug && (c.name.toLowerCase().includes(q) || (c.short_name || "").toLowerCase().includes(q)))
-      .slice(0, 5);
-  }, [allColleges, search, currentSlug]);
-
-  if (results.length === 0) return null;
-
-  return (
-    <div className="mt-1 bg-card border border-border rounded-xl shadow-lg max-h-48 overflow-y-auto">
-      {results.map((c) => (
-        <Link
-          key={c.slug}
-          to={`/colleges/${c.slug}#compare`}
-          onClick={onSelect}
-          className="flex items-center justify-between px-4 py-2.5 hover:bg-muted text-sm border-b border-border last:border-0"
-        >
-          <div>
-            <p className="font-medium text-foreground">{c.short_name || c.name}</p>
-            <p className="text-xs text-muted-foreground">{c.city}, {c.state} • {c.type}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs font-medium text-primary">{c.rating}/5</p>
-            <p className="text-xs text-muted-foreground">{c.fees}</p>
-          </div>
-        </Link>
-      ))}
     </div>
   );
 }
